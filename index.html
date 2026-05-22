@@ -202,7 +202,8 @@
 
         /* =========================================================================
            ✨ LỚP NỀN SAO TĨNH ĐƯỢC TỐI ƯU HÓA PHẦN CỨNG GPU BẰNG BOX-SHADOW (CÁCH 1)
-           Tối ưu 120 FPS trên di động, khóa chiều cao tuyệt đối chống lỗi co giãn thanh địa chỉ
+           Sửa đổi: Đã chuyển các thuộc tính mask-image lên container cha .stars-background
+           để giữ độ hiển thị 100% của bóng đổ, đồng thời đưa kích thước lớp về 1px/2px chuẩn.
            ========================================================================= */
         .stars-background {
             position: absolute;
@@ -218,15 +219,18 @@
             will-change: transform;
             opacity: 0.9;
             overflow: hidden;
+            /* Áp dụng mặt nạ tại đây để làm mờ dốc đứng cho cả hệ sao con bên dưới */
+            mask-image: linear-gradient(to bottom, black 35%, rgba(0,0,0,0.6) 70%, transparent 92%);
+            -webkit-mask-image: linear-gradient(to bottom, black 35%, rgba(0,0,0,0.6) 70%, transparent 92%);
         }
 
-        /* Lớp sao nhỏ li ti ngẫu nhiên lệch pha chu kỳ nguyên tố triệt tiêu lưới hình vuông */
+        /* Lớp sao nhỏ: Đặt kích thước 1px x 1px thực tế để box-shadow tạo ra các điểm chấm chuẩn xác */
         .stars-glow-layer {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 1px;
+            height: 1px;
             background: transparent;
             box-shadow: 
                 43px 83px rgba(255,255,255,0.95), 183px 212px rgba(255,255,255,0.85), 297px 115px #fff,
@@ -236,25 +240,21 @@
                 890px 420px #fff, 1040px 600px rgba(255,255,255,0.7), 1280px 510px #fff,
                 210px 730px rgba(255,255,255,0.6), 650px 780px #fff, 1150px 690px rgba(255,255,255,0.7),
                 380px 890px rgba(255,255,255,0.5), 940px 920px rgba(255,255,255,0.45);
-            /* Mask-image tạo dốc hao hụt tự nhiên, sao thưa dần rồi biến mất hoàn toàn */
-            mask-image: linear-gradient(to bottom, black 35%, rgba(0,0,0,0.6) 70%, transparent 92%);
-            -webkit-mask-image: linear-gradient(to bottom, black 35%, rgba(0,0,0,0.6) 70%, transparent 92%);
         }
 
+        /* Lớp sao vừa: Đặt kích thước 2px x 2px thực tế */
         .stars-glow-layer-medium {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 2px;
+            height: 2px;
             background: transparent;
             box-shadow: 
                 95px 120px rgba(255,255,255,0.95), 250px 75px #fff, 530px 210px rgba(255,255,255,0.95),
                 780px 310px #fff, 1150px 150px rgba(255,255,255,0.95), 1380px 280px #fff,
                 310px 490px rgba(255,255,255,0.85), 810px 540px rgba(255,255,255,0.8), 1210px 440px #fff,
                 140px 650px rgba(255,255,255,0.7), 620px 690px #fff, 1050px 610px rgba(255,255,255,0.6);
-            mask-image: linear-gradient(to bottom, black 25%, rgba(0,0,0,0.5) 60%, transparent 85%);
-            -webkit-mask-image: linear-gradient(to bottom, black 25%, rgba(0,0,0,0.5) 60%, transparent 85%);
         }
 
         .deep-space-fade {
@@ -336,9 +336,8 @@
         </defs>
     </svg>
 
-    <!-- 🌌 ĐỒ HỌA NỀN CỰC QUANG VÀ KHÔNG GIAN ĐÊM (CẤU TRÚC PHÂN LỚP HOÀN MỸ) -->
+    <!-- 🌌 ĐỒ HỌA NỀN CỰC QUANG VÀ KHÔNG GIAN ĐÊM -->
     <div class="cosmic-background">
-        <!-- 1. Cực quang mây khói cuộn sóng dưới cùng -->
         <div class="aurora-container">
             <div class="aurora-curtain curtain-1"></div>
             <div class="aurora-curtain curtain-2"></div>
@@ -347,7 +346,6 @@
             <div class="deep-space-fade"></div>
         </div>
         
-        <!-- 2. Vân khói trắng Nebula hướng tâm -->
         <div class="nebula-wisps">
             <div class="central-bloom-glow"></div>
             <div class="wisp wisp-1"></div>
@@ -355,21 +353,40 @@
             <div class="wisp wisp-3"></div>
         </div>
 
-        <!-- 3. Nền sao tĩnh tối ưu GPU Hardware Acceleration (Cách 1) -->
         <div class="stars-background">
             <div class="stars-glow-layer"></div>
             <div class="stars-glow-layer-medium"></div>
         </div>
     </div>
 
-    <!-- HEADER / NAVIGATION (Tinh gọn liên kết) -->
+    <!-- HEADER / NAVIGATION (Tích hợp Logo Chữ T Vector Nghệ thuật của bạn) -->
     <header class="sticky top-0 z-40 w-full border-b border-white/5 nav-blur bg-slate-950/15 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex items-center justify-between relative z-50">
-            <!-- Brand Logo -->
-            <a href="#" class="flex items-center gap-2.5 group">
-                <div class="bg-gradient-to-tr from-cyan-400 to-indigo-500 p-2 rounded-xl shadow-lg shadow-cyan-500/10 group-hover:scale-105 transition-transform duration-300">
-                    <svg class="w-5 h-5 text-slate-950" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+            <!-- Brand Logo (Vẽ lại mượt mà bằng SVG Gradient trùng khớp 100% hình mẫu chữ T) -->
+            <a href="#" class="flex items-center gap-3 group relative">
+                <div class="absolute -inset-2 bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <div class="relative w-10 h-10 flex items-center justify-center scale-95 group-hover:scale-105 transition-transform duration-300">
+                    <svg class="w-full h-full" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logo-top-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#4ade80" /> 
+                                <stop offset="50%" stop-color="#22c55e" /> 
+                                <stop offset="100%" stop-color="#06b6d4" /> 
+                            </linearGradient>
+                            <linearGradient id="logo-bottom-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#2dd4bf" /> 
+                                <stop offset="100%" stop-color="#15803d" /> 
+                            </linearGradient>
+                            <filter id="logo-shadow" x="-10%" y="-10%" width="120%" height="120%">
+                                <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity="0.3" />
+                            </filter>
+                        </defs>
+                        <path d="M 50,370 C 100,250 250,390 400,280 C 460,230 460,110 330,140 C 270,150 290,50 330,50 C 430,50 490,170 420,290 C 350,380 200,310 110,340 C 90,345 60,355 50,370 Z" 
+                              fill="url(#logo-top-gradient)" 
+                              filter="url(#logo-shadow)" />
+                        <path d="M 330,230 C 250,250 190,350 190,480 L 190,500 L 220,500 C 310,480 330,310 330,230 Z" 
+                              fill="url(#logo-bottom-gradient)" />
                     </svg>
                 </div>
                 <div class="flex flex-col">
@@ -378,25 +395,20 @@
                 </div>
             </a>
             
-            <!-- Navigation Links (Đã rút gọn) -->
+            <!-- Navigation Links -->
             <nav class="hidden lg:flex items-center gap-8 text-[14px] font-medium text-slate-300">
                 <a href="#features" class="hover:text-white transition-all duration-200">Tính năng</a>
+                <a href="#compare" class="hover:text-white transition-all duration-200">So sánh</a>
                 <a href="#pricing" class="hover:text-cyan-400 transition-all duration-200 font-bold text-cyan-400 flex items-center gap-1">Bảng giá <span class="bg-cyan-500/20 text-cyan-400 text-[9px] px-1.5 py-0.5 rounded-full font-bold">SALE</span></a>
-                <a href="#compare" class="hover:text-white transition-all duration-200">So sánh gói</a>
                 <a href="#faq" class="hover:text-white transition-all duration-200">Hỏi đáp</a>
             </nav>
 
-            <!-- Action buttons -->
             <div class="hidden lg:flex items-center gap-3">
-                <a href="#pricing" class="px-5 py-2 rounded-full font-bold text-sm btn-ghost">
-                    Đăng nhập
-                </a>
-                <a href="#pricing" class="px-5 py-2 rounded-full bg-white text-slate-950 font-bold text-sm hover:bg-slate-200 active:scale-95 transition-all duration-200 shadow-md">
-                    Đăng ký
-                </a>
+                <a href="#pricing" class="px-5 py-2 rounded-full font-bold text-sm btn-ghost">Đăng nhập</a>
+                <a href="#pricing" class="px-5 py-2 rounded-full bg-white text-slate-950 font-bold text-sm hover:bg-slate-200 active:scale-95 transition-all duration-200 shadow-md">Đăng ký</a>
             </div>
 
-            <!-- Nút menu mobile -->
+            <!-- Hamburger menu di động -->
             <button id="menu-btn" class="lg:hidden p-2 text-slate-400 hover:text-white border border-white/5 rounded-xl hover:bg-white/5 transition-all cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="4" x2="20" y1="12" y2="12"></line>
@@ -411,19 +423,16 @@
     <main class="relative z-10">
         <!-- HERO SECTION -->
         <section class="relative pt-24 pb-16 px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-8">
-            <!-- Badge -->
             <div class="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full px-4 py-1.5 text-xs sm:text-sm text-cyan-400 font-semibold mx-auto">
                 <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
                 Nền tảng tín hiệu thông minh hàng đầu dành cho nhà giao dịch chuyên nghiệp
             </div>
             
-            <!-- Main Title -->
             <h1 class="text-4xl sm:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.05] font-sans">
                 Start trading like <br>
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-500 font-extrabold">smart money</span>
             </h1>
             
-            <!-- Subtitle -->
             <p class="text-slate-400 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed font-normal">
                 Hệ thống cảnh báo chỉ báo nâng cấp thế hệ mới, lọc sạch 95% nhiễu động sideway. Đồng hành cùng 15,000+ traders đón đầu xu hướng dòng tiền lớn chuẩn xác 24/7.
             </p>
@@ -439,7 +448,6 @@
                         <p class="text-[10px] text-slate-500">Áp dụng cho chu kỳ thanh toán năm</p>
                     </div>
                 </div>
-                <!-- Countdown values -->
                 <div class="flex items-center gap-1.5 font-mono text-sm">
                     <span class="bg-slate-900 px-2.5 py-1 rounded text-cyan-400 font-bold" id="days">03</span>
                     <span class="text-slate-600">:</span>
@@ -451,14 +459,11 @@
                 </div>
             </div>
 
-            <!-- PRICING CYCLE TOGGLE -->
             <div class="flex flex-col items-center justify-center gap-y-4 pt-4 px-4 max-w-md mx-auto relative z-20">
-                <!-- Promo Banner Badge -->
                 <div class="px-5 py-2 border border-white/10 bg-slate-950/40 rounded-xl text-slate-200 text-xs sm:text-sm font-semibold tracking-wide shadow-md">
                     Thanh toán theo năm, tiết kiệm thêm đến <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400 font-extrabold animate-pulse">45% chi phí!</span>
                 </div>
                 
-                <!-- Segmented Switcher -->
                 <div class="inline-flex p-1 bg-slate-950/80 border border-white/10 rounded-full w-full max-w-[280px] shadow-2xl">
                     <button id="toggle-monthly" class="flex-1 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-white bg-white/10 border border-white/10 shadow-md">
                         Hàng tháng
@@ -472,9 +477,7 @@
 
         <!-- SECTION PRICING CARDS -->
         <section id="pricing" class="max-w-7xl mx-auto px-6 lg:px-8 py-8 relative z-10">
-            <!-- Container trượt ngang trên mobile -->
             <div class="flex overflow-x-auto lg:grid lg:grid-cols-3 gap-6 lg:gap-8 items-stretch relative -mx-6 px-6 lg:mx-0 lg:px-0 snap-x snap-mandatory scroll-smooth pt-8 pb-6 lg:pb-0 no-scrollbar">
-                
                 <!-- Plan 1: Starter -->
                 <div class="pricing-card flex-shrink-0 w-[85vw] sm:w-[360px] lg:w-auto snap-center border border-teal-500/20 rounded-3xl p-8 bg-slate-950/40 hover:border-teal-400/40 hover:shadow-[0_0_30px_-5px_rgba(20,184,166,0.15)] transition-all duration-300 flex flex-col justify-between">
                     <div class="space-y-4">
@@ -522,15 +525,15 @@
                 </div>
 
                 <!-- Plan 2: Premium -->
-                <div class="pricing-card flex-shrink-0 w-[85vw] sm:w-[360px] lg:w-auto snap-center border-2 border-cyan-500/50 rounded-3xl p-8 bg-slate-950/80 flex flex-col justify-between relative shadow-[0_0_40px_-8px_rgba(6,182,212,0.3)] hover:shadow-[0_0_45px_-5px_rgba(6,182,212,0.45)] hover:border-cyan-400 transition-all duration-300 relative">
-                    <div class="absolute -top-4.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-950 px-5 py-1.5 rounded-full text-xs font-bold shadow-lg shadow-cyan-500/20 tracking-wider">PHỔ BIẾN NHẤT</div>
+                <div class="pricing-card flex-shrink-0 w-[85vw] sm:w-[360px] lg:w-auto snap-center border-2 border-cyan-500/50 rounded-3xl p-8 pt-12 bg-slate-950/80 flex flex-col justify-between relative shadow-[0_0_40px_-8px_rgba(6,182,212,0.3)] hover:shadow-[0_0_45px_-5px_rgba(6,182,212,0.45)] hover:border-cyan-400 transition-all duration-300">
+                    <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-950 px-5 py-1.5 rounded-full text-xs font-bold shadow-lg shadow-cyan-500/20 tracking-wider whitespace-nowrap z-30">PHỔ BIẾN NHẤT</div>
                     
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
                             <span class="text-xs uppercase tracking-widest font-bold text-cyan-400">Gói Chuyên Nghiệp</span>
                             <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[10px] px-2.5 py-1 rounded-md font-bold uppercase">PREMIUM</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-white">Premium Suite</h3>
+                        <h3 class="text-2xl font-bold text-white mt-1">Premium Suite</h3>
                         <p class="text-xs text-slate-300 leading-relaxed font-medium">Bộ chỉ báo nâng cao hoàn chỉnh kèm trợ lý AI hỗ trợ đa dạng mọi loại tài sản giao dịch, tối ưu hóa điểm vào/ra lệnh.</p>
                         
                         <div class="py-4 border-t border-b border-white/5 space-y-1">
@@ -614,7 +617,6 @@
                         </button>
                     </div>
                 </div>
-
             </div>
 
             <!-- Chỉ bảo kéo ngang trực quan cho mobile -->
@@ -847,25 +849,25 @@
         </div>
     </footer>
 
-    <!-- 🌌 MOBILE MENU MODAL -->
-    <div id="mobile-menu" class="hidden fixed inset-0 z-50 bg-slate-950/75 border border-white/5 nav-blur p-6 flex flex-col justify-between transition-all duration-300">
-        <div class="space-y-8">
-            <div class="flex justify-between items-center border-b border-white/5 pb-4">
-                <span class="font-display font-bold text-xl tracking-wider text-white">TienCK</span>
-                <button id="close-btn" class="p-2 border border-white/5 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white transition cursor-pointer">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+    <!-- 🌌 MOBILE MENU MODAL (Đã thu gọn diện tích thừa thành dạng Floating Glass Card cao cấp) -->
+    <div id="mobile-menu" class="hidden fixed top-20 right-4 left-4 z-50 bg-slate-950/95 border border-white/10 nav-blur p-6 rounded-3xl shadow-2xl transition-all duration-300 max-w-md mx-auto">
+        <div class="space-y-6">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                <span class="font-display font-bold text-base tracking-wider text-white">Menu Điều Hướng</span>
+                <button id="close-btn" class="p-1.5 border border-white/10 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white transition cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
-            <div class="flex flex-col space-y-5 text-lg font-semibold text-slate-300">
-                <a href="#features" class="mobile-nav-link hover:text-cyan-400 transition">Tính năng</a>
-                <a href="#pricing" class="mobile-nav-link hover:text-cyan-400 transition">Bảng giá</a>
-                <a href="#compare" class="mobile-nav-link hover:text-cyan-400 transition">So sánh</a>
-                <a href="#faq" class="mobile-nav-link hover:text-cyan-400 transition">Hỏi đáp</a>
+            <div class="flex flex-col space-y-4 text-base font-semibold text-slate-300">
+                <a href="#features" class="mobile-nav-link hover:text-cyan-400 transition py-1">Tính năng</a>
+                <a href="#compare" class="mobile-nav-link hover:text-cyan-400 transition py-1">So sánh</a>
+                <a href="#pricing" class="mobile-nav-link hover:text-cyan-400 transition py-1">Bảng giá</a>
+                <a href="#faq" class="mobile-nav-link hover:text-cyan-400 transition py-1">Hỏi đáp</a>
             </div>
-        </div>
-        <div class="pb-12 space-y-4">
-            <a href="#pricing" class="mobile-nav-link block w-full py-4 text-center bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-cyan-500/10">Thuê Ngay</a>
-            <p class="text-[10px] text-center text-slate-650">Premium Indicators Ecosystem</p>
+            <div class="border-t border-white/10 pt-4 space-y-3">
+                <a href="#pricing" class="mobile-nav-link block w-full py-3 text-center bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-cyan-500/10 text-sm">Thuê Ngay</a>
+                <p class="text-[9px] text-center text-slate-500">Premium Indicators Ecosystem</p>
+            </div>
         </div>
     </div>
 
@@ -1044,56 +1046,51 @@
         // ==========================================
         //  ⏳ REAL-TIME COUNTDOWN TIMER (Gia tăng chuyển đổi)
         // ==========================================
-        // Bọc toàn bộ logic trong một hàm khởi chạy an toàn
-(function() {
-    function startCountdown() {
-        // Lấy hoặc tạo mốc thời gian kết thúc (3 ngày từ thời điểm hiện tại)
-        const targetDate = new Date();
-        targetDate.setDate(targetDate.getDate() + 3);
-        
-        const dayEl = document.getElementById('days');
-        const hourEl = document.getElementById('hours');
-        const minEl = document.getElementById('minutes');
-        const secEl = document.getElementById('seconds');
+        (function() {
+            function startCountdown() {
+                const targetDate = new Date();
+                targetDate.setDate(targetDate.getDate() + 3);
+                
+                const dayEl = document.getElementById('days');
+                const hourEl = document.getElementById('hours');
+                const minEl = document.getElementById('minutes');
+                const secEl = document.getElementById('seconds');
 
-        // Kiểm tra nếu các phần tử tồn tại trước khi chạy
-        if (!dayEl || !hourEl || !minEl || !secEl) return;
+                if (!dayEl || !hourEl || !minEl || !secEl) return;
 
-        function updateTimer() {
-            const now = new Date().getTime();
-            const difference = targetDate.getTime() - now;
-            
-            if (difference <= 0) {
-                dayEl.textContent = "00";
-                hourEl.textContent = "00";
-                minEl.textContent = "00";
-                secEl.textContent = "00";
-                return;
+                function updateTimer() {
+                    const now = new Date().getTime();
+                    const difference = targetDate.getTime() - now;
+                    
+                    if (difference <= 0) {
+                        dayEl.textContent = "00";
+                        hourEl.textContent = "00";
+                        minEl.textContent = "00";
+                        secEl.textContent = "00";
+                        return;
+                    }
+                    
+                    const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((difference % (1000 * 60)) / 1000);
+                    
+                    dayEl.textContent = d.toString().padStart(2, '0');
+                    hourEl.textContent = h.toString().padStart(2, '0');
+                    minEl.textContent = m.toString().padStart(2, '0');
+                    secEl.textContent = s.toString().padStart(2, '0');
+                }
+                
+                updateTimer();
+                setInterval(updateTimer, 1000);
             }
-            
-            const d = Math.floor(difference / (1000 * 60 * 60 * 24));
-            const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((difference % (1000 * 60)) / 1000);
-            
-            dayEl.textContent = d.toString().padStart(2, '0');
-            hourEl.textContent = h.toString().padStart(2, '0');
-            minEl.textContent = m.toString().padStart(2, '0');
-            secEl.textContent = s.toString().padStart(2, '0');
-        }
-        
-        // Gọi update ngay lập tức và thiết lập vòng lặp
-        updateTimer();
-        setInterval(updateTimer, 1000);
-    }
 
-    // Đợi DOM load xong rồi chạy
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', startCountdown);
-    } else {
-        startCountdown();
-    }
-})();
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', startCountdown);
+            } else {
+                startCountdown();
+            }
+        })();
     </script>
 </body>
 </html>
