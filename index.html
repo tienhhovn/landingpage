@@ -202,8 +202,8 @@
 
         /* =========================================================================
            ✨ LỚP NỀN SAO TĨNH ĐƯỢC TỐI ƯU HÓA PHẦN CỨNG GPU BẰNG BOX-SHADOW (CÁCH 1)
-           Sửa đổi: Đã chuyển các thuộc tính mask-image lên container cha .stars-background
-           để giữ độ hiển thị 100% của bóng đổ, đồng thời đưa kích thước lớp về 1px/2px chuẩn.
+           Tối ưu hóa: Thể hiện dải ngân hà đa lớp, mật độ sao nhân đôi (X2 Density).
+           Sắp xếp: Phân bổ tập trung cực kỳ nhiều ở vùng trên, thưa dần và mờ nhạt khi xuống dưới.
            ========================================================================= */
         .stars-background {
             position: absolute;
@@ -217,14 +217,14 @@
             transform: translate3d(0, 0, 0);
             -webkit-transform: translate3d(0, 0, 0);
             will-change: transform;
-            opacity: 0.9;
+            opacity: 0.95;
             overflow: hidden;
-            /* Áp dụng mặt nạ tại đây để làm mờ dốc đứng cho cả hệ sao con bên dưới */
-            mask-image: linear-gradient(to bottom, black 35%, rgba(0,0,0,0.6) 70%, transparent 92%);
-            -webkit-mask-image: linear-gradient(to bottom, black 35%, rgba(0,0,0,0.6) 70%, transparent 92%);
+            /* Mặt nạ làm mờ sương tạo dốc giảm mượt mà về phía dưới, triệt tiêu sao hoàn toàn ở chân trang */
+            mask-image: linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 65%, transparent 90%);
+            -webkit-mask-image: linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 65%, transparent 90%);
         }
 
-        /* Lớp sao nhỏ: Đặt kích thước 1px x 1px thực tế để box-shadow tạo ra các điểm chấm chuẩn xác */
+        /* Lớp sao nhỏ (1px): Nhân đôi số lượng (Double Density), tập trung nhiều ở đỉnh (Y < 350) */
         .stars-glow-layer {
             position: absolute;
             top: 0;
@@ -233,16 +233,37 @@
             height: 1px;
             background: transparent;
             box-shadow: 
+                /* --- DANH SÁCH SAO BAN ĐẦU --- */
                 43px 83px rgba(255,255,255,0.95), 183px 212px rgba(255,255,255,0.85), 297px 115px #fff,
                 341px 290px rgba(255,255,255,0.95), 580px 175px #fff, 715px 95px rgba(255,255,255,0.9),
                 845px 320px #fff, 912px 145px rgba(255,255,255,0.85), 1120px 240px #fff,
                 135px 480px rgba(255,255,255,0.9), 450px 390px #fff, 620px 520px rgba(255,255,255,0.9),
                 890px 420px #fff, 1040px 600px rgba(255,255,255,0.7), 1280px 510px #fff,
                 210px 730px rgba(255,255,255,0.6), 650px 780px #fff, 1150px 690px rgba(255,255,255,0.7),
-                380px 890px rgba(255,255,255,0.5), 940px 920px rgba(255,255,255,0.45);
+                380px 890px rgba(255,255,255,0.5), 940px 920px rgba(255,255,255,0.45),
+                
+                /* --- [GHI CHÚ]: PHẦN SAO NHỎ BỔ SUNG NHÂN ĐÔI MẬT ĐỘ TẬP TRUNG PHÍA TRÊN --- */
+                95px 65px rgba(255,255,255,0.9), 210px 145px #fff, 280px 45px rgba(255,255,255,0.8),
+                395px 190px rgba(255,255,255,0.95), 490px 85px #fff, 515px 230px rgba(255,255,255,0.75),
+                612px 115px #fff, 680px 295px rgba(255,255,255,0.85), 790px 65px #fff,
+                825px 210px rgba(255,255,255,0.9), 980px 105px rgba(255,255,255,0.8), 1030px 290px #fff,
+                1190px 55px rgba(255,255,255,0.85), 1250px 185px #fff, 1310px 90px rgba(255,255,255,0.95),
+                1380px 240px rgba(255,255,255,0.7), 150px 280px #fff, 245px 315px rgba(255,255,255,0.85),
+                465px 335px rgba(255,255,255,0.9), 675px 325px #fff, 835px 345px rgba(255,255,255,0.8),
+                925px 285px rgba(255,255,255,0.75), 1145px 345px #fff, 1295px 315px rgba(255,255,255,0.85),
+                
+                /* --- [GHI CHÚ]: PHẦN SAO NHỎ BỔ SUNG MẬT ĐỘ THƯA DẦN PHÂN KHÚC GIỮA (Y: 350 - 650) --- */
+                160px 410px rgba(255,255,255,0.7), 320px 465px rgba(255,255,255,0.65), 510px 540px #fff,
+                740px 460px rgba(255,255,255,0.6), 960px 490px rgba(255,255,255,0.75), 1150px 410px #fff,
+                290px 580px rgba(255,255,255,0.5), 550px 610px rgba(255,255,255,0.55), 785px 590px #fff,
+                1015px 560px rgba(255,255,255,0.45), 1260px 630px rgba(255,255,255,0.5),
+                
+                /* --- [GHI CHÚ]: PHẦN SAO NHỎ BỔ SUNG CỰC KỲ THƯA THỚT PHÂN KHÚC DƯỚI (Y > 650) --- */
+                180px 690px rgba(255,255,255,0.4), 485px 760px rgba(255,255,255,0.3), 830px 720px rgba(255,255,255,0.35),
+                1090px 790px rgba(255,255,255,0.25), 1340px 715px rgba(255,255,255,0.3);
         }
 
-        /* Lớp sao vừa: Đặt kích thước 2px x 2px thực tế */
+        /* Lớp sao trung (2px): Nhân đôi số lượng (Double Density), tập trung nhiều ở đỉnh (Y < 350) */
         .stars-glow-layer-medium {
             position: absolute;
             top: 0;
@@ -251,10 +272,24 @@
             height: 2px;
             background: transparent;
             box-shadow: 
+                /* --- DANH SÁCH SAO BAN ĐẦU --- */
                 95px 120px rgba(255,255,255,0.95), 250px 75px #fff, 530px 210px rgba(255,255,255,0.95),
                 780px 310px #fff, 1150px 150px rgba(255,255,255,0.95), 1380px 280px #fff,
                 310px 490px rgba(255,255,255,0.85), 810px 540px rgba(255,255,255,0.8), 1210px 440px #fff,
-                140px 650px rgba(255,255,255,0.7), 620px 690px #fff, 1050px 610px rgba(255,255,255,0.6);
+                140px 650px rgba(255,255,255,0.7), 620px 690px #fff, 1050px 610px rgba(255,255,255,0.6),
+                
+                /* --- [GHI CHÚ]: PHẦN SAO TRUNG BỔ SUNG NHÂN ĐÔI MẬT ĐỘ TẬP TRUNG PHÍA TRÊN --- */
+                160px 50px rgba(255,255,255,0.95), 320px 140px #fff, 440px 95px rgba(255,255,255,0.9),
+                640px 195px rgba(255,255,255,0.85), 880px 130px #fff, 940px 230px rgba(255,255,255,0.9),
+                1090px 75px rgba(255,255,255,0.95), 1250px 115px #fff, 1340px 210px rgba(255,255,255,0.8),
+                110px 260px rgba(255,255,255,0.85), 220px 290px #fff, 480px 270px rgba(255,255,255,0.95),
+                690px 280px rgba(255,255,255,0.85), 810px 260px #fff, 1030px 275px rgba(255,255,255,0.9),
+                
+                /* --- [GHI CHÚ]: PHẦN SAO TRUNG BỔ SUNG MẬT ĐỘ THƯA DẦN PHÂN KHÚC GIỮA VÀ DƯỚI --- */
+                410px 410px rgba(255,255,255,0.75), 680px 470px rgba(255,255,255,0.7), 980px 430px #fff,
+                240px 520px rgba(255,255,255,0.65), 510px 560px rgba(255,255,255,0.6), 880px 490px #fff,
+                1140px 580px rgba(255,255,255,0.55), 1310px 530px rgba(255,255,255,0.6),
+                380px 680px rgba(255,255,255,0.5), 740px 650px rgba(255,255,255,0.4), 920px 680px rgba(255,255,255,0.45);
         }
 
         .deep-space-fade {
@@ -587,7 +622,7 @@
                             <div class="flex items-baseline">
                                 <span class="text-xl font-bold text-cyan-400">$</span>
                                 <span class="text-5xl font-extrabold tracking-tight text-white" id="ultimate-price">83.99</span>
-                                <span class="text-slate-300 ml-1.5 text-xs" id="ultimate-period">/tháng</span>
+                                <span class="text-slate-305 ml-1.5 text-xs" id="ultimate-period">/tháng</span>
                             </div>
                         </div>
 
@@ -727,7 +762,7 @@
                             <tr>
                                 <td class="p-5 font-medium text-slate-200">Kênh hỗ trợ VIP riêng tư</td>
                                 <td class="p-5 text-center text-slate-650"><i class="fa-solid fa-circle-minus"></i></td>
-                                <td class="p-5 text-center text-slate-400 bg-cyan-500/5">Cơ bản</td>
+                                <td class="p-5 text-center text-slate-405 bg-cyan-500/5">Cơ bản</td>
                                 <td class="p-5 text-center text-indigo-400 font-bold">Đặc quyền 24/7</td>
                             </tr>
                         </tbody>
@@ -754,7 +789,7 @@
                         <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-xs text-cyan-400">HA</div>
                         <div>
                             <h4 class="font-bold text-xs text-white">Hoàng Anh</h4>
-                            <p class="text-[10px] text-slate-500">Crypto Scalper</p>
+                            <p class="text-[10px] text-slate-505">Crypto Scalper</p>
                         </div>
                     </div>
                 </div>
