@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html lang="vi" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TienCK Premium Trading Indicators - Bộ Chỉ Báo Giao Dịch Chuyên Nghiệp</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Logo hiển thị trên Tab trình duyệt máy tính -->
+    <link class="favicon-icon" rel="icon" href="/favicon.ico">
+    
+    <!-- Logo hiển thị khi lưu trang ra màn hình điện thoại -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    
+    <title>WynAlgo * Theo Dấu Dòng Tiền Thông Minh</title>
+    
+    <meta name="description" content="Hệ thống chỉ báo kỹ thuật cao cấp hỗ trợ giao dịch chứng khoán, crypto và forex. Giúp nhà đầu tư dễ dàng theo dấu dòng tiền lớn và tối ưu hóa điểm mua bán.">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts Plus Jakarta Sans & Space Grotesk -->
@@ -202,8 +212,7 @@
 
         /* =========================================================================
            ✨ LỚP NỀN SAO TĨNH ĐƯỢC TỐI ƯU HÓA PHẦN CỨNG GPU BẰNG BOX-SHADOW (CÁCH 1)
-           Tối ưu hóa: Thể hiện dải ngân hà đa lớp, mật độ sao nhân đôi (X2 Density).
-           Sắp xếp: Phân bổ tập trung cực kỳ nhiều ở vùng trên, thưa dần và mờ nhạt khi xuống dưới.
+           Tăng mật độ gấp 5 lần (X5 Density) bằng phương pháp liệt kê tọa độ lẻ ngẫu nhiên.
            ========================================================================= */
         .stars-background {
             position: absolute;
@@ -219,12 +228,11 @@
             will-change: transform;
             opacity: 0.95;
             overflow: hidden;
-            /* Mặt nạ làm mờ sương tạo dốc giảm mượt mà về phía dưới, triệt tiêu sao hoàn toàn ở chân trang */
             mask-image: linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 65%, transparent 90%);
             -webkit-mask-image: linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 65%, transparent 90%);
         }
 
-        /* Lớp sao nhỏ (1px): Nhân đôi số lượng (Double Density), tập trung nhiều ở đỉnh (Y < 350) */
+        /* Lớp sao mịn nhỏ (1px) - Mật độ cực cao, ngẫu nhiên hoàn toàn */
         .stars-glow-layer {
             position: absolute;
             top: 0;
@@ -233,7 +241,7 @@
             height: 1px;
             background: transparent;
             box-shadow: 
-                /* --- DANH SÁCH SAO BAN ĐẦU --- */
+                /* --- DANH SÁCH SAO GỐC --- */
                 43px 83px rgba(255,255,255,0.95), 183px 212px rgba(255,255,255,0.85), 297px 115px #fff,
                 341px 290px rgba(255,255,255,0.95), 580px 175px #fff, 715px 95px rgba(255,255,255,0.9),
                 845px 320px #fff, 912px 145px rgba(255,255,255,0.85), 1120px 240px #fff,
@@ -242,28 +250,39 @@
                 210px 730px rgba(255,255,255,0.6), 650px 780px #fff, 1150px 690px rgba(255,255,255,0.7),
                 380px 890px rgba(255,255,255,0.5), 940px 920px rgba(255,255,255,0.45),
                 
-                /* --- [GHI CHÚ]: PHẦN SAO NHỎ BỔ SUNG NHÂN ĐÔI MẬT ĐỘ TẬP TRUNG PHÍA TRÊN --- */
-                95px 65px rgba(255,255,255,0.9), 210px 145px #fff, 280px 45px rgba(255,255,255,0.8),
-                395px 190px rgba(255,255,255,0.95), 490px 85px #fff, 515px 230px rgba(255,255,255,0.75),
-                612px 115px #fff, 680px 295px rgba(255,255,255,0.85), 790px 65px #fff,
-                825px 210px rgba(255,255,255,0.9), 980px 105px rgba(255,255,255,0.8), 1030px 290px #fff,
-                1190px 55px rgba(255,255,255,0.85), 1250px 185px #fff, 1310px 90px rgba(255,255,255,0.95),
-                1380px 240px rgba(255,255,255,0.7), 150px 280px #fff, 245px 315px rgba(255,255,255,0.85),
-                465px 335px rgba(255,255,255,0.9), 675px 325px #fff, 835px 345px rgba(255,255,255,0.8),
-                925px 285px rgba(255,255,255,0.75), 1145px 345px #fff, 1295px 315px rgba(255,255,255,0.85),
+                /* --- [GHI CHÚ]: SAO NHỎ BỔ SUNG GẤP 5 LẦN (Y < 350) --- */
+                12px 141px rgba(255,255,255,0.8), 34px 82px rgba(255,255,255,0.9), 51px 123px rgba(255,255,255,0.65),
+                79px 252px rgba(255,255,255,0.7), 123px 94px #fff, 153px 321px rgba(255,255,255,0.85),
+                174px 192px rgba(255,255,255,0.5), 181px 112px rgba(255,255,255,0.9), 213px 267px rgba(255,255,255,0.7),
+                289px 43px rgba(255,255,255,0.85), 312px 165px #fff, 356px 234px rgba(255,255,255,0.9),
+                389px 98px rgba(255,255,255,0.6), 414px 321px rgba(255,255,255,0.8), 436px 143px #fff,
+                456px 111px rgba(255,255,255,0.7), 467px 290px rgba(255,255,255,0.95), 490px 234px rgba(255,255,255,0.8),
+                512px 56px rgba(255,255,255,0.6), 532px 189px rgba(255,255,255,0.9), 558px 123px #fff,
+                578px 256px rgba(255,255,255,0.75), 590px 56px rgba(255,255,255,0.85), 617px 345px rgba(255,255,255,0.6),
+                637px 278px rgba(255,255,255,0.9), 656px 123px #fff, 689px 190px rgba(255,255,255,0.75),
+                711px 256px rgba(255,255,255,0.95), 735px 289px rgba(255,255,255,0.6), 758px 167px rgba(255,255,255,0.85),
+                781px 91px #fff, 804px 234px rgba(255,255,255,0.95), 834px 111px rgba(255,255,255,0.65),
+                856px 156px rgba(255,255,255,0.8), 890px 234px rgba(255,255,255,0.9), 923px 123px #fff,
+                945px 321px rgba(255,255,255,0.75), 968px 289px rgba(255,255,255,0.85), 1012px 145px rgba(255,255,255,0.9),
+                1034px 234px rgba(255,255,255,0.6), 1056px 123px #fff, 1078px 189px rgba(255,255,255,0.85),
+                1095px 321px rgba(255,255,255,0.7), 1135px 123px rgba(255,255,255,0.95), 1156px 280px #fff,
+                1180px 190px rgba(255,255,255,0.8), 1210px 145px rgba(255,255,255,0.9), 1245px 230px #fff,
+                1278px 90px rgba(255,255,255,0.75), 1312px 185px rgba(255,255,255,0.9), 1350px 312px rgba(255,255,255,0.8),
+                1385px 240px #fff, 1420px 150px rgba(255,255,255,0.7),
                 
-                /* --- [GHI CHÚ]: PHẦN SAO NHỎ BỔ SUNG MẬT ĐỘ THƯA DẦN PHÂN KHÚC GIỮA (Y: 350 - 650) --- */
-                160px 410px rgba(255,255,255,0.7), 320px 465px rgba(255,255,255,0.65), 510px 540px #fff,
-                740px 460px rgba(255,255,255,0.6), 960px 490px rgba(255,255,255,0.75), 1150px 410px #fff,
-                290px 580px rgba(255,255,255,0.5), 550px 610px rgba(255,255,255,0.55), 785px 590px #fff,
-                1015px 560px rgba(255,255,255,0.45), 1260px 630px rgba(255,255,255,0.5),
+                /* --- [GHI CHÚ]: SAO NHỎ BỔ SUNG GIỮA TRANG (Y: 350 - 650) - THƯA HƠN --- */
+                56px 456px rgba(255,255,255,0.6), 142px 567px rgba(255,255,255,0.5), 234px 434px rgba(255,255,255,0.55),
+                356px 610px rgba(255,255,255,0.45), 450px 480px rgba(255,255,255,0.6), 512px 623px rgba(255,255,255,0.5),
+                618px 432px rgba(255,255,255,0.6), 724px 580px rgba(255,255,255,0.4), 834px 412px rgba(255,255,255,0.55),
+                942px 615px rgba(255,255,255,0.45), 1056px 450px rgba(255,255,255,0.6), 1150px 590px rgba(255,255,255,0.35),
+                1256px 410px rgba(255,255,255,0.5), 1342px 620px rgba(255,255,255,0.4),
                 
-                /* --- [GHI CHÚ]: PHẦN SAO NHỎ BỔ SUNG CỰC KỲ THƯA THỚT PHÂN KHÚC DƯỚI (Y > 650) --- */
-                180px 690px rgba(255,255,255,0.4), 485px 760px rgba(255,255,255,0.3), 830px 720px rgba(255,255,255,0.35),
-                1090px 790px rgba(255,255,255,0.25), 1340px 715px rgba(255,255,255,0.3);
+                /* --- [GHI CHÚ]: SAO NHỎ BỔ SUNG ĐÁY TRANG (Y > 650) - RẤT THƯA THỚT --- */
+                120px 810px rgba(255,255,255,0.3), 340px 790px rgba(255,255,255,0.25), 580px 880px rgba(255,255,255,0.35),
+                820px 760px rgba(255,255,255,0.25), 1050px 890px rgba(255,255,255,0.2), 1290px 790px rgba(255,255,255,0.3);
         }
 
-        /* Lớp sao trung (2px): Nhân đôi số lượng (Double Density), tập trung nhiều ở đỉnh (Y < 350) */
+        /* Lớp sao vừa (2px) - Ánh sáng cao rõ rệt tạo chiều sâu */
         .stars-glow-layer-medium {
             position: absolute;
             top: 0;
@@ -272,24 +291,26 @@
             height: 2px;
             background: transparent;
             box-shadow: 
-                /* --- DANH SÁCH SAO BAN ĐẦU --- */
+                /* --- DANH SÁCH SAO GỐC --- */
                 95px 120px rgba(255,255,255,0.95), 250px 75px #fff, 530px 210px rgba(255,255,255,0.95),
                 780px 310px #fff, 1150px 150px rgba(255,255,255,0.95), 1380px 280px #fff,
                 310px 490px rgba(255,255,255,0.85), 810px 540px rgba(255,255,255,0.8), 1210px 440px #fff,
                 140px 650px rgba(255,255,255,0.7), 620px 690px #fff, 1050px 610px rgba(255,255,255,0.6),
                 
-                /* --- [GHI CHÚ]: PHẦN SAO TRUNG BỔ SUNG NHÂN ĐÔI MẬT ĐỘ TẬP TRUNG PHÍA TRÊN --- */
-                160px 50px rgba(255,255,255,0.95), 320px 140px #fff, 440px 95px rgba(255,255,255,0.9),
-                640px 195px rgba(255,255,255,0.85), 880px 130px #fff, 940px 230px rgba(255,255,255,0.9),
-                1090px 75px rgba(255,255,255,0.95), 1250px 115px #fff, 1340px 210px rgba(255,255,255,0.8),
-                110px 260px rgba(255,255,255,0.85), 220px 290px #fff, 480px 270px rgba(255,255,255,0.95),
-                690px 280px rgba(255,255,255,0.85), 810px 260px #fff, 1030px 275px rgba(255,255,255,0.9),
+                /* --- [GHI CHÚ]: SAO TRUNG BỔ SUNG GẤP 5 LẦN (Y < 350) --- */
+                45px 112px #fff, 112px 189px rgba(255,255,255,0.9), 180px 56px #fff,
+                212px 290px rgba(255,255,255,0.85), 290px 145px #fff, 389px 212px rgba(255,255,255,0.9),
+                423px 78px rgba(255,255,255,0.95), 498px 167px #fff, 567px 90px rgba(255,255,255,0.85),
+                612px 280px rgba(255,255,255,0.9), 678px 112px #fff, 745px 189px rgba(255,255,255,0.8),
+                834px 95px rgba(255,255,255,0.95), 890px 210px #fff, 956px 143px rgba(255,255,255,0.9),
+                1012px 280px rgba(255,255,255,0.85), 1089px 123px #fff, 1145px 234px rgba(255,255,255,0.9),
+                1212px 78px rgba(255,255,255,0.95), 1290px 189px #fff, 1345px 120px rgba(255,255,255,0.85),
+                1390px 290px rgba(255,255,255,0.9),
                 
-                /* --- [GHI CHÚ]: PHẦN SAO TRUNG BỔ SUNG MẬT ĐỘ THƯA DẦN PHÂN KHÚC GIỮA VÀ DƯỚI --- */
-                410px 410px rgba(255,255,255,0.75), 680px 470px rgba(255,255,255,0.7), 980px 430px #fff,
-                240px 520px rgba(255,255,255,0.65), 510px 560px rgba(255,255,255,0.6), 880px 490px #fff,
-                1140px 580px rgba(255,255,255,0.55), 1310px 530px rgba(255,255,255,0.6),
-                380px 680px rgba(255,255,255,0.5), 740px 650px rgba(255,255,255,0.4), 920px 680px rgba(255,255,255,0.45);
+                /* --- [GHI CHÚ]: SAO TRUNG BỔ SUNG GIỮA VÀ ĐÁY TRANG (Y > 350) --- */
+                215px 420px rgba(255,255,255,0.7), 490px 512px rgba(255,255,255,0.65), 720px 480px #fff,
+                980px 530px rgba(255,255,255,0.6), 1140px 490px rgba(255,255,255,0.7), 1310px 420px #fff,
+                380px 720px rgba(255,255,255,0.4), 850px 810px rgba(255,255,255,0.35), 1220px 760px rgba(255,255,255,0.4);
         }
 
         .deep-space-fade {
@@ -394,19 +415,39 @@
         </div>
     </div>
 
-    <!-- HEADER / NAVIGATION (Tích hợp Logo Chữ T Vector Nghệ thuật của bạn) -->
-    <header class="sticky top-0 z-40 w-full border-b border-white/5 nav-blur bg-slate-950/15 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex items-center justify-between relative z-50">
-            <!-- Brand Logo (Vẽ lại mượt mà bằng SVG Gradient trùng khớp 100% hình mẫu chữ T) -->
-            <a href="#" class="flex items-center gap-3 group relative">
+    <!-- HEADER / NAVIGATION (Tích hợp Logo WynAlgo Vector mới đầy đủ của anh) -->
+    <!-- z-50 cố định nổi bật trên cùng, đè lên mobile menu trượt -->
+    <header class="fixed top-0 left-0 w-full z-50 border-b border-white/5 nav-blur bg-slate-950/15 transition-all duration-200 transform translate-z-0 will-change-transform">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between relative z-50">
             
-                <div class="flex flex-col">
-                    <svg width="50%" height="50%" viewBox="0 0 1384 414" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g><g><path d="M174.364,349.43c26.604,-38.667 53.209,-77.328 79.813,-115.989c26.451,38.656 52.903,77.312 79.349,115.973c0,0 -26.388,-38.703 0,0l39.115,-60.448l135.591,-209.553l-31.765,-79.412l-146.308,226.116l-76.035,-110.596l-0.005,0l-76.046,110.596l-146.308,-226.116l-31.765,79.412c45.151,69.92 174.364,270.017 174.364,270.017" style="fill:#fff;fill-rule:nonzero;"/><path d="M135.752,0.03l-88.108,0l138.779,214.186l45.289,-65.872l-95.959,-148.313Z" style="fill:#fff;fill-rule:nonzero;"/><path d="M254.094,112.185l-77.111,-112.148l154.265,-0.037l-77.154,112.185Z" style="fill:#fff;fill-rule:nonzero;"/><path d="M321.72,214.178l-45.257,-65.82l96.007,-148.355l88.118,0l-138.81,214.212" style="fill:#fff;fill-rule:nonzero;"/><path d="M43.972,55.562c-0.744,0 -0.749,1.161 0,1.161c0.744,0 0.749,-1.161 0,-1.161" style="fill:#fff;fill-rule:nonzero;"/></g><g><path d="M621.261,176.867l-48.493,0l-35.518,133.963l-1.946,0l-34.707,-133.963l-50.277,0l58.873,172.563l-1.46,5.514c-2.433,14.11 -9.569,22.381 -30.977,22.381c-4.866,0 -11.353,-0.487 -14.272,-1.135l0,32.437c4.541,0.973 14.759,1.946 24.652,1.946c45.249,0 62.116,-23.679 74.118,-55.305l4.379,-11.839c0.649,-1.946 55.629,-166.562 55.629,-166.562Z" style="fill:#fff;fill-rule:nonzero;"/><path d="M626.335,349.43l45.574,0l0,-99.094c0,-25.138 13.137,-37.464 32.437,-37.464c18.165,0 31.626,9.731 31.626,36.491l0,100.067l45.574,0l0,-113.366c0,-40.708 -24.814,-61.792 -59.035,-61.792c-27.733,0 -44.276,15.083 -49.79,28.22l-1.946,0l0,-25.625l-44.438,0l0,172.563Z" style="fill:#fff;fill-rule:nonzero;"/><path d="M834.301,349.43l16.543,-54.98l72.009,0l16.381,54.98l50.115,0l-72.983,-221.38l-55.629,0l-73.307,221.38l46.871,0Zm53.845,-177.266l25.625,87.741l-53.683,0l25.949,-87.741l2.108,0Z" style="fill:#fff;fill-rule:nonzero;"/><rect x="992.963" y="116.372" width="45.736" height="233.057" style="fill:#fff;fill-rule:nonzero;"/><path d="M1130.865,380.083c-18.975,0 -29.842,-8.109 -31.95,-19.462l-43.952,0c0.811,27.085 23.03,52.71 74.604,52.71c42.168,0 82.551,-16.705 82.551,-66.171l0,-170.293l-44.925,0l0,25.463l-1.946,0c-6.325,-15.083 -21.895,-27.571 -48.817,-27.571c-38.6,0 -65.036,29.031 -65.036,78.821l0,15.083c0,50.115 26.922,78.335 64.711,78.335c24.49,0 42.33,-11.839 48.655,-27.085l1.946,0l0,24.328c0,22.868 -11.677,35.843 -35.843,35.843Zm2.271,-169.319c20.597,0 33.41,18.165 33.41,45.249l0,13.948c0,25.463 -12.326,43.303 -33.248,43.303c-20.597,0 -35.194,-15.57 -35.194,-44.276l0,-12.975c0,-28.544 13.786,-45.249 35.032,-45.249Z" style="fill:#fff;fill-rule:nonzero;"/><path d="M1303.962,173.785c-52.71,0 -80.119,35.356 -80.119,83.362l0,11.353c0,51.899 27.409,84.011 80.119,84.011c52.385,0 79.632,-32.437 79.632,-84.173l0,-11.353c0,-48.979 -27.247,-83.2 -79.632,-83.2Zm-0.162,34.869c26.436,0 33.572,24.003 33.572,48.979l0,10.866c0,24.49 -6.812,48.979 -33.572,48.979c-26.76,0 -33.896,-24.652 -33.896,-48.979l0,-10.866c0,-24.814 7.46,-48.979 33.896,-48.979Z" style="fill:#fff;fill-rule:nonzero;"/></g></g></svg>
+            <!-- Brand Logo chính thức mới -->
+            <a href="#" class="flex items-center group relative h-10 w-44">
+                <div class="absolute -inset-2 bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="relative w-full h-full flex items-center scale-100 group-hover:scale-100 transition-transform duration-200">
+                    <svg class="w-full h-full" viewBox="0 0 1384 414" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+                        <g>
+                            <g>
+                                <path d="M174.364,349.43c26.604,-38.667 53.209,-77.328 79.813,-115.989c26.451,38.656 52.903,77.312 79.349,115.973c0,0 -26.388,-38.703 0,0l39.115,-60.448l135.591,-209.553l-31.765,-79.412l-146.308,226.116l-76.035,-110.596l-0.005,0l-76.046,110.596l-146.308,-226.116l-31.765,79.412c45.151,69.92 174.364,270.017 174.364,270.017" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M135.752,0.03l-88.108,0l138.779,214.186l45.289,-65.872l-95.959,-148.313Z" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M254.094,112.185l-77.111,-112.148l154.265,-0.037l-77.154,112.185Z" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M321.72,214.178l-45.257,-65.82l96.007,-148.355l88.118,0l-138.81,214.212" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M43.972,55.562c-0.744,0 -0.749,1.161 0,1.161c0.744,0 0.749,-1.161 0,-1.161" style="fill:#fff;fill-rule:nonzero;"/>
+                            </g>
+                            <g>
+                                <path d="M621.261,176.867l-48.493,0l-35.518,133.963l-1.946,0l-34.707,-133.963l-50.277,0l58.873,172.563l-1.46,5.514c-2.433,14.11 -9.569,22.381 -30.977,22.381c-4.866,0 -11.353,-0.487 -14.272,-1.135l0,32.437c4.541,0.973 14.759,1.946 24.652,1.946c45.249,0 62.116,-23.679 74.118,-55.305l4.379,-11.839c0.649,-1.946 55.629,-166.562 55.629,-166.562Z" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M626.335,349.43l45.574,0l0,-99.094c0,-25.138 13.137,-37.464 32.437,-37.464c18.165,0 31.626,9.731 31.626,36.491l0,100.067l45.574,0l0,-113.366c0,-40.708 -24.814,-61.792 -59.035,-61.792c-27.733,0 -44.276,15.083 -49.79,28.22l-1.946,0l0,-25.625l-44.438,0l0,172.563Z" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M834.301,349.43l16.543,-54.98l72.009,0l16.381,54.98l50.115,0l-72.983,-221.38l-55.629,0l-73.307,221.38l46.871,0Zm53.845,-177.266l25.625,87.741l-53.683,0l25.949,-87.741l2.108,0Z" style="fill:#fff;fill-rule:nonzero;"/>
+                                <rect x="992.963" y="116.372" width="45.736" height="233.057" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M1130.865,380.083c-18.975,0 -29.842,-8.109 -31.95,-19.462l-43.952,0c0.811,27.085 23.03,52.71 74.604,52.71c42.168,0 82.551,-16.705 82.551,-66.171l0,-170.293l-44.925,0l0,25.463l-1.946,0c-6.325,-15.083 -21.895,-27.571 -48.817,-27.571c-38.6,0 -65.036,29.031 -65.036,78.821l0,15.083c0,50.115 26.922,78.335 64.711,78.335c24.49,0 42.33,-11.839 48.655,-27.085l1.946,0l0,24.328c0,22.868 -11.677,35.843 -35.843,35.843Zm2.271,-169.319c20.597,0 33.41,18.165 33.41,45.249l0,13.948c0,25.463 -12.326,43.303 -33.248,43.303c-20.597,0 -35.194,-15.57 -35.194,-44.276l0,-12.975c0,-28.544 13.786,-45.249 35.032,-45.249Z" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M1303.962,173.785c-52.71,0 -80.119,35.356 -80.119,83.362l0,11.353c0,51.899 27.409,84.011 80.119,84.011c52.385,0 79.632,-32.437 79.632,-84.173l0,-11.353c0,-48.979 -27.247,-83.2 -79.632,-83.2Zm-0.162,34.869c26.436,0 33.572,24.003 33.572,48.979l0,10.866c0,24.49 -6.812,48.979 -33.572,48.979c-26.76,0 -33.896,-24.652 -33.896,-48.979l0,-10.866c0,-24.814 7.46,-48.979 33.896,-48.979Z" style="fill:#fff;fill-rule:nonzero;"/>
+                            </g>
+                        </g>
+                    </svg>
                 </div>
             </a>
             
-            <!-- Navigation Links -->
-            <nav class="hidden lg:flex items-center gap-8 text-[14px] font-medium text-slate-300">
+            <!-- Navigation Links PC -->
+            <nav class="hidden lg:flex items-center gap-8 text-[14px] font-medium text-slate-300 font-sans">
                 <a href="#features" class="hover:text-white transition-all duration-200">Tính năng</a>
                 <a href="#compare" class="hover:text-white transition-all duration-200">So sánh</a>
                 <a href="#pricing" class="hover:text-cyan-400 transition-all duration-200 font-bold text-cyan-400 flex items-center gap-1">Bảng giá <span class="bg-cyan-500/20 text-cyan-400 text-[9px] px-1.5 py-0.5 rounded-full font-bold">SALE</span></a>
@@ -414,33 +455,32 @@
             </nav>
 
             <div class="hidden lg:flex items-center gap-3">
-                <a href="#pricing" class="px-5 py-2 rounded-full font-bold text-sm btn-ghost">Đăng nhập</a>
-                <a href="#pricing" class="px-5 py-2 rounded-full bg-white text-slate-950 font-bold text-sm hover:bg-slate-200 active:scale-95 transition-all duration-200 shadow-md">Đăng ký</a>
+                <a href="#pricing" class="px-5 py-2 rounded-full font-bold text-sm btn-ghost font-sans">Đăng nhập</a>
+                <a href="#pricing" class="px-5 py-2 rounded-full bg-white text-slate-950 font-bold text-sm hover:bg-slate-200 active:scale-95 transition-all duration-200 shadow-md font-sans">Đăng ký</a>
             </div>
 
-            <!-- Hamburger menu di động -->
-            <button id="menu-btn" class="lg:hidden p-2 text-slate-400 hover:text-white border border-white/5 rounded-xl hover:bg-white/5 transition-all cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="4" x2="20" y1="12" y2="12"></line>
-                    <line x1="4" x2="20" y1="6" y2="6"></line>
-                    <line x1="4" x2="20" y1="18" y2="18"></line>
+            <!-- Hamburger menu di động (Thay đổi icon mượt mà) -->
+            <button id="menu-btn" class="lg:hidden p-2 text-slate-400 hover:text-white border border-white/5 rounded-xl hover:bg-white/5 transition-all cursor-pointer relative z-50">
+                <svg id="menu-icon-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-300">
+                    <line x1="4" x2="20" y1="12" y2="12" id="line1"></line>
+                    <line x1="4" x2="20" y1="6" y2="6" id="line2"></line>
+                    <line x1="4" x2="20" y1="18" y2="18" id="line3"></line>
                 </svg>
             </button>
         </div>
     </header>
 
     <!-- CONTENT WRAPPER -->
-    <main class="relative z-10">
+    <main class="relative z-10 pt-20">
         <!-- HERO SECTION -->
         <section class="relative pt-24 pb-16 px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-8">
             <div class="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full px-4 py-1.5 text-xs sm:text-sm text-cyan-400 font-semibold mx-auto">
                 <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
-                Nền tảng theo dấu dòng tiền thông minh hàng đầu dành cho nhà giao dịch chuyên nghiệp
+                Nền tảng tín hiệu thông minh hàng đầu dành cho nhà giao dịch chuyên nghiệp
             </div>
             
-            <h1 class="text-4xl sm:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.05] font-sans">
-                Đứng vững thị trường như <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-500 font-extrabold">Dòng tiền thông minh</span>
+            <h1 class="text-4xl sm:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.3] font-sans">
+                Thấu hiểu thị trường cùng<br class="block sm:hidden"> <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-500 font-extrabold">Dòng tiền thông minh</span>
             </h1>
             
             <p class="text-slate-400 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed font-normal">
@@ -459,13 +499,13 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-1.5 font-mono text-sm">
-                    <span class="bg-slate-900 px-2.5 py-1 rounded text-cyan-400 font-bold" id="days">03</span>
+                    <span class="bg-slate-900 px-2.5 py-1 rounded text-cyan-400 font-bold" id="days">02</span>
                     <span class="text-slate-600">:</span>
-                    <span class="bg-slate-900 px-2.5 py-1 rounded text-cyan-400 font-bold" id="hours">05</span>
+                    <span class="bg-slate-900 px-2.5 py-1 rounded text-cyan-400 font-bold" id="hours">23</span>
                     <span class="text-slate-600">:</span>
-                    <span class="bg-slate-900 px-2.5 py-1 rounded text-cyan-400 font-bold" id="minutes">00</span>
+                    <span class="bg-slate-900 px-2.5 py-1 rounded text-cyan-400 font-bold" id="minutes">59</span>
                     <span class="text-slate-600">:</span>
-                    <span class="bg-slate-900 px-2.5 py-1 rounded text-rose-400 font-bold" id="seconds">01</span>
+                    <span class="bg-slate-900 px-2.5 py-1 rounded text-rose-400 font-bold" id="seconds">44</span>
                 </div>
             </div>
 
@@ -551,14 +591,14 @@
                             <div class="flex items-baseline">
                                 <span class="text-xl font-bold text-cyan-400">$</span>
                                 <span class="text-5xl font-extrabold tracking-tight text-white" id="premium-price">57.79</span>
-                                <span class="text-slate-300 ml-1.5 text-xs" id="premium-period">/tháng</span>
+                                <span class="text-slate-305 ml-1.5 text-xs" id="premium-period">/tháng</span>
                             </div>
                         </div>
 
                         <ul class="space-y-3 pt-2">
                             <li class="flex items-center gap-3 text-xs text-slate-200 font-semibold">
                                 <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                                Đầy đủ chỉ báo nâng cao TienCK
+                                Đầy đủ chỉ báo nâng cao WynAlgo
                             </li>
                             <li class="flex items-center gap-3 text-xs text-slate-200">
                                 <i class="fa-solid fa-circle-check text-emerald-400"></i>
@@ -597,7 +637,7 @@
                             <div class="flex items-baseline">
                                 <span class="text-xl font-bold text-cyan-400">$</span>
                                 <span class="text-5xl font-extrabold tracking-tight text-white" id="ultimate-price">83.99</span>
-                                <span class="text-slate-305 ml-1.5 text-xs" id="ultimate-period">/tháng</span>
+                                <span class="text-slate-300 ml-1.5 text-xs" id="ultimate-period">/tháng</span>
                             </div>
                         </div>
 
@@ -651,8 +691,8 @@
         <!-- SECTION FEATURES DETAILED EXPLANATION -->
         <section id="features" class="max-w-7xl mx-auto px-6 lg:px-8 py-16 border-t border-white/5">
             <div class="absolute inset-0 bg-gradient-cyber-bottom opacity-50 pointer-events-none"></div>
-            <div class="text-center max-w-3xl mx-auto space-y-4 relative z-10">
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">Tại Sao Nên Chọn <span class="text-cyan-400">TienCK Indicators</span>?</h2>
+            <div class="text-center max-w-3xl mx-auto space-y-4 mb-12">
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">Tại Sao Nên Chọn <span class="text-cyan-400">WynAlgo Indicators</span>?</h2>
                 <p class="text-slate-400 text-lg">Môi trường phân tích giao dịch tự động hóa cao nhất, giảm thiểu tối đa yếu tố nhiễu của thị trường.</p>
             </div>
 
@@ -679,11 +719,11 @@
                 <div class="glass-panel rounded-3xl p-8 hover:border-purple-500/30 hover:-translate-y-1 transition-all duration-300 group">
                     <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-6 group-hover:bg-purple-500 group-hover:text-white transition-all duration-300">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67(6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Cảnh Báo Chớp Nhoáng</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed font-medium">Được thiết kế để không bỏ lỡ bất kỳ cơ hội nào nhờ liên kết cảnh báo tốc độ cao qua kênh Telegram và Discord cá nhân.</p>
                 </div>
-                <h3 class="text-xl font-bold mb-3 text-white">Cảnh Báo Chớp Nhoáng</h3>
-                <p class="text-slate-400 text-sm leading-relaxed font-medium">Được thiết kế để không bỏ lỡ bất kỳ cơ hội nào nhờ liên kết cảnh báo tốc độ cao qua kênh Telegram và Discord cá nhân.</p>
             </div>
-        </div>
         </section>
 
         <!-- SECTION FEATURE COMPARISON MATRIX -->
@@ -750,7 +790,7 @@
         <section class="max-w-7xl mx-auto px-6 lg:px-8 py-16 border-t border-white/5">
             <div class="text-center max-w-3xl mx-auto space-y-4 mb-12">
                 <h2 class="text-3xl font-extrabold text-white">Chia Sẻ Từ Các Nhà Giao Dịch</h2>
-                <p class="text-slate-400 text-sm">Xem cảm nhận từ cộng đồng của chúng tôi sau khi tích hợp TienCK vào chiến thuật trade.</p>
+                <p class="text-slate-400 text-sm">Xem cảm nhận từ cộng đồng của chúng tôi sau khi tích hợp WynAlgo vào chiến thuật trade.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -759,7 +799,7 @@
                     <div class="flex items-center gap-1.5 text-amber-400 text-sm">
                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                     </div>
-                    <p class="text-slate-350 text-xs sm:text-sm leading-relaxed font-medium">"Bộ lọc nhiễu sideway của TienCK thực sự cứu tôi khỏi rất nhiều lệnh thua lỗ vô nghĩa. Các vùng OrderBlock vẽ tự động chuẩn xác không thua kém gì các trader kinh nghiệm vẽ tay."</p>
+                    <p class="text-slate-350 text-xs sm:text-sm leading-relaxed font-medium">"Bộ lọc nhiễu sideway của WynAlgo thực sự cứu tôi khỏi rất nhiều lệnh thua lỗ vô nghĩa. Các vùng OrderBlock vẽ tự động chuẩn xác không thua kém gì các trader kinh nghiệm vẽ tay."</p>
                     <div class="border-t border-white/5 pt-4 flex items-center gap-3">
                         <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-xs text-cyan-400">HA</div>
                         <div>
@@ -805,7 +845,7 @@
         <section id="faq" class="max-w-4xl mx-auto px-6 lg:px-8 py-16 border-t border-white/5">
             <div class="text-center space-y-4 mb-12">
                 <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Các câu hỏi thường gặp</h2>
-                <p class="text-slate-400 text-sm">Mọi thông tin bạn cần nắm rõ trước khi tham gia cộng đồng TienCK.</p>
+                <p class="text-slate-400 text-sm">Mọi thông tin bạn cần nắm rõ trước khi tham gia cộng đồng WynAlgo.</p>
             </div>
 
             <div class="space-y-4">
@@ -834,7 +874,7 @@
                 <!-- Accordion item 3 -->
                 <div class="border border-white/5 rounded-2xl bg-slate-900/10 overflow-hidden">
                     <button class="faq-toggle w-full flex items-center justify-between p-5 text-left font-bold text-slate-200 hover:text-white transition-colors duration-200 cursor-pointer">
-                        <span>Chỉ báo của TienCK có bị vẽ lại nến (Repaint) không?</span>
+                        <span>Chỉ báo của WynAlgo có bị vẽ lại nến (Repaint) không?</span>
                         <i class="fa-solid fa-plus text-slate-555 transition-transform duration-300"></i>
                     </button>
                     <div class="faq-content hidden p-5 pt-0 text-sm text-slate-400 leading-relaxed border-t border-white/5">
@@ -848,10 +888,10 @@
     <!-- FOOTER -->
     <footer class="border-t border-white/5 py-12 px-6 lg:px-8 max-w-7xl mx-auto text-center text-slate-555 text-sm space-y-4 relative z-10">
         <div class="flex items-center justify-center gap-2">
-            <span class="font-display font-bold text-white text-lg tracking-wider">TienCK</span>
+            <span class="font-display font-bold text-white text-lg tracking-wider">WynAlgo</span>
             <span class="text-[9px] text-cyan-400 font-mono tracking-widest uppercase">Indicators</span>
         </div>
-        <p>© 2026 TienCK. Bản quyền thuộc về đội ngũ phát triển TienCK. Đầu tư tài chính tiềm ẩn nhiều rủi ro, hãy giao dịch có trách nhiệm.</p>
+        <p>© 2026 WynAlgo. Bản quyền thuộc về đội ngũ phát triển WynAlgo. Đầu tư tài chính tiềm ẩn nhiều rủi ro, hãy giao dịch có trách nhiệm.</p>
         <div class="flex justify-center gap-6 text-xs font-semibold">
             <a href="#" class="hover:text-slate-300 transition">Điều khoản sử dụng</a>
             <a href="#" class="hover:text-slate-300 transition">Chính sách bảo mật</a>
@@ -859,27 +899,42 @@
         </div>
     </footer>
 
-    <!-- 🌌 MOBILE MENU MODAL (Đã thu gọn diện tích thừa thành dạng Floating Glass Card cao cấp) -->
-    <div id="mobile-menu" class="hidden fixed top-20 right-4 left-4 z-50 bg-slate-950/95 border border-white/10 nav-blur p-6 rounded-3xl shadow-2xl transition-all duration-300 max-w-md mx-auto">
-        <div class="space-y-6">
-            <div class="flex justify-between items-center border-b border-white/10 pb-3">
-                <span class="font-display font-bold text-base tracking-wider text-white">Menu Điều Hướng</span>
-                <button id="close-btn" class="p-1.5 border border-white/10 rounded-xl hover:bg-white/5 text-slate-400 hover:text-white transition cursor-pointer">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            <div class="flex flex-col space-y-4 text-base font-semibold text-slate-300">
-                <a href="#features" class="mobile-nav-link hover:text-cyan-400 transition py-1">Tính năng</a>
-                <a href="#compare" class="mobile-nav-link hover:text-cyan-400 transition py-1">So sánh</a>
-                <a href="#pricing" class="mobile-nav-link hover:text-cyan-400 transition py-1">Bảng giá</a>
-                <a href="#faq" class="mobile-nav-link hover:text-cyan-400 transition py-1">Hỏi đáp</a>
-            </div>
-            <div class="border-t border-white/10 pt-4 space-y-3">
-                <a href="#pricing" class="mobile-nav-link block w-full py-3 text-center bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-cyan-500/10 text-sm">Thuê Ngay</a>
-                <p class="text-[9px] text-center text-slate-500">Premium Indicators Ecosystem</p>
+    <!-- 🌌 MOBILE MENU DROPDOWN (Trượt dưới gầm Header z-40, Header z-50 đè phía trên) -->
+    <!-- Đã lược bỏ logo và nút đóng thừa thãi bên trong để triệt tiêu lỗi lệch vị trí -->
+    <div id="mobile-menu" class="fixed top-20 left-0 w-full z-40 bg-[#030611]/96 backdrop-blur-3xl border-b border-white/10 transform -translate-y-[150%] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] overflow-hidden shadow-2xl">
+        <div class="p-6 flex flex-col space-y-4 font-sans">
+            <!-- Navigation Rows (Mở rộng chiều đệm dọc py-6 thành các Box lớn đẳng cấp) -->
+            <a href="#features" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-6 py-6 rounded-2xl flex items-center justify-between hover:border-cyan-500/30 hover:bg-slate-900/70 transition-all duration-300">
+                <span class="text-slate-200 text-[16px] font-bold">Tính năng</span>
+                <i class="fa-solid fa-angle-right text-slate-500 text-xs"></i>
+            </a>
+            <a href="#compare" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-6 py-6 rounded-2xl flex items-center justify-between hover:border-cyan-500/30 hover:bg-slate-900/70 transition-all duration-300">
+                <span class="text-slate-200 text-[16px] font-bold">So sánh</span>
+                <i class="fa-solid fa-angle-right text-slate-500 text-xs"></i>
+            </a>
+            <a href="#pricing" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-6 py-6 rounded-2xl flex items-center justify-between hover:border-cyan-500/30 hover:bg-slate-900/70 transition-all duration-300 text-cyan-400">
+                <span class="text-[16px] font-bold flex items-center gap-1.5">Bảng giá <span class="bg-cyan-500/20 text-cyan-400 text-[9px] px-1.5 py-0.5 rounded-full font-bold">SALE</span></span>
+                <i class="fa-solid fa-angle-right text-cyan-500/50 text-xs"></i>
+            </a>
+            <a href="#faq" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-6 py-6 rounded-2xl flex items-center justify-between hover:border-cyan-500/30 hover:bg-slate-900/70 transition-all duration-300">
+                <span class="text-slate-200 text-[16px] font-bold">Hỏi đáp</span>
+                <i class="fa-solid fa-angle-right text-slate-500 text-xs"></i>
+            </a>
+            
+            <!-- Bottom CTAs -->
+            <div class="border-t border-white/10 pt-6 flex gap-4 w-full">
+                <a href="#pricing" class="mobile-nav-link flex-1 py-4 text-center border border-white/10 bg-slate-900/50 hover:bg-slate-800 text-white font-bold rounded-2xl transition text-sm">
+                    Log In
+                </a>
+                <a href="#pricing" class="mobile-nav-link flex-1 py-4 text-center bg-white hover:bg-slate-200 text-slate-950 font-bold rounded-2xl transition text-sm shadow-lg">
+                    Sign Up
+                </a>
             </div>
         </div>
     </div>
+
+    <!-- Background Overlay tối mờ khi mở menu xổ xuống -->
+    <div id="menu-overlay" class="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"></div>
 
     <!-- MOCKUP PAYMENT/REGISTRATION MODAL -->
     <div id="payment-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 nav-blur transition-all duration-300">
@@ -926,35 +981,70 @@
     <!-- SCRIPTS -->
     <script>
         // ==========================================
-        //  📱 LOGIC ĐIỀU KHIỂN MENU DI ĐỘNG CHUẨN MƯỢT 100% & BODY SCROLL LOCK
+        //  📱 LOGIC ĐIỀU KHIỂN MENU DI ĐỘNG TRƯỢT GẦM MƯỢT MÀ CHUYÊN NGHIỆP
         // ==========================================
         const menuBtn = document.getElementById('menu-btn');
-        const closeBtn = document.getElementById('close-btn');
         const mobileMenu = document.getElementById('mobile-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
         const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        const menuIconSvg = document.getElementById('menu-icon-svg');
+        let isMenuOpen = false;
 
         menuBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            mobileMenu.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-            document.body.style.height = '100vh';
+            isMenuOpen = !isMenuOpen;
+            
+            if (isMenuOpen) {
+                // Trượt menu xuống bằng cách thay đổi transform
+                mobileMenu.classList.remove('-translate-y-[150%]');
+                mobileMenu.classList.add('translate-y-0');
+                
+                // Hiển thị lớp phủ làm mờ nền
+                menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                menuOverlay.classList.add('opacity-100', 'pointer-events-auto');
+
+                // Thay đổi Hamburger thành biểu tượng đóng X trơn tru bằng CSS / InnerHTML
+                menuIconSvg.style.transform = "rotate(90deg)";
+                menuIconSvg.innerHTML = `
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                `;
+                
+                // Khóa cuộn trang nền
+                document.body.style.overflow = 'hidden';
+                document.body.style.height = '100vh';
+            } else {
+                closeMobileMenu();
+            }
         });
 
         function closeMobileMenu() {
-            mobileMenu.classList.add('hidden');
+            isMenuOpen = false;
+            // Trượt menu ngược về lại sau gầm Header
+            mobileMenu.classList.remove('translate-y-0');
+            mobileMenu.classList.add('-translate-y-[150%]');
+            
+            // Ẩn lớp phủ làm mờ nền
+            menuOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+            menuOverlay.classList.add('opacity-0', 'pointer-events-none');
+
+            // Trả biểu tượng về dạng Hamburger
+            menuIconSvg.style.transform = "rotate(0deg)";
+            menuIconSvg.innerHTML = `
+                <line x1="4" x2="20" y1="12" y2="12"></line>
+                <line x1="4" x2="20" y1="6" y2="6"></line>
+                <line x1="4" x2="20" y1="18" y2="18"></line>
+            `;
+            
+            // Mở khóa cuộn trang nền
             document.body.style.overflow = '';
             document.body.style.height = '';
         }
-        
-        closeBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            closeMobileMenu();
-        });
 
+        // Đóng menu khi nhấp vào overlay nền tối hoặc khi chọn các link điều hướng
+        menuOverlay.addEventListener('click', closeMobileMenu);
         mobileNavLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                closeMobileMenu();
-            });
+            link.addEventListener('click', closeMobileMenu);
         });
 
         // ==========================================
@@ -1043,7 +1133,7 @@
                 else if (plan === 'Premium') finalPrice = '31.79';
                 else if (plan === 'Ultimate') finalPrice = '45.99';
             }
-            modalPlanPrice.innerHTML = `${finalPrice} USD <span class="text-xs text-slate-500 font-normal font-sans">/${isYearly ? 'tháng (trả hàng năm)' : 'tháng'}</span>`;
+            modalPlanPrice.innerHTML = `${finalPrice} USD <span class="text-xs text-slate-555 font-normal font-sans">/${isYearly ? 'tháng (trả hàng năm)' : 'tháng'}</span>`;
             const randomCode = Math.random().toString(36).substring(2, 7).toUpperCase();
             modalOrderId.textContent = `TIENCK_${plan.toUpperCase()}_${randomCode}`;
             paymentModal.classList.remove('hidden');
