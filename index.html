@@ -100,9 +100,9 @@
 
         /* Hero: line-height này giữ hai dòng tiêu đề thoáng, không quá sát trên mobile lẫn desktop. */
         .hero-title {
-            /* clamp(Kích_thước_nhỏ_nhất, Kích_thước_tự_co_giãn, Kích_thước_lớn_nhất) */
+            /* clamp(Kích_thước_nhỏ_nhất, Kích_thước_tự_co_giãn, Kích_thước_lớn_nhất), thay đổi line height chỉ thay đổi trên di động */
             font-size: clamp(2.1rem, 5.8vw + 0.5rem, 4.5rem);
-            line-height: 3.35;
+            line-height: 1.25;
         }
 
         @media (min-width: 640px) {
