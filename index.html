@@ -553,19 +553,6 @@
     <main class="relative z-10 pt-20">
         <!-- HERO SECTION -->
         <section class="relative pt-24 pb-16 px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-7 sm:space-y-8">
-            
-            <!-- Hero headline: chỉnh line-height trong .hero-title nếu sau này anh đổi câu headline dài hơn. -->
-            <!--h1 class="text-4xl sm:text-7xl font-extrabold tracking-normal text-white max-w-5xl mx-auto hero-title font-sans">
-                Thấu hiểu thị trường cùng<br class="block sm:hidden"> <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-500 font-extrabold">Dòng tiền thông minh</span>
-        </h1-->
-            <!--h1 class="hero-fluid-title font-extrabold tracking-tight text-white max-w-5xl mx-auto hero-title font-sans">
-                Thấu hiểu thị trường cùng<br class="block sm:hidden"> 
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-500 font-extrabold">Dòng tiền thông minh</span>
-            </h1-->
-            <!--h1 class="hero-fluid-title font-extrabold tracking-tight text-white max-w-5xl mx-auto hero-title font-sans text-3xl sm:text-5xl md:text-6xl leading-tight sm:leading-normal">
-                Thấu hiểu thị trường như<br> 
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-500 font-extrabold">Dòng tiền thông minh</span>
-        </h1-->
             <h1 class="hero-fluid-title font-extrabold tracking-tight text-white max-w-5xl mx-auto hero-title font-sans">
                 Thấu hiểu thị trường như<br> 
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-500 font-extrabold">Dòng tiền thông minh</span>
@@ -615,7 +602,6 @@
         <!-- SECTION PRICING CARDS -->
         <section id="pricing" class="max-w-7xl mx-auto px-6 lg:px-8 py-8 relative z-10">
             <div class="flex overflow-x-auto lg:grid lg:grid-cols-3 gap-6 lg:gap-8 items-stretch relative -mx-6 px-6 lg:mx-0 lg:px-0 snap-x snap-mandatory scroll-smooth pt-8 pb-6 lg:pb-0 no-scrollbar">
-                <!-- TODO PRICING: Đổi tên gói, giá tháng/năm và quyền lợi tại các card bên dưới, đồng thời cập nhật bảng giá trong script cuối file. -->
                 <!-- Plan 1: Starter -->
                 <div class="pricing-card flex-shrink-0 w-[85vw] sm:w-[360px] lg:w-auto snap-center border border-teal-500/20 rounded-3xl p-8 bg-slate-950/40 hover:border-teal-400/40 hover:shadow-[0_0_30px_-5px_rgba(20,184,166,0.15)] transition-all duration-300 flex flex-col justify-between">
                     <div class="space-y-4">
@@ -980,7 +966,6 @@
             <span class="text-[9px] text-cyan-400 font-sans tracking-normal uppercase">Indicators</span>
         </div>
         <p>© 2026 WynAlgo. Bản quyền thuộc về đội ngũ phát triển WynAlgo. Đầu tư tài chính tiềm ẩn nhiều rủi ro, hãy giao dịch có trách nhiệm.</p>
-        <!-- TODO LEGAL: Thay # bằng link thật khi anh có trang Điều khoản và Chính sách bảo mật. -->
         <div class="flex justify-center gap-6 text-xs font-semibold">
             <a href="#" class="hover:text-slate-300 transition">Điều khoản sử dụng</a>
             <a href="#" class="hover:text-slate-300 transition">Chính sách bảo mật</a>
@@ -988,8 +973,32 @@
         </div>
     </footer>
 
-    <!-- MOBILE MENU: Dropdown trượt xuống dưới header, không lặp lại logo để tránh lệch vị trí. -->
-    <div id="mobile-menu" role="navigation" aria-labelledby="mobile-menu-title" aria-hidden="true" class="fixed top-[83px] left-0 right-0 z-30 bg-[#030611]/98 backdrop-blur-3xl border-b border-white/5 shadow-2xl shadow-black/30 px-7 sm:px-8 py-6 flex flex-col gap-4 transition-all duration-300 ease-out opacity-0 pointer-events-none invisible -translate-y-4 overflow-y-auto max-h-[calc(100dvh-83px)]">
+    <!-- LỚP PHỦ NỀN ĐỒNG BỘ CHO DI ĐỘNG KHI MỞ MENU -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-slate-950/40 z-20 opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"></div>
+
+    <!-- 📱 MOBILE MENU: Dropdown trượt xuống ngay dưới header 
+         ĐÃ CHỈNH SỬA: Thay đổi hoàn toàn lớp nền 'bg-[#030611]/80 backdrop-blur-xl' 
+         Thành 'nav-blur bg-slate-950/15' để khớp chính xác 100% với header (blur(12px) và opacity 15%) -->
+    <div 
+        id="mobile-menu"
+        role="navigation"
+        aria-labelledby="mobile-menu-title"
+        aria-hidden="true"
+        class="fixed top-[83px] left-0 right-0 z-30
+        nav-blur bg-slate-950/15
+        border-b border-white/5
+        shadow-2xl shadow-black/30
+        px-7 sm:px-8 py-6
+        flex flex-col gap-4
+        transition-[opacity,transform]
+        duration-300
+        ease-out
+        opacity-0
+        pointer-events-none
+        invisible
+        -translate-y-4
+        overflow-y-auto
+        max-h-[calc(100dvh-83px)]">
         <h2 id="mobile-menu-title" class="sr-only">Menu điều hướng WynAlgo</h2>
 
         <!-- MIDDLE NAVIGATION ROWS (Lux-style Grid Rows with Direction Arrows) -->
@@ -1041,7 +1050,6 @@
                 <p class="text-sm text-slate-400">Bạn đã chọn thuê gói <span id="modal-plan-name" class="text-cyan-400 font-bold">Premium</span></p>
             </div>
 
-            <!-- TODO PAYMENT: Thay ảnh QR placeholder bằng QR ngân hàng thật hoặc QR động từ cổng thanh toán. -->
             <div class="bg-slate-950 p-4 rounded-2xl border border-white/5 text-center space-y-4">
                 <div class="mx-auto w-36 h-36 bg-slate-900 rounded-xl p-2 flex items-center justify-center border border-white/5">
                     <img id="qr-image" src="https://placehold.co/150x150/040815/06b6d4?text=QR+PAYMENT" alt="QR Thanh toán" class="w-full h-full object-cover rounded-lg">
@@ -1053,7 +1061,6 @@
                         <span id="modal-plan-price-period" class="text-xs text-slate-500 font-normal font-sans">/tháng</span>
                     </p>
                 </div>
-                <!-- TODO BANK: Cập nhật ngân hàng, số tài khoản, chủ tài khoản nếu anh đổi tài khoản nhận tiền. -->
                 <div class="text-left space-y-1.5 text-xs text-slate-300 border-t border-white/5 pt-3">
                     <p>🏦 <strong>Ngân hàng:</strong> Techcombank</p>
                     <p>💳 <strong>Số tài khoản:</strong> 19028384819002</p>
@@ -1075,9 +1082,8 @@
     <!-- SCRIPTS -->
     <script>
         // ==========================================
-        // CONFIG DỄ CHỈNH SAU NÀY
+        // CONFIG DỄ CHỈNH SỬA BẢNG GIÁ
         // ==========================================
-        // TODO PRICE: Đổi giá ở đây khi anh thay bảng giá. Mỗi gói gồm giá tháng, giá năm và giá gạch ngang.
         const PLAN_PRICES = {
             Starter: {
                 monthly: '29.99',
@@ -1099,8 +1105,6 @@
             },
         };
 
-        // TODO SALE: Điền dạng '2026-06-30T23:59:59+07:00' nếu muốn countdown kết thúc ở ngày cố định.
-        // Để trống thì countdown luôn chạy 3 ngày kể từ lúc người dùng mở trang.
         const OFFER_END_DATE = '';
 
         const ACTIVE_BILLING_CLASS = 'flex-1 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-white bg-white/10 border border-white/10 shadow-md';
@@ -1116,18 +1120,25 @@
             document.body.style.height = '';
         }
 
-        // ==========================================
-        // MOBILE MENU: mở/đóng menu trên màn hình nhỏ
-        // ==========================================
+        // =========================================================
+        // MOBILE MENU: Mở/đóng menu tích hợp Overlay và mượt mà hóa
+        // =========================================================
         const menuBtn = document.getElementById('menu-btn');
         const menuIconOpen = document.getElementById('menu-icon-open');
         const menuIconClose = document.getElementById('menu-icon-close');
         const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
         const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
 
         function openMobileMenu() {
             mobileMenu.classList.remove('opacity-0', 'pointer-events-none', 'invisible', '-translate-y-4');
             mobileMenu.classList.add('opacity-100', 'pointer-events-auto', 'visible', 'translate-y-0');
+            
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                mobileMenuOverlay.classList.add('opacity-100', 'pointer-events-auto');
+            }
+            
             menuBtn.setAttribute('aria-expanded', 'true');
             menuBtn.setAttribute('aria-label', 'Đóng menu điều hướng');
             mobileMenu.setAttribute('aria-hidden', 'false');
@@ -1138,6 +1149,12 @@
         function closeMobileMenu(restoreFocus = false) {
             mobileMenu.classList.add('opacity-0', 'pointer-events-none', 'invisible', '-translate-y-4');
             mobileMenu.classList.remove('opacity-100', 'pointer-events-auto', 'visible', 'translate-y-0');
+            
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.classList.add('opacity-0', 'pointer-events-none');
+                mobileMenuOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+            
             menuBtn.setAttribute('aria-expanded', 'false');
             menuBtn.setAttribute('aria-label', 'Mở menu điều hướng');
             mobileMenu.setAttribute('aria-hidden', 'true');
@@ -1160,6 +1177,13 @@
                 closeMobileMenu(false);
             });
         });
+
+        // Đóng menu di động khi nhấn vào lớp phủ (Overlay) bên ngoài
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', function() {
+                closeMobileMenu(false);
+            });
+        }
 
         // ==========================================
         // BILLING SWITCHER: đổi giá giữa tháng và năm
@@ -1240,7 +1264,6 @@
                 window.crypto.getRandomValues(bytes);
                 return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('').toUpperCase();
             }
-
             return Date.now().toString(36).slice(-6).toUpperCase();
         }
 
@@ -1298,7 +1321,6 @@
         (function() {
             function getTargetDate() {
                 if (OFFER_END_DATE) return new Date(OFFER_END_DATE);
-
                 const rollingDate = new Date();
                 rollingDate.setDate(rollingDate.getDate() + 3);
                 return rollingDate;
