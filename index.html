@@ -450,6 +450,63 @@
                 transition-duration: 0.001ms !important;
             }
         }
+        <!--marquee-->
+
+        .section-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .title {
+            color: #ffffff;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 3px;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            background-color: #0a192f;
+            border-top: 1px solid #334a66;
+            border-bottom: 1px solid #334a66;
+            padding: 20px 0;
+            cursor: default;
+            /* Đã tăng vùng mờ từ 10% lên 25% để chữ biến mất dần lâu hơn */
+            mask-image: linear-gradient(to right, transparent, black 25%, black 75%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 25%, black 75%, transparent);
+        }
+
+        .marquee-track {
+            display: flex;
+            white-space: nowrap;
+            animation: marquee-scroll 50s linear infinite;
+            width: max-content;
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        .keyword {
+            color: #a0aab8;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin: 0 80px;
+            text-transform: uppercase;
+        }
+
+        @keyframes marquee-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-66%); }
+        }
+
     </style>
 </head>
 <body id="top" class="antialiased">
@@ -598,6 +655,30 @@
                 </div>
             </div>
         </section>
+
+        <!--DẢI MARQUEE CHẠY NGANG-->
+        <div class="section-wrapper">
+        <h2 class="title">✦ CÁC THỊ TRƯỜNG HỖ TRỢ ✦</h2>
+        <div class="marquee-container">
+            <div class="marquee-track">
+                <span class="keyword">✦ CHỈ SỐ</span>
+                <span class="keyword">✦ CỔ PHIẾU</span>
+                <span class="keyword">✦ CRYPTO</span>
+                <span class="keyword">✦ HÀNG HÓA</span>
+                <span class="keyword">✦ FOREX</span>
+                <span class="keyword">✦ CHỈ SỐ</span>
+                <span class="keyword">✦ CỔ PHIẾU</span>
+                <span class="keyword">✦ CRYPTO</span>
+                <span class="keyword">✦ HÀNG HÓA</span>
+                <span class="keyword">✦ FOREX</span>
+                <span class="keyword">✦ CHỈ SỐ</span>
+                <span class="keyword">✦ CỔ PHIẾU</span>
+                <span class="keyword">✦ CRYPTO</span>
+                <span class="keyword">✦ HÀNG HÓA</span>
+                <span class="keyword">✦ FOREX</span>
+            </div>
+        </div>
+    </div>
 
         <!-- SECTION PRICING CARDS -->
         <section id="pricing" class="max-w-7xl mx-auto px-6 lg:px-8 py-8 relative z-10">
