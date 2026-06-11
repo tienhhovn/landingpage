@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <!-- Logo hiển thị trên Tab trình duyệt máy tính -->
-    <link rel="icon" type="image/png" sizes="32x32" href="WynAlgo32.png">
+    <link class="favicon-icon" rel="icon" href="WynAlgo32.png">
     
     <!-- Logo hiển thị khi lưu trang ra màn hình điện thoại -->
     <link class="apple-touch-icon" href="WynAlgo32.png">
     
-    <title>Theo Dấu Dòng Tiền Thông Minh</title>
+    <title>WynAlgo - Theo Dấu Dòng Tiền Thông Minh</title>
     
     <meta name="description" content="Hệ thống chỉ báo kỹ thuật cao cấp hỗ trợ giao dịch chứng khoán, crypto và forex. Giúp nhà đầu tư dễ dàng theo dấu dòng tiền lớn và tối ưu hóa điểm mua bán.">
     <meta name="theme-color" content="#030611">
@@ -127,7 +127,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 750px; /* Điều chỉnh để cực quang kết thúc gần khu vực marquee */
+            height: 690px; /* Điều chỉnh để cực quang kết thúc gần khu vực marquee */
             pointer-events: none;
             z-index: 0; 
             overflow: hidden;
@@ -159,7 +159,7 @@
 
         .curtain-1 {
             left: 2%;
-            background: linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.45) 30%, rgba(20, 184, 166, 0.6) 50%, rgba(6, 182, 212, 0.35) 70%, transparent 100%);
+            background: linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.45) 30%, rgba(20, 184, 166, 0.8) 50%, rgba(6, 182, 212, 0.35) 70%, transparent 100%);
             animation: wave-movement-1 20s infinite ease-in-out alternate;
         }
 
@@ -170,6 +170,12 @@
             animation-delay: -3s;
         }
 
+        .curtain-22 {
+            left: 55%;
+            background: linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.45) 30%, rgba(20, 184, 166, 0.8) 50%, rgba(6, 182, 212, 0.35) 70%, transparent 100%);
+            animation: wave-movement-1 40s infinite ease-in-out alternate;
+        }
+        
         .curtain-3 {
             left: 60%;
             background: linear-gradient(90deg, transparent 0%, rgba(20, 184, 166, 0.3) 20%, rgba(6, 182, 212, 0.5) 45%, rgba(168, 85, 247, 0.4) 75%, transparent 100%);
@@ -242,24 +248,6 @@
         .wisp {
             position: absolute;
             mix-blend-mode: screen;
-        }
-
-        .wisp-1 {
-            top: -5%;
-            left: 25%;
-            width: 80%;
-            height: 380px;
-            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.28) 0%, rgba(240, 246, 255, 0.08) 25%, rgba(6, 182, 212, 0.02) 50%, transparent 75%);
-            transform: rotate(-3deg) scaleY(0.5);
-        }
-
-        .wisp-2 {
-            top: 28%;
-            left: 30%;
-            width: 70%;
-            height: 340px;
-            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.26) 0%, rgba(224, 242, 254, 0.07) 30%, rgba(99, 102, 241, 0.02) 55%, transparent 75%);
-            transform: rotate(4deg) scaleY(0.45);
         }
 
         /* =========================================================================
@@ -384,6 +372,7 @@
                 1602px 805px rgba(255,255,255,0.3),1665px 842px rgba(255,255,255,0.25),1642px 878px rgba(255,255,255,0.3),1618px 826px rgba(255,255,255,0.28);
         }
 
+      
         /* Tùy chỉnh kính mờ Menu */
         .nav-blur {
             backdrop-filter: blur(12px);
@@ -502,7 +491,7 @@
         }
 
         .marquee-container {
-            width: 100%;
+            width: 92%;
             overflow: hidden;
             background-color: #070f2b;
             border-top: 1px solid #334a66;
@@ -528,9 +517,9 @@
         .keyword {
             color: #a0aab8;
             font-size: 1rem;
-            font-weight: 400;
-            letter-spacing: 2px;
-            margin: 0 80px;
+            font-weight: 500; /* độ đậm */
+            letter-spacing: 1px;
+            margin: 0 60px;
             text-transform: uppercase;
         }
 
@@ -538,6 +527,105 @@
             from { transform: translateX(0); }
             to { transform: translateX(-66%); }
         }
+        
+        /* =========================================================================
+   ⚡ NÚT NHẬN 30 NGÀY MIỄN PHÍ - HIỆU ỨNG VIỀN XOAY CONIC GRADIENT
+   ========================================================================= */
+
+/* 1. Khung bọc ngoài (Wrapper): Xử lý xoay màu và tạo viền */
+.rotating-border-wrapper {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 9999px; 
+    background: transparent;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    text-decoration: none; /* Đảm bảo không bị gạch chân khi dùng thẻ <a> */
+    box-shadow: 0 0 20px -5px rgba(6, 182, 212, 0.6);
+}
+
+/* Hiệu ứng phóng to nhẹ & tăng độ sáng bóng khi hover/touch */
+.rotating-border-wrapper:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 
+        0 0 25px rgba(6, 182, 212, 0.9); /* Vầng sáng phát quang tỏa đều 360 độ */
+}
+
+/* Lớp mặt nạ đục rỗng ruột viền cực kỳ thanh lịch để lộ nền thật ở phía sau */
+.rotating-border-glow-layer {
+    position: absolute;
+    inset: -1.5px; /* Đẩy nhẹ ra ngoài mép nút chỉ 1.2px cực kỳ thanh lịch */
+    padding: 1.2px; /* Viền siêu mảnh mang tính thẩm mỹ cao */
+    border-radius: 9999px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+
+    /* Đục rỗng phần ruột bằng công nghệ mặt nạ loại trừ */
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+/* Tạo dải màu chuyển động chạy tròn phía sau lớp mặt nạ */
+.rotating-border-gradient {
+    position: absolute;
+    width: 135%;
+    height: 135%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(
+        from 0deg, 
+        #67e8f9, /* Xanh Cyan 06b6d4*/
+        #7c3aed, /* Tím huyền ảo a855f7*/
+        #34d399, /* Xanh Emerald 10b981*/
+        #67e8f9  
+    );
+    /* 👇 TỐC ĐỘ XOAY VIỀN: 4.5s xoay mượt mà, càng nhỏ xoay càng nhanh */
+    animation: rotate-border-gradient 4.5s linear infinite;
+}
+
+@keyframes rotate-border-gradient {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* 2. Phần nút nội dung phía bên trong che khuất lõi gradient tạo hiệu ứng viền phát sáng */
+.rotating-border-btn {
+    position: relative;
+    z-index: 2;
+    /* 👇 Nền tối mờ trong suốt (Glassmorphism) hòa quyện mây tinh vân phía sau */
+    background: rgba(28, 28, 30, 0.15) ; /* rgba(7, 15, 43, 0.3) đến rgba(28, 28, 30, 0.50) */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Sợi chỉ trắng siêu mỏng định hình khung */
+    color: #e5e7eb;
+    padding: 8px 22px; /* ĐỔI KHOẢNG CÁCH ĐỆM (Size nút): py-4 (trên dưới) và px-8 (trái phải) */
+    border-radius: 9999px; /* Đồng bộ độ bo tròn với wrapper */
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Đổi màu nền nút tối sẫm hơn một chút khi hover */
+.rotating-border-btn:hover {
+    background-color: rgba(7, 15, 43, 0.9);
+    color: #e5e7eb;
+}
+        
     </style>
 </head>
 <body id="top" class="antialiased">
@@ -557,19 +645,16 @@
         </defs>
     </svg>
 
-    <!-- 🌌 ĐỒ HỌA NỀN CỰC QUANG VÀ KHÔNG GIAN ĐÊM (Cố định ở khu vực Hero 980px đầu tiên) <div class="aurora-curtain curtain-4"></div> -->
+    <!-- 🌌 ĐỒ HỌA NỀN CỰC QUANG VÀ KHÔNG GIAN ĐÊM (Cố định ở khu vực Hero 980px đầu tiên) -->
     <div class="cosmic-background">
         <div class="aurora-container">
             <div class="aurora-curtain curtain-1"></div>
             <div class="aurora-curtain curtain-2"></div>
             <div class="aurora-curtain curtain-3"></div>
-           
         </div>
         
         <div class="nebula-wisps">
             <div class="central-bloom-glow"></div>
-            <div class="wisp wisp-1"></div>
-            <div class="wisp wisp-2"></div>
         </div>
 
         <div class="stars-background">
@@ -638,44 +723,39 @@
 
     <!-- CONTENT WRAPPER -->
     <main class="relative z-10 pt-20">
-        <!-- HERO SECTION (Chỉ phần này có dải cực quang động ) #FFFFFF,#67E8F9,#3B82F6,,#0623EF-->
+        <!-- HERO SECTION (Chỉ phần này có dải cực quang động) #436fff #1bd1d7 [linear-gradient(180deg,rgba(59,171,246,1)_0%,rgba(59,171,246,1)_35%,rgba(103,232,249,1)_45%,rgba(255,255,255,1)_50%,rgba(103,232,249,1)_55%,rgba(59,130,246,1)_65%,rgba(25,83,255,1)_100%)]-->
         <section class="relative pt-24 pb-16 px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-7 sm:space-y-8">
             <h1 class="hero-fluid-title font-extrabold tracking-tight text-white max-w-5xl mx-auto hero-title font-sans">
                 Thấu hiểu thị trường như<br> 
-                <!--span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-violet-500 font-extrabold">Dòng tiền thông minh</span> <br-->
-                <span class="text-transparent bg-clip-text bg-[linear-gradient(180deg,#3BabF6_0%,#3BabF6_35%,#67E8F9_45%,#FFFFFF_50%,#67E8F9_55%,#3B82F6_65%,#2563EB_100%)]">Dòng Tiền Thông Minh</span><br>
+                <span class="text-transparent bg-clip-text font-extrabold bg-[linear-gradient(180deg,rgba(59,171,246,1)_0%,rgba(59,171,246,1)_35%,rgba(103,232,249,1)_45%,rgba(255,255,255,1)_50%,rgba(103,232,249,1)_55%,rgba(59,130,246,1)_70%,rgba(25,83,255,1)_100%)]">Dòng Tiền Thông Minh</span><br>
             </h1>
-            <p class="text-slate text-lg sm:text-xl max-w-3xl mx-auto hero-copy font-normal text-center">
-                <span class="block">Hệ thống chỉ báo được thiết kế tối ưu nhằm theo dấu dòng tiền thông minh,</span>
-                <span class="block">giúp nhận diện hành vi mua bán một cách trực quan và đa tầng.</span>
-                <span class="block">Ngừng dự đoán thị trường và bắt đầu theo chân dòng tiền lớn.</span>
+            <p class="text-slate text-xl sm:text-2xl max-w-3xl mx-auto hero-copy font-normal text-center">
+                <span class="block">Hệ thống chỉ báo kỹ thuật theo dấu dòng tiền.</span>
+                <span class="block">Ngừng dự đoán thị trường & bắt đầu theo chân dòng tiền lớn.</span>
             </p>
-
-            <!-- COUNTDOWN BANNER -->
-            <div class="max-w-xl mx-auto bg-slate-950/50 border border-white/5 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl relative z-20">
-                <div class="flex items-center gap-3">
-                    <div class="bg-amber-500/15 p-2 rounded-lg text-amber-400">
-                        <i class="fa-solid fa-bolt-lightning animate-bounce"></i>
-                    </div>
-                    <div class="text-left">
-                        <p class="text-xs text-slate-300 uppercase tracking-normal font-bold">Khuyến mãi cực đại 30%</p>
-                        <p class="text-[10px] text-slate-500">Áp dụng cho chu kỳ thanh toán năm</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-1.5 font-sans tabular-nums text-sm">
-                    <span class="bg-slate-900 px-2.5 py-1 rounded text-cyan-400 font-bold" id="days">03</span>
-                    <span class="text-slate-600">:</span>
-                    <span class="bg-slate-900 px-2.5 py-1 rounded text-cyan-400 font-bold" id="hours">05</span>
-                    <span class="text-slate-600">:</span>
-                    <span class="bg-slate-900 px-2.5 py-1 rounded text-cyan-400 font-bold" id="minutes">00</span>
-                    <span class="text-slate-600">:</span>
-                    <span class="bg-slate-900 px-2.5 py-1 rounded text-rose-400 font-bold" id="seconds">01</span>
-                </div>
-            </div>
         </section>
         
+        <div class="flex justify-center mb-10 px-6 relative z-30">
+            <a href="#pricing" class="rotating-border-wrapper" aria-label="Nhận miễn phí">
+                <!-- Khung viền xoay siêu tinh tế mảnh 1.2px có đục rỗng CSS mask -->
+                <div class="rotating-border-glow-layer">
+                    <div class="rotating-border-gradient"></div>
+                </div>
+                
+                <!-- Nút bấm mờ trong suốt (Glassmorphism) nền Slate mờ hòa vào tối không gian -->
+                <span class="rotating-border-btn">
+                    Trải nghiệm 30 ngày không rủi ro 
+                    <!-- Icon SVG Arrow Right sắc nét -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#67E8F9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                        <path d="M4 12H20"/>
+                        <path d="M15 7L20 12L15 17"/>
+                    </svg>
+                </span>
+            </a>
+        </div>          
+
         <!--DẢI MARQUEE CHẠY NGANG-->
-        <div class="section-wrapper">
+        <div class="section-wrapper mt-6">
             <h2 class="title text-xs text-slate-100 font-normal"> CÁC THỊ TRƯỜNG HỖ TRỢ </h2>
             <div class="marquee-container">
                 <div class="marquee-track">
@@ -705,108 +785,46 @@
         <section id="about-indicators" class="relative max-w-7xl mx-auto px-6 lg:px-8 py-16 z-10 overflow-hidden">
             <div class="text-center max-w-3xl mx-auto space-y-4 mb-16 relative z-10">
                 <span class="text-xs uppercase tracking-widest font-extrabold text-cyan-400 px-3 py-1 bg-cyan-950/40 border border-cyan-500/20 rounded-full">Hệ Sinh Thái WynAlgo</span>
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">Bộ Công Cụ Phân Tích <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400 font-extrabold">Dẫn Đầu Xu Hướng</span></h2>
-                <p class="text-slate-400 text-base sm:text-lg">Thay vì dự đoán mù quáng, chúng tôi mang tới cho bạn lăng kính phân tích chuyển động thực tế của các dòng tiền lớn trên thị trường.</p>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-violet-600 font-extrabold">Dẫn Đầu Xu Hướng</span></h2>
+                <p class="text-slate-400 text-base sm:text-lg">WynAlgo mang đến lăng kính phân tích chuyển động thực tế<br> của dòng tiền lớn trên thị trường.</p>
             </div>
 
             <!-- Giao diện hiển thị chi tiết 3 chỉ báo lõi kèm hình vẽ minh họa kĩ thuật độ phân giải cao -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch relative z-10">
                 
-                <!-- Chỉ báo 1: TienCK_SignalEye -->
-                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between hover:border-cyan-400/50 hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.15)] transition-all duration-300 relative z-10">
-                    <div class="space-y-6">
-                        <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-2xl border border-cyan-500/20 shadow-inner">
-                            <i class="fa-solid fa-eye"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-white mb-2 flex items-center justify-between">
-                                <span>TienCK_SignalEye</span>
-                                <span class="text-[9px] bg-cyan-500/20 text-cyan-400 px-2.5 py-0.5 rounded-full font-bold font-mono">ĐỘC QUYỀN</span>
-                            </h3>
-                            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
-                                <strong>Mắt thần quét đa tầng:</strong> Tổng hợp tối tân từ BigMoney và BigTrade giúp quét cùng lúc nhiều mã cổ phiếu, phát hiện dòng tiền xoay vòng giữa các nhóm ngành để bạn luôn đi trước một bước.
-                            </p>
-                        </div>
-
-                        <!-- Cơ chế & Ứng dụng cốt lõi -->
-                        <div class="space-y-2.5 pt-2 border-t border-white/5">
-                            <div class="flex items-start gap-2.5 text-xs text-slate-300">
-                                <span class="text-cyan-400 mt-0.5"><i class="fa-solid fa-layer-group"></i></span>
-                                <span><strong>Đa khung thời gian:</strong> Tự động giao thoa dữ liệu 3H và 1D.</span>
-                            </div>
-                            <div class="flex items-start gap-2.5 text-xs text-slate-300">
-                                <span class="text-cyan-400 mt-0.5"><i class="fa-solid fa-arrow-trend-up"></i></span>
-                                <span><strong>Xoay vòng nhóm ngành:</strong> Định vị dòng tiền đổ vào Ngân hàng, BĐS, Thép...</span>
-                            </div>
-                        </div>
-                        
-                        <!-- 📈 Hình ảnh kĩ thuật minh họa: Sơ đồ radar quét dòng tiền WynAlgo -->
-                        <div class="bg-slate-950/80 rounded-2xl p-4 border border-white/5 h-44 flex flex-col justify-between overflow-hidden">
-                            <div class="flex items-center justify-between text-[9px] text-slate-500 border-b border-white/5 pb-1">
-                                <span>[Hình minh họa: Quét dòng tiền nhóm ngành WynAlgo]</span>
-                                <span class="text-cyan-400 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-ping"></span> ACTIVE</span>
-                            </div>
-                            <!-- Sơ đồ mạng lưới dòng tiền quét bởi SignalEye -->
-                            <div class="relative w-full h-28 flex items-center justify-center">
-                                <svg class="w-full h-full" viewBox="0 0 200 100">
-                                    <!-- Vòng tròn radar đồng tâm -->
-                                    <circle cx="100" cy="50" r="45" fill="none" stroke="rgba(6, 182, 212, 0.1)" stroke-width="1" />
-                                    <circle cx="100" cy="50" r="30" fill="none" stroke="rgba(6, 182, 212, 0.15)" stroke-width="1" />
-                                    <circle cx="100" cy="50" r="15" fill="none" stroke="rgba(6, 182, 212, 0.2)" stroke-width="1" stroke-dasharray="2,2" />
-                                    
-                                    <!-- Đường quét radar quay -->
-                                    <line x1="100" y1="50" x2="135" y2="20" stroke="rgba(6, 182, 212, 0.6)" stroke-width="1.5" />
-                                    <polygon points="100,50 135,20 145,35" fill="rgba(6, 182, 212, 0.1)" />
-                                    
-                                    <!-- Các điểm nút nhóm ngành (Ngân hàng, Bất động sản, Thép, v.v.) -->
-                                    <circle cx="65" cy="30" r="4" fill="#10b981" />
-                                    <text x="50" y="20" fill="#10b981" font-size="7" font-family="monospace">BĐS +12%</text>
-                                    
-                                    <circle cx="140" cy="65" r="4" fill="#ef4444" />
-                                    <text x="145" y="70" fill="#ef4444" font-size="7" font-family="monospace">Dầu khí -4%</text>
-                                    
-                                    <circle cx="120" cy="25" r="5" fill="#06b6d4" />
-                                    <text x="128" y="22" fill="#06b6d4" font-size="7" font-family="monospace">BANK +28%</text>
-                                    
-                                    <!-- Liên kết mạng lưới quét -->
-                                    <line x1="65" y1="30" x2="120" y2="25" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
-                                    <line x1="120" y1="25" x2="140" y2="65" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chỉ báo 2: BigMoney Indicator -->
+                <!-- Chỉ báo 1: BigMoney Indicator -->
                 <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between hover:border-emerald-400/50 hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.15)] transition-all duration-300 relative z-10">
-                    <div class="space-y-6">
-                        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl border border-emerald-500/20 shadow-inner">
-                            <i class="fa-solid fa-coins"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-white mb-2 flex items-center justify-between">
-                                <span>BigMoney Indicator</span>
-                                <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full font-bold font-mono">BÁM DÒNG TIỀN</span>
-                            </h3>
-                            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
-                                <strong>Truy dấu dòng tiền lớn:</strong> Định vị chính xác hành vi gom hàng hoặc xả hàng của nhà đầu tư tổ chức ngay trên từng cây nến. Không đoán tương lai, phản ánh trực quan sự thật dòng tiền.
-                            </p>
-                        </div>
-
-                        <!-- Cơ chế & Ứng dụng cốt lõi -->
-                        <div class="space-y-2.5 pt-2 border-t border-white/5">
-                            <div class="flex items-start gap-2.5 text-xs text-slate-300">
-                                <span class="text-emerald-400 mt-0.5"><i class="fa-solid fa-tag"></i></span>
-                                <span><strong>Nhãn mua bán:</strong> Hiện nhãn ▲/▲+ khi gom, ▼/▼+ khi xả.</span>
+                    <div class="space-y-6 flex-grow flex flex-col justify-between">
+                        <div class="space-y-6">
+                            <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl border border-emerald-500/20 shadow-inner">
+                                <i class="fa-solid fa-coins"></i>
                             </div>
-                            <div class="flex items-start gap-2.5 text-xs text-slate-300">
-                                <span class="text-emerald-400 mt-0.5"><i class="fa-solid fa-circle-nodes"></i></span>
-                                <span><strong>Tích hợp thông minh:</strong> Tìm GAP, vẽ phân kỳ & vùng S/R cứng.</span>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2 flex items-center justify-between">
+                                    <span>BigMoney Indicator</span>
+                                    <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full font-bold font-mono">BÁM DÒNG TIỀN</span>
+                                </h3>
+                                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
+                                    <strong>Truy dấu dòng tiền lớn:</strong> Định vị chính xác hành vi gom hàng hoặc xả hàng của nhà đầu tư tổ chức ngay trên từng cây nến. Không đoán tương lai, phản ánh trực quan sự thật dòng tiền.
+                                </p>
+                            </div>
+
+                            <!-- Cơ chế & Ứng dụng cốt lõi -->
+                            <div class="space-y-2.5 pt-2 border-t border-white/5">
+                                <div class="flex items-start gap-2.5 text-xs text-slate-300">
+                                    <span class="text-emerald-400 mt-0.5"><i class="fa-solid fa-tag"></i></span>
+                                    <span><strong>Nhãn mua bán:</strong> Hiện nhãn ▲/▲+ khi gom, ▼/▼+ khi xả.</span>
+                                </div>
+                                <div class="flex items-start gap-2.5 text-xs text-slate-300">
+                                    <span class="text-emerald-400 mt-0.5"><i class="fa-solid fa-circle-nodes"></i></span>
+                                    <span><strong>Tích hợp thông minh:</strong> Tìm GAP, vẽ phân kỳ & vùng S/R cứng.</span>
+                                </div>
                             </div>
                         </div>
                         
                         <!-- 📈 Hình ảnh kĩ thuật minh họa: Biểu đồ hành vi mua bán của cá mập -->
-                        <div class="bg-slate-950/80 rounded-2xl p-4 border border-white/5 h-44 flex flex-col justify-between overflow-hidden">
+                        <div class="bg-slate-950/80 rounded-2xl p-4 border border-white/5 h-44 flex flex-col justify-between overflow-hidden mt-6">
                             <div class="flex items-center justify-between text-[9px] text-slate-500 border-b border-white/5 pb-1">
                                 <span>[Hình minh họa: Hành vi Gom/Xả BigMoney]</span>
                                 <span class="text-emerald-400"><i class="fa-solid fa-chart-line"></i> BULLISH GAP</span>
@@ -845,41 +863,51 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- 🔗 Nút truy cập chỉ báo TradingView -->
+                    <div class="pt-6 mt-6 border-t border-white/5">
+                        <a href="https://vn.tradingview.com/script/lTeNB8SC-WynAlgo-BigMoney/" target="_blank" rel="noopener" class="w-full flex flex-col items-center justify-center gap-1 py-3 px-4 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 hover:border-emerald-400/50 transition-all duration-300 font-bold text-sm text-center">
+                            <span>Truy cập chỉ báo BigMoney</span>
+                            <span class="font-normal text-xs text-emerald-400/70">(Chuyển hướng đến TradingView®)</span>
+                        </a>
+                    </div>
                 </div>
 
-                <!-- Chỉ báo 3: BigTrade Indicator -->
-                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between hover:border-purple-400/50 hover:shadow-[0_0_30px_-5px_rgba(168,85,247,0.15)] transition-all duration-300 relative z-10">
-                    <div class="space-y-6">
-                        <div class="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-2xl border border-purple-500/20 shadow-inner">
-                            <i class="fa-solid fa-bullseye"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-white mb-2 flex items-center justify-between">
-                                <span>BigTrade Indicator</span>
-                                <span class="text-[9px] bg-purple-500/20 text-purple-400 px-2.5 py-0.5 rounded-full font-bold font-mono">BẮT TÍN HIỆU</span>
-                            </h3>
-                            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
-                                <strong>Vị thế vàng & MTF:</strong> Điểm vào lệnh chuẩn xác không vẽ lại nến (No-repaint). Tích hợp sẵn bảng quản lý danh mục đa khung thời gian để theo dõi mượt mà không cần chuyển chart.
-                            </p>
-                        </div>
-
-                        <!-- Cơ chế & Ứng dụng cốt lõi -->
-                        <div class="space-y-2.5 pt-2 border-t border-white/5">
-                            <div class="flex items-start gap-2.5 text-xs text-slate-300">
-                                <span class="text-purple-400 mt-0.5"><i class="fa-solid fa-circle-check"></i></span>
-                                <span><strong>Cung cấp SL & TP:</strong> Đưa ra mức dừng lỗ, chốt lời tự động.</span>
+                <!-- Chỉ báo 2: BigTrade Indicator -->
+                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between hover:border-cyan-400/50 hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.15)] transition-all duration-300 relative z-10">
+                    <div class="space-y-6 flex-grow flex flex-col justify-between">
+                        <div class="space-y-6">
+                            <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-2xl border border-cyan-500/20 shadow-inner">
+                                <i class="fa-solid fa-bullseye"></i>
                             </div>
-                            <div class="flex items-start gap-2.5 text-xs text-slate-300">
-                                <span class="text-purple-400 mt-0.5"><i class="fa-solid fa-desktop"></i></span>
-                                <span><strong>Quản lý 6 mã cùng lúc:</strong> Bảng điều khiển tích hợp MTF sắc sảo.</span>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2 flex items-center justify-between">
+                                    <span>BigTrade Indicator</span>
+                                    <span class="text-[9px] bg-cyan-500/20 text-cyan-400 px-2.5 py-0.5 rounded-full font-bold font-mono">BẮT TÍN HIỆU</span>
+                                </h3>
+                                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
+                                    <strong>Vị thế vàng & MTF:</strong> Điểm vào lệnh chuẩn xác không vẽ lại nến (No-repaint). Tích hợp sẵn bảng quản lý danh mục đa khung thời gian để theo dõi mượt mà không cần chuyển chart.
+                                </p>
+                            </div>
+
+                            <!-- Cơ chế & Ứng dụng cốt lõi -->
+                            <div class="space-y-2.5 pt-2 border-t border-white/5">
+                                <div class="flex items-start gap-2.5 text-xs text-slate-300">
+                                    <span class="text-cyan-400 mt-0.5"><i class="fa-solid fa-circle-check"></i></span>
+                                    <span><strong>Cung cấp SL & TP:</strong> Đưa ra mức dừng lỗ, chốt lời tự động.</span>
+                                </div>
+                                <div class="flex items-start gap-2.5 text-xs text-slate-300">
+                                    <span class="text-cyan-400 mt-0.5"><i class="fa-solid fa-desktop"></i></span>
+                                    <span><strong>Quản lý 6 mã cùng lúc:</strong> Bảng điều khiển tích hợp MTF sắc sảo.</span>
+                                </div>
                             </div>
                         </div>
                         
                         <!-- 📈 Hình ảnh kĩ thuật minh họa: Khung vào lệnh tỉ lệ RR thực chiến -->
-                        <div class="bg-slate-950/80 rounded-2xl p-4 border border-white/5 h-44 flex flex-col justify-between overflow-hidden">
+                        <div class="bg-slate-950/80 rounded-2xl p-4 border border-white/5 h-44 flex flex-col justify-between overflow-hidden mt-6">
                             <div class="flex items-center justify-between text-[9px] text-slate-500 border-b border-white/5 pb-1">
                                 <span>[Hình minh họa: Thiết lập vị thế TP/SL tự động]</span>
-                                <span class="text-purple-400"><i class="fa-solid fa-crosshairs"></i> R:R = 1:2.5</span>
+                                <span class="text-cyan-400"><i class="fa-solid fa-crosshairs"></i> R:R = 1:2.5</span>
                             </div>
                             <div class="relative w-full h-28 flex items-center justify-center">
                                 <svg class="w-full h-full" viewBox="0 0 200 100">
@@ -887,9 +915,9 @@
                                     <path d="M10 80 Q 40 90, 60 60 T 110 50 T 160 25" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
                                     
                                     <!-- Điểm kích hoạt Vị thế Buy -->
-                                    <circle cx="60" cy="60" r="5" fill="#a855f7" />
+                                    <circle cx="60" cy="60" r="5" fill="#06b6d4" />
                                     <polygon points="56,66 64,66 60,59" fill="#fff" />
-                                    <text x="70" y="64" fill="#a855f7" font-size="8.5" font-weight="bold">ENTRY BUY</text>
+                                    <text x="70" y="64" fill="#06b6d4" font-size="8.5" font-weight="bold">ENTRY BUY</text>
                                     
                                     <!-- Vùng màu Chốt lời (TP) - Xanh lá nhẹ -->
                                     <rect x="60" y="25" width="100" height="35" fill="rgba(16, 185, 129, 0.08)" stroke="rgba(16, 185, 129, 0.3)" stroke-width="0.5" />
@@ -904,6 +932,89 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- 🔗 Nút truy cập chỉ báo TradingView -->
+                    <div class="pt-6 mt-6 border-t border-white/5">
+                        <a href="https://vn.tradingview.com/script/lqlCTPHZ-WynAlgo-BigTrade/" target="_blank" rel="noopener" class="w-full flex flex-col items-center justify-center gap-1.5 py-3 px-4 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 font-bold text-sm text-center">
+                            <span>Truy cập chỉ báo BigTrade</span>
+                            <span class="font-normal text-xs text-cyan-400/70">(Chuyển hướng đến TradingView®)</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Chỉ báo 3: TienCK_SignalEye -->
+                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between hover:border-purple-400/50 hover:shadow-[0_0_30px_-5px_rgba(168,85,247,0.15)] transition-all duration-300 relative z-10">
+                    <div class="space-y-6 flex-grow flex flex-col justify-between">
+                        <div class="space-y-6">
+                            <div class="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-2xl border border-purple-500/20 shadow-inner">
+                                <i class="fa-solid fa-eye"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2 flex items-center justify-between">
+                                    <span>TienCK_SignalEye</span>
+                                    <span class="text-[9px] bg-purple-500/20 text-purple-400 px-2.5 py-0.5 rounded-full font-bold font-mono">ĐỘC QUYỀN</span>
+                                </h3>
+                                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">
+                                    <strong>Mắt thần quét đa tầng:</strong> Tổng hợp tối tân từ BigMoney và BigTrade giúp quét cùng lúc nhiều mã cổ phiếu, phát hiện dòng tiền xoay vòng giữa các nhóm ngành để bạn luôn đi trước một bước.
+                                </p>
+                            </div>
+
+                            <!-- Cơ chế & Ứng dụng cốt lõi -->
+                            <div class="space-y-2.5 pt-2 border-t border-white/5">
+                                <div class="flex items-start gap-2.5 text-xs text-slate-300">
+                                    <span class="text-purple-400 mt-0.5"><i class="fa-solid fa-layer-group"></i></span>
+                                    <span><strong>Đa khung thời gian:</strong> Tự động giao thoa dữ liệu 3H và 1D.</span>
+                                </div>
+                                <div class="flex items-start gap-2.5 text-xs text-slate-300">
+                                    <span class="text-purple-400 mt-0.5"><i class="fa-solid fa-arrow-trend-up"></i></span>
+                                    <span><strong>Xoay vòng nhóm ngành:</strong> Định vị dòng tiền đổ vào Ngân hàng, BĐS, Thép...</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 📈 Hình ảnh kĩ thuật minh họa: Sơ đồ radar quét dòng tiền WynAlgo -->
+                        <div class="bg-slate-950/80 rounded-2xl p-4 border border-white/5 h-44 flex flex-col justify-between overflow-hidden mt-6">
+                            <div class="flex items-center justify-between text-[9px] text-slate-500 border-b border-white/5 pb-1">
+                                <span>[Hình minh họa: Quét dòng tiền nhóm ngành WynAlgo]</span>
+                                <span class="text-purple-400 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-purple-500 rounded-full animate-ping"></span> ACTIVE</span>
+                            </div>
+                            <!-- Sơ đồ mạng lưới dòng tiền quét bởi SignalEye -->
+                            <div class="relative w-full h-28 flex items-center justify-center">
+                                <svg class="w-full h-full" viewBox="0 0 200 100">
+                                    <!-- Vòng tròn radar đồng tâm -->
+                                    <circle cx="100" cy="50" r="45" fill="none" stroke="rgba(168, 85, 247, 0.1)" stroke-width="1" />
+                                    <circle cx="100" cy="50" r="30" fill="none" stroke="rgba(168, 85, 247, 0.15)" stroke-width="1" />
+                                    <circle cx="100" cy="50" r="15" fill="none" stroke="rgba(168, 85, 247, 0.2)" stroke-width="1" stroke-dasharray="2,2" />
+                                    
+                                    <!-- Đường quét radar quay -->
+                                    <line x1="100" y1="50" x2="135" y2="20" stroke="rgba(168, 85, 247, 0.6)" stroke-width="1.5" />
+                                    <polygon points="100,50 135,20 145,35" fill="rgba(168, 85, 247, 0.1)" />
+                                    
+                                    <!-- Các điểm nút nhóm ngành (Ngân hàng, Bất động sản, Thép, v.v.) -->
+                                    <circle cx="65" cy="30" r="4" fill="#10b981" />
+                                    <text x="50" y="20" fill="#10b981" font-size="7" font-family="monospace">BĐS +12%</text>
+                                    
+                                    <circle cx="140" cy="65" r="4" fill="#ef4444" />
+                                    <text x="145" y="70" fill="#ef4444" font-size="7" font-family="monospace">Dầu khí -4%</text>
+                                    
+                                    <circle cx="120" cy="25" r="5" fill="#a855f7" />
+                                    <text x="128" y="22" fill="#a855f7" font-size="7" font-family="monospace">BANK +28%</text>
+                                    
+                                    <!-- Liên kết mạng lưới quét -->
+                                    <line x1="65" y1="30" x2="120" y2="25" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                                    <line x1="120" y1="25" x2="140" y2="65" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 🔗 Nút truy cập chỉ báo TradingView -->
+                    <div class="pt-6 mt-6 border-t border-white/5">
+                        <a href="https://vn.tradingview.com/script/fBV4cYvS-WynAlgo-SignalEye/" target="_blank" rel="noopener" class="w-full flex flex-col items-center justify-center gap-1 py-3 px-4 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/20 hover:border-purple-400/50 transition-all duration-300 font-bold text-sm text-center">
+                            <span>Truy cập chỉ báo SignalEye</span>
+                            <span class="font-normal text-xs text-purple-400/70">(Chuyển hướng đến TradingView®)</span>
+                        </a>
+                    </div>
                 </div>
 
             </div>
@@ -911,6 +1022,11 @@
 
         <!-- SECTION PRICING CARDS -->
         <section id="pricing" class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
+        <div class="text-center space-y-4 mb-6">
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">
+                <span class="text-white font-extrabold">Chọn Ngay Kế Hoạch Của Bạn</span></h2>
+            </div>
+
             <div class="flex flex-col items-center justify-center gap-y-4 pt-4 px-4 max-w-md mx-auto relative z-20">
                 <div class="px-5 py-2 border border-white/10 bg-slate-950/40 rounded-xl text-slate-200 text-xs sm:text-sm font-semibold tracking-normal shadow-md">
                     Thanh toán theo năm, tiết kiệm thêm đến <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400 font-extrabold animate-pulse">45% chi phí!</span>
@@ -918,10 +1034,10 @@
                 
                 <div class="inline-flex p-1 bg-slate-950/80 border border-white/10 rounded-full w-full max-w-[280px] shadow-2xl">
                     <button id="toggle-monthly" type="button" aria-pressed="true" class="flex-1 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-white bg-white/10 border border-white/10 shadow-md">
-                        Hàng tháng
+                        Việt Nam
                     </button>
                     <button id="toggle-yearly" type="button" aria-pressed="false" class="flex-1 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-slate-400 hover:text-white border border-transparent">
-                        Hàng năm
+                        Quốc Tế
                     </button>
                 </div>
             </div>
@@ -932,7 +1048,7 @@
             <!-- CHÚ Ý py-12 lg:py-12: Bổ dung padding dọc trực tiếp vào khung cuộn để tránh viền phát quang bị cắt ngang khi tràn viền -->
             <div class="flex overflow-x-auto lg:grid lg:grid-cols-3 gap-6 lg:gap-8 items-stretch relative -mx-6 px-6 lg:mx-0 lg:px-0 snap-x snap-mandatory scroll-smooth py-12 lg:py-12 no-scrollbar relative z-10">
                 
-                <!-- Plan 1: Starter (Nâng cấp lực phát sáng hover rõ nét hơn) -->
+                <!-- Plan 1: Starter -->
                 <div class="pricing-card flex-shrink-0 w-[85vw] sm:w-[360px] lg:w-auto snap-center border border-teal-500/30 rounded-3xl p-8 bg-slate-950/40 hover:border-teal-400 hover:shadow-[0_0_35px_rgba(20,184,166,0.35)] transition-all duration-300 flex flex-col justify-between">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
@@ -978,7 +1094,7 @@
                     </div>
                 </div>
 
-                <!-- Plan 2: Premium (Cải tiến dải phát quang tinh tế và mượt dịu, không bị lộ viền cắt) -->
+                <!-- Plan 2: Premium -->
                 <div class="pricing-card flex-shrink-0 w-[85vw] sm:w-[360px] lg:w-auto snap-center border-2 border-cyan-400 rounded-3xl p-8 pt-12 bg-gradient-to-b from-[#0a1631] to-[#040815] flex flex-col justify-between relative shadow-[0_0_35px_rgba(6,182,212,0.25)] hover:shadow-[0_0_45px_rgba(6,182,212,0.45)] transition-all duration-300">
                     <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-950 px-5 py-1.5 rounded-full text-xs font-bold shadow-lg shadow-cyan-500/25 tracking-normal whitespace-nowrap z-30">PHỔ BIẾN NHẤT</div>
                     
@@ -1026,7 +1142,7 @@
                     </div>
                 </div>
 
-                <!-- Plan 3: Ultimate (Nâng cấp lực phát sáng hover sắc tím ma mị sắc nét) -->
+                <!-- Plan 3: Ultimate -->
                 <div class="pricing-card flex-shrink-0 w-[85vw] sm:w-[360px] lg:w-auto snap-center border border-purple-500/30 rounded-3xl p-8 bg-slate-950/40 hover:border-purple-400 hover:shadow-[0_0_35px_rgba(168,85,247,0.35)] transition-all duration-300 flex flex-col justify-between">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
@@ -1156,7 +1272,7 @@
             </div>
         </section>
 
-        <!-- SECTION FEATURE COMPARISON MATRIX (Làm sáng hơn bằng Spotlight mềm dịu trung tâm) -->
+        <!-- SECTION FEATURE COMPARISON MATRIX -->
         <section id="compare" class="relative max-w-7xl mx-auto px-6 lg:px-8 py-16 border-t border-white/5 overflow-hidden z-10">
             <div class="absolute inset-0 ambient-soft-spotlight pointer-events-none"></div>
             <!-- 🔦 Đèn cực quang tĩnh hắt sáng rõ nét từ chân bảng so sánh lên -->
@@ -1220,7 +1336,7 @@
             </div>
         </section>
 
-        <!-- SECTION TESTIMONIALS (Spotlight tĩnh hắt từ góc các phản hồi) -->
+        <!-- SECTION TESTIMONIALS -->
         <section class="relative max-w-7xl mx-auto px-6 lg:px-8 py-16 border-t border-white/5 overflow-hidden z-10">
             <div class="absolute inset-x-0 top-0 h-40 ambient-soft-spotlight pointer-events-none"></div>
             <!-- 🔦 Đèn cực quang tĩnh nền tím huyền bí chiếu sáng góc bên phải -->
@@ -1336,14 +1452,14 @@
             <span class="font-sans font-bold text-white text-xl tracking-normal">WynAlgo</span>
             <span class="text-[10px] text-cyan-400 font-sans tracking-normal uppercase bg-cyan-500/20 px-2.5 py-0.5 rounded-full font-bold">Indicators</span>
         </div>
-        <p class="max-w-3xl mx-auto leading-relaxed relative z-10">
-            © 2026 WynAlgo. Bản quyền thuộc về đội ngũ phát triển WynAlgo. <br class="hidden sm:inline">
-            Tuyên bố Miễn trừ Trách nhiệm về Giao dịch và Đầu tư
-Cảnh báo Rủi ro: Giao dịch và đầu tư chứng khoán, hàng hóa, tiền điện tử và các tài sản tài chính khác tiềm ẩn rủi ro đáng kể, bao gồm nguy cơ mất toàn bộ vốn đầu tư. Nội dung trên trang web này chỉ mang tính chất tham khảo, không cấu thành lời khuyên tài chính, đầu tư hay pháp lý. Mọi quyết định đầu tư nên được đưa ra sau khi tham vấn các chuyên gia tài chính có chuyên môn và đánh giá kỹ lưỡng về tình hình tài chính cá nhân. Hiệu suất đầu tư trong quá khứ không phản ánh cũng như không đảm bảo kết quả trong tương lai. Hãy luôn giao dịch có trách nhiệm.
-Kết quả Giả định/Mô phỏng: Hiệu suất giao dịch giả định hoặc mô phỏng có những hạn chế cố hữu. Dữ liệu mô phỏng không phản ánh các giao dịch đã thực hiện trong điều kiện thị trường thực. Kết quả mô phỏng thường được tối ưu hóa dựa trên dữ liệu lịch sử và không tính đến các yếu tố thực tế như trượt giá, thanh khoản hoặc phí giao dịch. Do đó, không có cam kết nào về việc tài khoản thực tế sẽ đạt được lợi nhuận hoặc thua lỗ tương đương với các kết quả hiển thị.
-Chứng thực từ Khách hàng: Các ý kiến hoặc lời chứng thực trên trang web chỉ mang tính chất cá biệt và không đại diện cho trải nghiệm của toàn bộ khách hàng, cũng như không đảm bảo cho thành công của quý vị.
-Phạm vi Trách nhiệm: Là nhà cung cấp công cụ và chiến lược phân tích kỹ thuật, chúng tôi không quản lý tài khoản giao dịch của khách hàng. Chúng tôi không đưa ra tuyên bố nào về khả năng sinh lời hoặc hiệu quả hoạt động của khách hàng khi sử dụng các công cụ/nền tảng của chúng tôi.
-Bản quyền & Đối tác Dữ liệu: Các biểu đồ được tích hợp từ TradingView®. TradingView® là thương hiệu đã đăng ký của TradingView, Inc. (www.TradingView.com) và không có bất kỳ mối quan hệ đối tác hay liên kết nào với dịch vụ của chúng tôi. Dữ liệu thị trường: Dữ liệu thị trường được hiển thị thông qua nền tảng TradingView®. Chúng tôi không cung cấp dữ liệu thị trường và khuyến nghị người dùng kiểm chứng dữ liệu độc lập trước khi thực hiện các quyết định giao dịch.
+        <p class="max-w-3xl mx-auto leading-relaxed relative z-10 text-justify">
+            WynAlgo chỉ cung cấp công cụ phân tích kỹ thuật và nhằm mục đích giáo dục.<br>    
+            Giao dịch và đầu tư chứng khoán, hàng hóa, tiền điện tử và các tài sản tài chính khác tiềm ẩn rủi ro đáng kể, bao gồm nguy cơ mất toàn bộ vốn đầu tư. Nội dung trên trang web này chỉ mang tính chất tham khảo, không cấu thành lời khuyên tài chính, đầu tư hay pháp lý. Mọi quyết định đầu tư nên được đưa ra sau khi tham vấn các chuyên gia tài chính có chuyên môn và đánh giá kỹ lưỡng về tình hình tài chính cá nhân. Hiệu suất đầu tư trong quá khứ không phản ánh cũng như không đảm bảo kết quả trong tương lai. Hãy luôn giao dịch có trách nhiệm.<br>
+            Hiệu suất giao dịch giả định hoặc mô phỏng có những hạn chế cố hữu. Dữ liệu mô phỏng không phản ánh các giao dịch đã thực hiện trong điều kiện thị trường thực. Kết quả mô phỏng thường được tối ưu hóa dựa trên dữ liệu lịch sử và không tính đến các yếu tố thực tế như trượt giá, thanh khoản hoặc phí giao dịch. Do đó, không có cam kết nào về việc tài khoản thực tế sẽ đạt được lợi nhuận hoặc thua lỗ tương đương với các kết quả hiển thị.<br>
+            Các ý kiến hoặc lời chứng thực trên trang web chỉ mang tính chất cá biệt và không đại diện cho trải nghiệm của toàn bộ khách hàng, cũng như không đảm bảo cho thành công trên thị trường.<br>
+            Các biểu đồ được tích hợp từ TradingView®. TradingView® là thương hiệu đã đăng ký của TradingView, Inc. (www.TradingView.com) và không có bất kỳ mối quan hệ đối tác hay liên kết nào với dịch vụ của chúng tôi. Dữ liệu thị trường được hiển thị thông qua nền tảng TradingView®. Chúng tôi không cung cấp dữ liệu thị trường và khuyến nghị người dùng kiểm chứng dữ liệu độc lập trước khi thực hiện các quyết định giao dịch.<br>
+            <br>
+            © 2026 WynAlgo.
         </p>
         <div class="flex justify-center gap-6 text-xs font-semibold relative z-10">
             <a href="#" class="hover:text-cyan-400 transition">Điều khoản sử dụng</a>
@@ -1696,60 +1812,6 @@ Bản quyền & Đối tác Dữ liệu: Các biểu đồ được tích hợp 
                 closeMobileMenu(true);
             }
         });
-
-        // ==========================================
-        // COUNTDOWN TIMER: hiển thị thời gian còn lại của ưu đãi
-        // ==========================================
-        (function() {
-            function getTargetDate() {
-                if (OFFER_END_DATE) return new Date(OFFER_END_DATE);
-                const rollingDate = new Date();
-                rollingDate.setDate(rollingDate.getDate() + 3);
-                return rollingDate;
-            }
-
-            function startCountdown() {
-                const targetDate = getTargetDate();
-                const dayEl = document.getElementById('days');
-                const hourEl = document.getElementById('hours');
-                const minEl = document.getElementById('minutes');
-                const secEl = document.getElementById('seconds');
-
-                if (!dayEl || !hourEl || !minEl || !secEl) return;
-
-                function updateTimer() {
-                    const now = new Date().getTime();
-                    const difference = targetDate.getTime() - now;
-
-                    if (!Number.isFinite(difference) || difference <= 0) {
-                        dayEl.textContent = '00';
-                        hourEl.textContent = '00';
-                        minEl.textContent = '00';
-                        secEl.textContent = '00';
-                        return;
-                    }
-
-                    const d = Math.floor(difference / (1000 * 60 * 60 * 24));
-                    const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-                    const s = Math.floor((difference % (1000 * 60)) / 1000);
-
-                    dayEl.textContent = d.toString().padStart(2, '0');
-                    hourEl.textContent = h.toString().padStart(2, '0');
-                    minEl.textContent = m.toString().padStart(2, '0');
-                    secEl.textContent = s.toString().padStart(2, '0');
-                }
-
-                updateTimer();
-                setInterval(updateTimer, 1000);
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', startCountdown);
-            } else {
-                startCountdown();
-            }
-        })();
     </script>
 </body>
 </html>
