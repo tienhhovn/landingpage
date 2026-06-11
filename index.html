@@ -542,21 +542,21 @@
     background: transparent;
     transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     text-decoration: none; /* Đảm bảo không bị gạch chân khi dùng thẻ <a> */
-    box-shadow: 0 0 20px -5px rgba(6, 182, 212, 0.6);
+    box-shadow: 0 0 5px -5px rgba(6, 182, 212, 1); /* viền sáng xung quanh */ 
 }
 
 /* Hiệu ứng phóng to nhẹ & tăng độ sáng bóng khi hover/touch */
 .rotating-border-wrapper:hover {
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-2px) scale(1.02); /* Phóng to nhẹ khi tương tác */
     box-shadow: 
-        0 0 25px rgba(6, 182, 212, 0.9); /* Vầng sáng phát quang tỏa đều 360 độ */
+        0 0 15px rgba(6, 182, 212, 0.6); /* Vầng sáng phát quang tỏa đều 360 độ */
 }
 
 /* Lớp mặt nạ đục rỗng ruột viền cực kỳ thanh lịch để lộ nền thật ở phía sau */
 .rotating-border-glow-layer {
     position: absolute;
     inset: -1.5px; /* Đẩy nhẹ ra ngoài mép nút chỉ 1.2px cực kỳ thanh lịch */
-    padding: 1.2px; /* Viền siêu mảnh mang tính thẩm mỹ cao */
+    padding: 2px; /* Viền siêu mảnh mang tính thẩm mỹ cao */
     border-radius: 9999px;
     overflow: hidden;
     pointer-events: none;
@@ -599,14 +599,14 @@
     position: relative;
     z-index: 2;
     /* 👇 Nền tối mờ trong suốt (Glassmorphism) hòa quyện mây tinh vân phía sau */
-    background: rgba(28, 28, 30, 0.15) ; /* rgba(7, 15, 43, 0.3) đến rgba(28, 28, 30, 0.50) */
+    background: rgba(255, 255, 255, 0.05) ; /* rgba(7, 15, 43, 0.3) đến rgba(28, 28, 30, 0.50) */
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Sợi chỉ trắng siêu mỏng định hình khung */
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Sợi chỉ trắng siêu mỏng định hình khung */
     color: #e5e7eb;
     padding: 8px 22px; /* ĐỔI KHOẢNG CÁCH ĐỆM (Size nút): py-4 (trên dưới) và px-8 (trái phải) */
     border-radius: 9999px; /* Đồng bộ độ bo tròn với wrapper */
-    font-weight: 700;
+    font-weight: 600;
     font-size: 0.95rem;
     letter-spacing: 0.5px;
     display: inline-flex;
@@ -617,15 +617,22 @@
     justify-content: center;
     transition: background-color 0.3s ease;
     cursor: pointer;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    box-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.1),
+        inset 0 1px 1px rgba(255, 255, 255, 0.3);
 }
 
 /* Đổi màu nền nút tối sẫm hơn một chút khi hover */
 .rotating-border-btn:hover {
-    background-color: rgba(7, 15, 43, 0.9);
-    color: #e5e7eb;
+    background-color: rgba(179, 170, 229, 0.2); /* Làm nền sáng hơn */
+    border-color: rgba(255, 255, 255, 0.7); /* Làm viền sắc nét hơn */
+    box-shadow: 
+                0 0 15px rgba(255, 255, 255, 0.4), /* Phát quang lan tỏa mạnh hơn */
+                0 0 35px rgba(79, 70, 229, 0.4), /* Thêm hiệu ứng màu xanh tím rực rỡ */
+                inset 0 1px 1px rgba(255, 255, 255, 0.6); /* Tăng độ sáng lõm */
+    
 }
-        
+
     </style>
 </head>
 <body id="top" class="antialiased">
@@ -744,9 +751,9 @@
                 
                 <!-- Nút bấm mờ trong suốt (Glassmorphism) nền Slate mờ hòa vào tối không gian -->
                 <span class="rotating-border-btn">
-                    Trải nghiệm 30 ngày không rủi ro 
+                    Nhận 30 ngày không rủi ro 
                     <!-- Icon SVG Arrow Right sắc nét -->
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#67E8F9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#e5e7eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
                         <path d="M4 12H20"/>
                         <path d="M15 7L20 12L15 17"/>
                     </svg>
