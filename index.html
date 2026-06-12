@@ -105,7 +105,7 @@
         }
 
         .hero-title {
-            font-size: clamp(2.1rem, 5.8vw + 0.5rem, 4.5rem);
+            font-size: clamp(1.8rem, 5.8vw + 0.5rem, 4.5rem);
             line-height: 1.35 !important;
         }
 
@@ -602,7 +602,7 @@
     background: rgba(255, 255, 255, 0.05) ; /* rgba(7, 15, 43, 0.3) đến rgba(28, 28, 30, 0.50) */
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.4); /* Sợi chỉ trắng siêu mỏng định hình khung */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Sợi chỉ trắng siêu mỏng định hình khung */
     color: #e5e7eb;
     padding: 8px 22px; /* ĐỔI KHOẢNG CÁCH ĐỆM (Size nút): py-4 (trên dưới) và px-8 (trái phải) */
     border-radius: 9999px; /* Đồng bộ độ bo tròn với wrapper */
@@ -632,7 +632,37 @@
                 inset 0 1px 1px rgba(255, 255, 255, 0.6); /* Tăng độ sáng lõm */
     
 }
+/* Ẩn dải màu */
+.rotating-border-wrapper:hover .rotating-border-gradient {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
 
+/* Gạch chân MENU */
+.underline-from-center {
+    position: relative;
+    text-decoration: none;
+}
+
+.underline-from-center::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -4px;
+    left: 50%; /* Bắt đầu từ giữa */
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+.underline-from-center:hover::after {
+    width: 100%;
+    left: 0; /* Mở rộng sang hai bên */
+}
+.responsive-text {
+    /* Chữ sẽ tự co giãn từ 10px đến 14px tùy theo độ rộng màn hình */
+    font-size: clamp(12px, 3vw, 16px);
+}
     </style>
 </head>
 <body id="top" class="antialiased">
@@ -701,17 +731,17 @@
             </a>
             
             <!-- Navigation Links -->
-            <nav class="hidden lg:flex items-center gap-8 text-[14px] font-medium text-slate-300">
-                <a href="#about-indicators" class="hover:text-white transition-all duration-200">Bộ Chỉ Báo</a>
-                <a href="#features" class="hover:text-white transition-all duration-200">Tính năng</a>
-                <a href="#compare" class="hover:text-white transition-all duration-200">So sánh</a>
-                <a href="#pricing" class="hover:text-cyan-400 transition-all duration-200 font-bold text-cyan-400 flex items-center gap-1">Bảng giá <span class="bg-cyan-500/20 text-cyan-400 text-[9px] px-1.5 py-0.5 rounded-full font-bold">SALE</span></a>
-                <a href="#faq" class="hover:text-white transition-all duration-200">Hỏi đáp</a>
+            <nav class="hidden lg:flex items-center gap-8 text-[14px] font-medium text-slate-300 absolute left-1/2 -translate-x-1/2">
+                <a href="#about-indicators" class="hover:text-white transition-all duration-200 font-bold underline-from-center" >Bộ Chỉ Báo</a>
+                <a href="#features" class="hover:text-white transition-all duration-200 font-bold underline-from-center">Tính năng</a>
+                <a href="#compare" class="hover:text-white transition-all duration-200 font-bold underline-from-center">So sánh</a>
+                <a href="#pricing" class="hover:text-white transition-all duration-200 font-bold flex items-center gap-1 underline-from-center">Bảng giá</a>
+                <a href="#faq" class="hover:text-white transition-all duration-200 font-bold underline-from-center">Q & A</a>
             </nav>
 
             <div class="hidden lg:flex items-center gap-3">
-                <a href="#about-indicators" class="px-5 py-2 rounded-full font-bold text-sm btn-ghost">Xem thực tế</a>
-                <a href="#pricing" class="px-5 py-2 rounded-full bg-white text-slate-950 font-bold text-sm hover:bg-slate-200 active:scale-95 transition-all duration-200 shadow-md">Đăng ký ngay</a>
+                <!--a href="#about-indicators" class="px-5 py-2 rounded-full font-bold text-sm btn-ghost">Xem thực tế</a-->
+                <a href="#pricing" class="px-5 py-2 rounded-full bg-white text-slate-950 font-bold text-sm hover:bg-slate-200 active:scale-95 transition-all duration-200 shadow-md">Nhận truy cập</a>
             </div>
 
             <!-- Hamburger menu di động -->
@@ -750,7 +780,7 @@
                 </div>
                 
                 <!-- Nút bấm mờ trong suốt (Glassmorphism) nền Slate mờ hòa vào tối không gian -->
-                <span class="rotating-border-btn whitespace-nowrap">
+                <span class="rotating-border-btn whitespace-nowrap responsive-text">
                     Trải nghiệm 30 ngày không rủi ro 
                     <!-- Icon SVG Arrow Right sắc nét -->
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#e5e7eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
