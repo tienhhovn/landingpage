@@ -159,10 +159,15 @@
         
         @media (max-width: 768px) {
             .aurora-curtain {
-                width: 80vw;   /* 120 Cho phép dải màu xòe rộng hẳn ra ngoài khung nhìn di động */
+                width: 60vw;   /* 120 Cho phép dải màu xòe rộng hẳn ra ngoài khung nhìn di động */
                 height: 140%;   /* Thu ngắn chiều cao lại một chút để không bị kéo giãn quá đà */
                 opacity: 0.6;    /* Giảm nhẹ độ mờ để các dải màu lớn đè lên nhau không bị cháy sáng */
             }
+            /* Điều chỉnh lại vị trí xuất phát để các dải màu xòe đều, không bị dồn cục */
+            .curtain-1 { left: -20%; }
+            .curtain-2 { left: 10%; }
+            .curtain-3 { left: 40%; }
+            .curtain-4 { right: -30%; }
         }
 
         .curtain-1 {
