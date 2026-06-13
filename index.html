@@ -144,8 +144,8 @@
             opacity: 0.95;
             mask-image: linear-gradient(to bottom, black 25%, black 60%, rgba(0,0,0,0.65) 78%, rgba(0,0,0,0.2) 88%, transparent 100%);
             -webkit-mask-image: linear-gradient(to bottom, black 25%, black 60%, rgba(0,0,0,0.65) 78%, rgba(0,0,0,0.2) 88%, transparent 100%);
-            filter: url(#aurora-turbulent-filter) blur(20px);
-            -webkit-filter: url(#aurora-turbulent-filter) blur(18px);
+            filter: url(#aurora-turbulent-filter) blur(30px);
+            -webkit-filter: url(#aurora-turbulent-filter) blur(20px);
         }
 
         .aurora-curtain {
@@ -156,37 +156,45 @@
             transform-origin: top center;
             mix-blend-mode: screen;
         }
+        
+        @media (max-width: 768px) {
+            .aurora-curtain {
+                width: 120vw;   /* Cho phép dải màu xòe rộng hẳn ra ngoài khung nhìn di động */
+                height: 100%;   /* Thu ngắn chiều cao lại một chút để không bị kéo giãn quá đà */
+                opacity: 0.6;    /* Giảm nhẹ độ mờ để các dải màu lớn đè lên nhau không bị cháy sáng */
+            }
+    
+            /* Điều chỉnh lại vị trí xuất phát để các dải màu xòe đều, không bị dồn cục */
+            .curtain-1 { left: -20%; }
+            .curtain-2 { left: 10%; }
+            .curtain-3 { left: 40%; }
+            .curtain-4 { right: -30%; }
+        }
 
         .curtain-1 {
             left: 2%;
-            background: linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.45) 30%, rgba(20, 184, 166, 0.8) 50%, rgba(6, 182, 212, 0.35) 70%, transparent 100%);
-            animation: wave-movement-1 20s infinite ease-in-out alternate;
+            background: linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.45) 30%, rgba(20, 184, 166, 0.75) 50%, rgba(6, 182, 212, 0.35) 70%, transparent 100%);
+            animation: wave-movement-1 19s infinite ease-in-out alternate;
         }
 
         .curtain-2 {
-            left: 36%;
-            background: linear-gradient(90deg, transparent 0%, rgba(99, 102, 241, 0.45) 25%, rgba(59, 130, 246, 0.4) 50%, rgba(99, 102, 241, 0.3) 75%, transparent 100%);
-            animation: wave-movement-2 26s infinite ease-in-out alternate;
+            left: 35%;
+            background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.5) 25%, rgba(59, 130, 246, 0.5) 50%, rgba(99, 102, 241, 0.5) 70%, transparent 100%); /* rgba(99, 102, 241, 0.45) 25%, rgba(59, 130, 246, 0.5) 50%, rgba(99, 102, 241, 0.5) 75% rgba(6, 182, 212, 0.28)*/
+            animation: wave-movement-2 20s infinite ease-in-out alternate;
             animation-delay: -3s;
-        }
-
-        .curtain-22 {
-            left: 55%;
-            background: linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.45) 30%, rgba(20, 184, 166, 0.8) 50%, rgba(6, 182, 212, 0.35) 70%, transparent 100%);
-            animation: wave-movement-1 40s infinite ease-in-out alternate;
         }
         
         .curtain-3 {
             left: 60%;
-            background: linear-gradient(90deg, transparent 0%, rgba(20, 184, 166, 0.3) 20%, rgba(6, 182, 212, 0.5) 45%, rgba(168, 85, 247, 0.4) 75%, transparent 100%);
+            background: linear-gradient(90deg, transparent 0%, rgba(20, 184, 166, 0.2) 20%, rgba(6, 182, 212, 0.35) 45%, rgba(168, 85, 247, 0.5) 75%, transparent 100%);
             animation: wave-movement-3 22s infinite ease-in-out alternate;
             animation-delay: -6s;
         }
 
         .curtain-4 {
-            right: -10%;
-            background: linear-gradient(90deg, transparent 0%, rgba(168, 85, 247, 0.35) 30%, rgba(99, 102, 241, 0.3) 60%, transparent 100%);
-            animation: wave-movement-4 28s infinite ease-in-out alternate;
+            right: -2%;
+            background: linear-gradient(90deg, transparent 0%, rgba(168, 85, 247, 0.35) 30%, rgba(99, 102, 241, 0.3) 65%, transparent 100%);
+            animation: wave-movement-4 24s infinite ease-in-out alternate;
             animation-delay: -9s;
         }
 
@@ -688,6 +696,7 @@
             <div class="aurora-curtain curtain-1"></div>
             <div class="aurora-curtain curtain-2"></div>
             <div class="aurora-curtain curtain-3"></div>
+            <div class="aurora-curtain curtain-4"></div>
         </div>
         
         <div class="nebula-wisps">
@@ -1541,39 +1550,37 @@
 
         <!-- MIDDLE NAVIGATION ROWS -->
         <div class="flex flex-col space-y-3 w-full">
-            <a href="#about-indicators" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-2xl flex items-center justify-between hover:border-cyan-500/30 hover:bg-slate-900/70 transition-all duration-200">
+            <a href="#about-indicators" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-2xl flex items-center justify-between hover:border-slate-500 hover:bg-slate-900/70 transition-all duration-200">
                 <span class="text-slate-200 text-[15px] font-bold">Bộ Chỉ Báo</span>
                 <i class="fa-solid fa-angle-right text-slate-500 text-xs"></i>
             </a>
-            <a href="#features" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-2xl flex items-center justify-between hover:border-cyan-500/30 hover:bg-slate-900/70 transition-all duration-200">
+            <a href="#features" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-2xl flex items-center justify-between hover:border-slate-500 hover:bg-slate-900/70 transition-all duration-200">
                 <span class="text-slate-200 text-[15px] font-bold">Tính năng</span>
                 <i class="fa-solid fa-angle-right text-slate-500 text-xs"></i>
             </a>
-            <a href="#compare" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-2xl flex items-center justify-between hover:border-cyan-500/30 hover:bg-slate-900/70 transition-all duration-200">
+            <a href="#compare" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-2xl flex items-center justify-between hover:border-slate-500 hover:bg-slate-900/70 transition-all duration-200">
                 <span class="text-slate-200 text-[15px] font-bold">So sánh</span>
                 <i class="fa-solid fa-angle-right text-slate-500 text-xs"></i>
             </a>
-            <a href="#pricing" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-2xl flex items-center justify-between hover:border-cyan-500/30 hover:bg-slate-900/70 transition-all duration-200 text-cyan-400">
-                <span class="text-[15px] font-bold flex items-center gap-1.5">Bảng giá <span class="bg-cyan-500/20 text-cyan-400 text-[9px] px-1.5 py-0.5 rounded-full font-bold">SALE</span></span>
-                <i class="fa-solid fa-angle-right text-cyan-500/50 text-xs"></i>
+            <a href="#pricing" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-2xl flex items-center justify-between hover:border-slate-500 hover:bg-slate-900/70 transition-all duration-200 ">
+                <span class="text-slate-200 text-[15px] font-bold flex items-center gap-1.5">Bảng giá</span>
+                <i class="fa-solid fa-angle-right text-slate-500 text-xs"></i>
             </a>
-            <a href="#faq" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-2xl flex items-center justify-between hover:border-cyan-500/30 hover:bg-slate-900/70 transition-all duration-200">
+            <a href="#faq" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-2xl flex items-center justify-between hover:border-slate-500 hover:bg-slate-900/70 transition-all duration-200">
                 <span class="text-slate-200 text-[15px] font-bold">Hỏi đáp</span>
                 <i class="fa-solid fa-angle-right text-slate-500 text-xs"></i>
             </a>
         </div>
 
         <!-- BOTTOM ACCOUNT CTAS -->
-        <div class="flex flex-col space-y-3.5 w-full">
-            <div class="flex items-center gap-3.5 w-full">
-                <a href="#about-indicators" class="mobile-nav-link flex-1 py-4 text-center border border-white/10 bg-slate-900/50 hover:bg-slate-800 text-white font-bold rounded-2xl transition text-sm">
-                    Bộ Chỉ Báo
-                </a>
-                <a href="#pricing" class="mobile-nav-link flex-1 py-4 text-center bg-white hover:bg-slate-200 text-slate-950 font-bold rounded-2xl transition text-sm shadow-lg shadow-white/5">
-                    Đăng ký
+        <div class="flex flex-col space-y-3.5 w-full mt-6 mb-4 item-center">
+            <div class="flex items-center gap-3.5">
+                <!--a href="#about-indicators" class="mobile-nav-link flex-1 py-4 text-center border border-white/10 bg-slate-900/50 hover:bg-slate-800 text-white font-bold rounded-2xl transition text-sm">Bộ Chỉ Báo</a-->
+                <a href="#pricing" class="mobile-nav-link w-fit px-8 py-4 text-center bg-white hover:bg-slate-200 text-slate-950 font-bold rounded-full transition text-sm shadow-lg shadow-white/5">
+                    Nhận truy cập
                 </a>
             </div>
-            <p class="text-[9px] text-center text-slate-600 tracking-normal uppercase font-mono">Premium Indicators Ecosystem</p>
+            <!--p class="text-[9px] text-center text-slate-600 tracking-normal uppercase font-mono">Premium Indicators Ecosystem</p-->
         </div>
     </div>
 
