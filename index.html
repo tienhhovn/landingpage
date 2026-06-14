@@ -513,8 +513,16 @@
             width: max-content;
         }
 
-        .marquee-track:hover {
-            animation-play-state: paused;
+        /* Chỉ kích hoạt dừng khi di chuột trên Máy tính (PC/Laptop) */
+        @media (hover: hover) {
+            .marquee-track:hover {
+                animation-play-state: paused;
+            }
+        }
+
+        /* Class bổ sung để phục vụ cho hiệu ứng chạm thả trên Di động */
+        .marquee-paused {
+            animation-play-state: paused !important;
         }
 
         .keyword {
@@ -1845,6 +1853,27 @@
                 closeMobileMenu(true);
             }
         });
+        document.addEventListener('DOMContentLoaded', () => {
+    // Tìm tất cả các dải chạy marquee track trên trang
+    const marqueeTracks = document.querySelectorAll('.marquee-track');
+
+    marqueeTracks.forEach(track => {
+        // Khi chạm tay vào màn hình di động -> Dừng chạy
+        track.addEventListener('touchstart', () => {
+            track.classList.add('marquee-paused');
+        }, { passive: true });
+
+        // Khi nhấc tay ra khỏi màn hình di động -> Chạy tiếp
+        track.addEventListener('touchend', () => {
+            track.classList.remove('marquee-paused');
+        }, { passive: true });
+        
+        // Phòng hờ trường hợp người dùng vuốt ngón tay ra ngoài vùng marquee
+        track.addEventListener('touchcancel', () => {
+            track.classList.remove('marquee-paused');
+        }, { passive: true });
+    });
+    });
     </script>
 </body>
 </html>
