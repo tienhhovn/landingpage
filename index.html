@@ -474,70 +474,65 @@
                 transition-duration: 0.001ms !important;
             }
         }
-        /* marquee */
+        
+        /* =========================================================================
+   📺 HỆ THỐNG MARQUEE CẢI TIẾN: HỖ TRỢ VUỐT KÉO TRÊN DI ĐỘNG
+   ========================================================================= */
 
-        .section-wrapper {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+.section-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-        .title {
-            color: #ffffff;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            font-weight: 300;
-            text-align: center;
-        }
+.title {
+    color: #ffffff;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    font-weight: 300;
+    text-align: center;
+}
 
-        .marquee-container {
-            width: 92%;
-            overflow: hidden;
-            background-color: #0209204d;
-            border-top: 1px solid #334a66;
-            border-bottom: 1px solid #334a66;
-            padding: 10px 0;
-            cursor: default;
-            /* Đã tăng vùng mờ từ 10% lên 25% để chữ biến mất dần lâu hơn */
-            mask-image: linear-gradient(to right, transparent, black 25%, black 75%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 25%, black 75%, transparent);
-        }
+/* 🌟 DÒNG THAY ĐỔI: Thêm `overflow-x: auto` trên di động để cho phép vuốt kéo tự do, ẩn thanh cuộn xấu xí đi */
+.marquee-container {
+    width: 92%;
+    overflow-x: auto; /* Cho phép cuộn ngang tự nhiên khi vuốt tay */
+    overflow-y: hidden;
+    background-color: #0209204d;
+    border-top: 1px solid #334a66;
+    border-bottom: 1px solid #334a66;
+    padding: 10px 0;
+    cursor: default;
+    mask-image: linear-gradient(to right, transparent, black 25%, black 75%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 25%, black 75%, transparent);
+    
+    /* Ẩn thanh cuộn (scrollbar) trên các trình duyệt để giữ giao diện sạch đẹp */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+.marquee-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
 
-        .marquee-track {
-            display: flex;
-            white-space: nowrap;
-            animation: marquee-scroll 50s linear infinite;
-            width: max-content;
-        }
+/* 🌟 DÒNG THAY ĐỔI: Loại bỏ thuộc tính animation CSS cũ, chúng ta sẽ chuyển sang điều khiển bằng JS để hỗ trợ cả vuốt kéo */
+.marquee-track {
+    display: flex;
+    white-space: nowrap;
+    width: max-content;
+    will-change: transform; /* Tối ưu hóa card đồ họa phần cứng */
+}
 
-        /* Chỉ kích hoạt dừng khi di chuột trên Máy tính (PC/Laptop) */
-        @media (hover: hover) {
-            .marquee-track:hover {
-                animation-play-state: paused;
-            }
-        }
-
-        /* Class bổ sung để phục vụ cho hiệu ứng chạm thả trên Di động */
-        .marquee-paused {
-            animation-play-state: paused !important;
-        }
-
-        .keyword {
-            color: #a0aab8;
-            font-size: 1rem;
-            font-weight: 500; /* độ đậm */
-            letter-spacing: 1px;
-            margin: 0 60px;
-            text-transform: uppercase;
-        }
-
-        @keyframes marquee-scroll {
-            from { transform: translateX(0); }
-            to { transform: translateX(-66%); }
-        }
+.keyword {
+    color: #a0aab8;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    margin: 0 60px;
+    text-transform: uppercase;
+}
         
         /* =========================================================================
    ⚡ NÚT NHẬN 30 NGÀY MIỄN PHÍ - HIỆU ỨNG VIỀN XOAY CONIC GRADIENT
@@ -1858,27 +1853,61 @@
                 closeMobileMenu(true);
             }
         });
-        document.addEventListener('DOMContentLoaded', () => {
-    // Tìm tất cả các dải chạy marquee track trên trang
-    const marqueeTracks = document.querySelectorAll('.marquee-track');
-
-    marqueeTracks.forEach(track => {
-        // Khi chạm tay vào màn hình di động -> Dừng chạy
-        track.addEventListener('touchstart', () => {
-            track.classList.add('marquee-paused');
-        }, { passive: true });
-
-        // Khi nhấc tay ra khỏi màn hình di động -> Chạy tiếp
-        track.addEventListener('touchend', () => {
-            track.classList.remove('marquee-paused');
-        }, { passive: true });
         
-        // Phòng hờ trường hợp người dùng vuốt ngón tay ra ngoài vùng marquee
-        track.addEventListener('touchcancel', () => {
-            track.classList.remove('marquee-paused');
-        }, { passive: true });
+    // MARQUEE
+        document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.marquee-container');
+    const track = document.querySelector('.marquee-track');
+    if (!container || !track) return;
+
+    // Nhân bản nội dung để tạo vòng lặp cuộn vô tận mượt mà
+    const originalContent = track.innerHTML;
+    track.innerHTML = originalContent + originalContent + originalContent;
+
+    let speed = 1; // Tốc độ chạy tự động (tăng số này nếu muốn chạy nhanh hơn)
+    let isPaused = false;
+    let animationFrameId = null;
+
+    // Hàm thực hiện cuộn tự động đều đặn
+    function step() {
+        if (!isPaused) {
+            container.scrollLeft += speed;
+            
+            // Nếu cuộn gần hết phân đoạn nhân bản, reset về vị trí ban đầu để tạo vòng lặp vô tận
+            if (container.scrollLeft >= track.scrollWidth / 3) {
+                container.scrollLeft = 0;
+            }
+        }
+        animationFrameId = requestAnimationFrame(step);
+    }
+
+    // Kích hoạt chạy tự động
+    animationFrameId = requestAnimationFrame(step);
+
+    /* =========================================================================
+       💻 XỬ LÝ TRÊN MÁY TÍNH (PC/LAPTOP): Di chuột vào thì dừng, bỏ ra chạy tiếp
+       ========================================================================= */
+    track.addEventListener('mouseenter', () => {
+        isPaused = true;
     });
+    track.addEventListener('mouseleave', () => {
+        isPaused = false;
     });
+
+    /* =========================================================================
+       📱 XỬ LÝ TRÊN DI ĐỘNG (TOUCH EVENTS): Chạm dừng, vuốt kéo tự do, thả ra chạy tiếp
+       ========================================================================= */
+    container.addEventListener('touchstart', () => {
+        isPaused = true; // Dừng chạy tự động lập tức khi chạm tay
+    }, { passive: true });
+
+    container.addEventListener('touchend', () => {
+        // Tạo một khoảng trễ nhỏ 200ms sau khi thả tay để trải nghiệm mượt mà hơn
+        setTimeout(() => {
+            isPaused = false;
+        }, 200);
+    }, { passive: true });
+});
     </script>
 </body>
 </html>
