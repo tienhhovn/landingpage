@@ -670,34 +670,7 @@
     font-size: clamp(12px, 3vw, 16px);
 }
 /* nhấp nháy bangr giá di động */
-/* Container bảng giá phải có relative */
-.pricing-card {
-    position: relative;
-    /* Đảm bảo nội dung nằm trên lớp glow */
-    z-index: 1;
-}
-
-/* Lớp glow giả bên dưới */
-.pricing-card::before {
-    content: '';
-    position: absolute;
-    inset: -2px; /* Tạo viền glow hơi tràn ra ngoài */
-    border-radius: 1.5rem; /* Bằng với rounded-3xl */
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-/* Khi có class pulse-glow, lớp này mới nhấp nháy */
-.pulse-glow::before {
-    opacity: 1;
-    animation: pulse-cyan 2s infinite ease-in-out;
-}
-
-@keyframes pulse-cyan {
-    0%, 100% { box-shadow: inset 0 0 20px rgba(6, 182, 212, 0.2); }
-    50% { box-shadow: inset 0 0 50px rgba(6, 182, 212, 0.6); }
-}    
+  
     </style>
 </head>
 <body id="top" class="antialiased">
@@ -1941,22 +1914,7 @@
 });
 
     /* Bảng giá nhấp nháy */
-    const card = document.querySelector('#premium-card');
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            // Nếu không nhìn thấy 90% phần tử, thì kích hoạt nhấp nháy
-            if (entry.intersectionRatio < 0.9) {
-                card.classList.add('pulse-glow');
-            } else {
-                card.classList.remove('pulse-glow');
-            }
-        });
-    }, {
-        threshold: [0, 0.9] // Theo dõi cả 2 trạng thái
-    });
-
-    observer.observe(card);
+   
     </script>
 </body>
 </html>
