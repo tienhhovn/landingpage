@@ -669,7 +669,31 @@
     /* Chữ sẽ tự co giãn từ 10px đến 14px tùy theo độ rộng màn hình */
     font-size: clamp(12px, 3vw, 16px);
 }
-/* nhấp nháy bangr giá di động */
+/* hiệu ứng chữ #00bce6, #2962ff 50.31%, #d500f9*/
+.textGradient-ttl {
+    animation: text-animation-title-ttl 6s ease-in-out infinite;
+    background: linear-gradient(90deg, #34d399, #2962ff 50.31%, #d600f8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-repeat: no-repeat;
+    background-size: 200%;
+}
+
+@keyframes text-animation-title-ttl {
+    0% {
+        background-position:0
+    }
+
+    50% {
+        background-position:80%
+    }
+
+    to {
+        background-position:0
+    }
+}
+
+
   
     </style>
 </head>
@@ -840,14 +864,14 @@
         <section id="about-indicators" class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
     
     <div class="text-center max-w-3xl mx-auto space-y-4 mb-16 relative z-10">
-        <h2 class="text-3xl sm:text-5xl font-extrabold text-white">
-            Sẵn sàng <br class="sm:hidden"><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-violet-600 font-extrabold">Nhận diện xu hướng rõ ràng</span>
+        <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2 pt-2">
+            Sẵn sàng <br class="sm:hidden"><span class="font-extrabold">Đón Đầu Xu Hướng</span>
         </h2>
-        <p class="text-slate-100 text-base sm:text-lg">Dễ dàng truy cập & thêm vào yêu thích </p>
+        <p class="text-[#f0fdff] text-lg sm:text-xl">Dễ dàng truy cập & thêm vào yêu thích. </p>
         
     </div>
     
-    <div class="border border-white/10 rounded-2xl bg-slate-900/50 relative overflow-hidden w-full">
+    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full">
         <div class="relative">
             
             <div class="flex flex-col-reverse md:flex-row items-center gap-6 md:gap-12">
@@ -881,7 +905,7 @@
 
                     <div class="w-full px-8 pt-8 md:pl-0 md:pr-12 md:py-12 xl:pr-24 space-y-6">
                         <div class="space-y-4">
-                            <h2 class="text-3xl sm:text-5xl font-extrabold text-white">BigMoney Indicator</h2>
+                            <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2"> Chỉ báo BigMoney</h2>
                             <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
                                 <strong>Truy dấu dòng tiền lớn:</strong> Định vị chính xác hành vi gom hàng hoặc xả hàng của nhà đầu tư tổ chức ngay trên từng cây nến. Không đoán tương lai, phản ánh trực quan sự thật dòng tiền.
                             </p>
@@ -899,7 +923,7 @@
                         </div>
 
                         <a href="https://vn.tradingview.com/script/lTeNB8SC-WynAlgo-BigMoney/" target="_blank" rel="noopener" 
-                           class="w-full flex flex-col items-center justify-center gap-0.5 py-3 px-4 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 hover:border-emerald-400/50 transition-all duration-300 font-bold text-sm text-center">
+                           class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
                             <div class="flex items-center gap-2">
                                 <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
             <g transform="matrix(1,0,0,1,-5.5,-5.5)">
@@ -912,8 +936,7 @@
             </g>
         </svg>
                                 <span>Sử dụng trên biểu đồ</span>
-                            </div>
-                            <span class="font-normal text-xs text-emerald-400/70">(Chuyển hướng đến TradingView®)</span>
+                            </div>                            <!--span class="font-normal text-xs text-emerald-400/70">(Chuyển hướng đến TradingView®)</span-->
                         </a>
                     </div>
                 </div>
@@ -925,7 +948,7 @@
 <!--chỉ báo 2 -->
 <section class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
     
-    <div class="border border-white/10 rounded-2xl bg-slate-900/50 relative overflow-hidden w-full">
+    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full">
         <div class="relative">
             
             <div class="flex flex-col-reverse md:flex-row items-center gap-6 md:gap-12">
@@ -948,9 +971,8 @@
 
                     <div class="w-full px-8 pt-8 md:pl-0 md:pr-12 md:py-12 xl:pr-24 space-y-6">
                         <div class="space-y-4">
-                            <h2 class="text-3xl sm:text-5xl font-extrabold text-white flex items-center gap-4">
-                                BigTrade
-                                <span class="text-[10px] bg-cyan-500/20 text-cyan-400 px-3 py-1 rounded-full font-bold font-mono">BẮT TÍN HIỆU</span>
+                            <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2">
+                                Chỉ báo BigTrade
                             </h2>
                             <p class="text-slate-300 text-base sm:text-lg leading-relaxed font-medium">
                                 <strong>Vị thế vàng & MTF:</strong> Điểm vào lệnh chuẩn xác không vẽ lại nến (No-repaint). Tích hợp sẵn bảng quản lý danh mục đa khung thời gian để theo dõi mượt mà.
@@ -969,7 +991,7 @@
                         </div>
 
                         <a href="https://vn.tradingview.com/script/lqlCTPHZ-WynAlgo-BigTrade/" target="_blank" rel="noopener" 
-                           class="w-full flex flex-col items-center justify-center gap-0.5 py-3.5 px-6 rounded-full bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 font-bold text-sm text-center">
+                           class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
                             <div class="flex items-center gap-2">
                                 <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
             <g transform="matrix(1,0,0,1,-5.5,-5.5)">
@@ -983,7 +1005,7 @@
         </svg>
                                 <span>Sử dụng trên biểu đồ</span>
                             </div>
-                            <span class="font-normal text-xs text-cyan-400/70">(Chuyển hướng đến TradingView®)</span>
+                            <!--span class="font-normal text-xs text-[#436fff]">(Chuyển hướng đến TradingView®)</span-->
                         </a>
                     </div>
                 </div>
@@ -995,7 +1017,7 @@
 <!-- chỉ báo 3 -->
 <section class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
     
-    <div class="border border-white/10 rounded-2xl bg-slate-900/50 relative overflow-hidden w-full">
+    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full">
         <div class="relative">
             <div class="flex flex-col-reverse md:flex-row items-center gap-6 md:gap-12">
                 
@@ -1023,9 +1045,8 @@
 
                     <div class="w-full px-8 pt-8 md:pl-0 md:pr-12 md:py-12 xl:pr-24 space-y-6">
                         <div class="space-y-4">
-                            <h2 class="text-3xl sm:text-5xl font-extrabold text-white flex items-center gap-4">
-                                SignalEye
-                                <span class="text-[10px] bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full font-bold font-mono">ĐỘC QUYỀN</span>
+                            <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2">
+                                Chỉ báo SignalEye
                             </h2>
                             <p class="text-slate-300 text-base sm:text-lg leading-relaxed font-medium">
                                 <strong>Mắt thần quét đa tầng:</strong> Tổng hợp tối tân giúp quét cùng lúc nhiều mã cổ phiếu, phát hiện dòng tiền xoay vòng giữa các nhóm ngành để bạn luôn đi trước một bước.
@@ -1044,7 +1065,7 @@
                         </div>
 
                         <a href="https://vn.tradingview.com/script/fBV4cYvS-WynAlgo-SignalEye/" target="_blank" rel="noopener" 
-                           class="w-full flex flex-col items-center justify-center gap-0.5 py-3.5 px-6 rounded-full bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/20 hover:border-purple-400/50 transition-all duration-300 font-bold text-sm text-center">
+                           class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
                             <div class="flex items-center gap-2">
                                 <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
             <g transform="matrix(1,0,0,1,-5.5,-5.5)">
@@ -1058,7 +1079,7 @@
         </svg>
                                 <span>Sử dụng trên biểu đồ</span>
                             </div>
-                            <span class="font-normal text-xs text-purple-400/70">(Chuyển hướng đến TradingView®)</span>
+                            <!--span class="font-normal text-xs text-purple-400/70">(Chuyển hướng đến TradingView®)</span-->
                         </a>
                     </div>
                 </div>
@@ -1071,7 +1092,7 @@
         <section id="pricing" class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
         <div class="text-center space-y-4 mb-6">
                 <h2 class="text-3xl sm:text-5xl font-extrabold text-white">
-                <span class="text-white font-extrabold">Chọn Ngay Kế Hoạch Của Bạn</span></h2>
+                <span class=" text-white font-extrabold">Chọn Ngay Kế Hoạch Của Bạn</span></h2>
             </div>
 
             <div class="flex flex-col items-center justify-center gap-y-4 pt-4 px-4 max-w-md mx-auto relative z-20">
@@ -1096,7 +1117,7 @@
             <div class="flex overflow-x-auto lg:grid lg:grid-cols-3 gap-4 lg:gap-8 items-stretch relative -mx-6 px-6 lg:mx-0 lg:px-0 snap-x snap-mandatory scroll-smooth py-12 lg:py-12 no-scrollbar relative z-10">
                 
                 <!-- Plan 1: Starter -->
-                <div class="pricing-card flex-shrink-0 w-[80vw] sm:w-[360px] lg:w-auto snap-center border border-teal-400 rounded-3xl p-8 bg-slate-950/40 hover:border-teal-400 hover:shadow-[0_0_35px_rgba(20,184,166,0.35)] transition-all duration-300 flex flex-col justify-between">
+                <div class="pricing-card flex-shrink-0 w-[80vw] sm:w-[360px] lg:w-auto snap-center border-2 border-emerald-400 rounded-3xl p-8 bg-slate-950/40 hover:border-teal-400 hover:shadow-[0_0_35px_rgba(20,184,166,0.35)] transition-all duration-300 flex flex-col justify-between">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
                             <span class="text-xs uppercase tracking-normal font-bold text-cyan-400">Gói Cơ Bản</span>
@@ -1108,7 +1129,7 @@
                         <div class="py-4 border-t border-b border-white/5 space-y-1">
                             <div class="text-slate-600 line-through text-xs" id="starter-strike">$39.99</div>
                             <div class="flex items-baseline">
-                                <span class="text-xl font-bold text-slate-400">$</span>
+                                <span class="text-xl font-bold text-white">$</span>
                                 <span class="text-5xl font-extrabold tracking-normal text-white" id="starter-price">29.99</span>
                                 <span class="text-slate-400 ml-1.5 text-xs" id="starter-period">/tháng</span>
                             </div>
@@ -1116,15 +1137,15 @@
 
                         <ul class="space-y-3 pt-2">
                             <li class="flex items-center gap-3 text-xs text-slate-300">
-                                <i class="fa-solid text-cyan-400 fa-circle-check"></i>
+                                <i class="fa-solid text-emerald-400 fa-circle-check"></i>
                                 Bộ chỉ báo Xu hướng cơ bản
                             </li>
                             <li class="flex items-center gap-3 text-xs text-slate-300">
-                                <i class="fa-solid text-cyan-400 fa-circle-check"></i>
+                                <i class="fa-solid text-emerald-400 fa-circle-check"></i>
                                 Tín hiệu Buy/Sell độ trễ thấp
                             </li>
                             <li class="flex items-center gap-3 text-xs text-slate-300">
-                                <i class="fa-solid text-cyan-400 fa-circle-check"></i>
+                                <i class="fa-solid text-emerald-400 fa-circle-check"></i>
                                 Cảnh báo qua Telegram/Discord cơ bản
                             </li>
                             <li class="flex items-center gap-3 text-xs text-slate-500 line-through">
@@ -1135,20 +1156,20 @@
                     </div>
                     
                     <div class="pt-8">
-                        <button type="button" data-plan="Starter" data-price="29.99" class="js-plan-button w-full bg-slate-900 hover:bg-slate-800 border border-white/5 hover:border-cyan-500/30 text-white text-center py-4 rounded-xl font-bold transition duration-200 cursor-pointer">
+                        <button type="button" data-plan="Starter" data-price="29.99" class="js-plan-button w-full bg-slate-900 hover:bg-slate-800 border border-white/5 hover:border-cyan-500/30 text-white text-center py-4 rounded-xl font-bold transition duration-200 hover:scale-[1.02] cursor-pointer">
                             Thuê Gói Starter
                         </button>
                     </div>
                 </div>
 
                 <!-- Plan 2: Premium -->
-                <div id="premium-card" class="pricing-card flex-shrink-0 w-[80vw] sm:w-[360px] lg:w-auto snap-center border-2 border-cyan-400 rounded-3xl p-8 bg-[#02092080] flex flex-col justify-between relative shadow-[0_0_35px_rgba(6,182,212,0.25)] hover:shadow-[0_0_45px_rgba(6,182,212,0.45)] transition-all duration-300 animate-pulse">
-                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-400 to-indigo-500 text-slate-950 px-5 py-1.5 rounded-full text-xs font-bold shadow-lg shadow-cyan-500/25 tracking-normal whitespace-nowrap z-30">PHỔ BIẾN NHẤT</div>
+                <div id="premium-card" class="pricing-card flex-shrink-0 w-[80vw] sm:w-[360px] lg:w-auto snap-center border-2 border-[#436fff] rounded-3xl p-8 bg-[#02092080] flex flex-col justify-between relative shadow-[0_0_35px_rgba(6,182,212,0.25)] hover:shadow-[0_0_45px_rgba(0,66,255,0.45)] transition-all duration-300">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[linear-gradient(172deg,rgba(59,171,246,0.8)_0%,rgba(59,171,246,1)_20%,rgba(103,232,249,1)_40%,rgba(255,255,255,1)_50%,rgba(103,232,249,1)_60%,rgba(59,130,246,1)_80%,rgba(25,83,255,0.8)_100%)] text-slate-950 px-5 py-1.5 rounded-full text-xs font-bold shadow-lg shadow-cyan-500/25 tracking-normal whitespace-nowrap z-30">PHỔ BIẾN NHẤT</div>
                     
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs uppercase tracking-normal font-bold text-cyan-400">Gói Chuyên Nghiệp</span>
-                            <span class="bg-cyan-500/20 text-cyan-400 border border-cyan-400/40 text-[10px] px-2.5 py-1 rounded-md font-bold uppercase">PREMIUM</span>
+                            <span class="text-xs uppercase tracking-normal font-bold text-blue-500">Gói Chuyên Nghiệp</span>
+                            <span class="bg-blue-500/20 text-blue-500 border border-blue-500/40 text-[10px] px-2.5 py-1 rounded-md font-bold uppercase">PREMIUM</span>
                         </div>
                         <h3 class="text-2xl font-bold text-white mt-1">Premium Suite</h3>
                         <p class="text-xs text-slate-200 leading-relaxed font-medium">Bộ chỉ báo nâng cao hoàn chỉnh kèm trợ lý AI hỗ trợ đa dạng mọi loại tài sản giao dịch, tối ưu hóa điểm vào/ra lệnh.</p>
@@ -1164,33 +1185,33 @@
 
                         <ul class="space-y-3 pt-2">
                             <li class="flex items-center gap-3 text-xs text-slate-200 font-semibold">
-                                <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                                <i class="fa-solid fa-circle-check text-slate-200"></i>
                                 Đầy đủ chỉ báo chuyên sâu TienCK_SignalEye
                             </li>
                             <li class="flex items-center gap-3 text-xs text-slate-200">
-                                <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                                <i class="fa-solid fa-circle-check text-slate-200"></i>
                                 Cơ chế lọc nhiễu sóng Sideway vượt trội
                             </li>
                             <li class="flex items-center gap-3 text-xs text-slate-200">
-                                <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                                <i class="fa-solid fa-circle-check text-slate-200"></i>
                                 Tự động vẽ vùng Cung & Cầu cứng OrderBlock
                             </li>
                             <li class="flex items-center gap-3 text-xs text-slate-200">
-                                <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                                <i class="fa-solid fa-circle-check text-slate-200"></i>
                                 Quyền truy cập phòng tín hiệu VIP Discord
                             </li>
                         </ul>
                     </div>
                     
                     <div class="pt-8">
-                        <button type="button" data-plan="Premium" data-price="57.79" class="js-plan-button w-full bg-gradient-to-r from-cyan-400 to-indigo-500 hover:from-cyan-300 hover:to-indigo-400 text-slate-950 text-center py-4 rounded-xl font-bold shadow-xl hover:scale-[1.01] transition-all duration-200 cursor-pointer">
+                        <button type="button" data-plan="Premium" data-price="57.79" class="js-plan-button w-full bg-[linear-gradient(172deg,rgba(59,171,246,0.8)_0%,rgba(59,171,246,1)_20%,rgba(103,232,249,1)_40%,rgba(255,255,255,1)_50%,rgba(103,232,249,1)_60%,rgba(59,130,246,1)_80%,rgba(25,83,255,0.8)_100%)] hover:from-emerald-300 hover:via-cyan-200 hover:to-violet-500 text-slate-950 text-center py-4 rounded-xl font-bold shadow-xl hover:scale-[1.02] transition-all duration-200 cursor-pointer">
                             Thuê Gói Premium ngay
                         </button>
                     </div>
                 </div>
 
-                <!-- Plan 3: Ultimate -->
-                <div class="pricing-card flex-shrink-0 w-[80vw] sm:w-[360px] lg:w-auto snap-center border border-purple-400 rounded-3xl p-8 bg-[#02092080] hover:border-purple-400 hover:shadow-[0_0_35px_rgba(168,85,247,0.35)] transition-all duration-300 flex flex-col justify-between">
+                <!-- Plan 3: Ultimate bg-gradient-to-r from-emerald-400 via-cyan-300 to-violet-600 hover:from-emerald-300 -->
+                <div class="pricing-card flex-shrink-0 w-[80vw] sm:w-[360px] lg:w-auto snap-center border-2 border-violet-400 rounded-3xl p-8 bg-[#02092080] hover:border-purple-400 hover:shadow-[0_0_35px_rgba(168,85,247,0.35)] transition-all duration-300 flex flex-col justify-between">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
                             <span class="text-xs uppercase tracking-normal font-bold text-indigo-400">Gói Tối Thượng</span>
@@ -1210,26 +1231,26 @@
 
                         <ul class="space-y-3 pt-2">
                             <li class="flex items-center gap-3 text-xs text-slate-300">
-                                <i class="fa-solid fa-circle-check text-indigo-400"></i>
+                                <i class="fa-solid fa-circle-check text-violet-400"></i>
                                 Đầy đủ quyền lợi của gói Premium
                             </li>
                             <li class="flex items-center gap-3 text-xs text-slate-300">
-                                <i class="fa-solid fa-circle-check text-indigo-400"></i>
+                                <i class="fa-solid fa-circle-check text-violet-400"></i>
                                 Quyền xuất tín hiệu Webhook để auto-trade
                             </li>
                             <li class="flex items-center gap-3 text-xs text-slate-300">
-                                <i class="fa-solid fa-circle-check text-indigo-400"></i>
+                                <i class="fa-solid fa-circle-check text-violet-400"></i>
                                 Chiến lược backtest AI định kỳ hàng tuần
                             </li>
                             <li class="flex items-center gap-3 text-xs text-slate-300">
-                                <i class="fa-solid fa-circle-check text-indigo-400"></i>
+                                <i class="fa-solid fa-circle-check text-violet-400"></i>
                                 Hỗ trợ cấu hình Bot VIP 1-1 trực tiếp
                             </li>
                         </ul>
                     </div>
                     
                     <div class="pt-8">
-                        <button type="button" data-plan="Ultimate" data-price="83.99" class="js-plan-button w-full bg-slate-900 hover:bg-slate-800 border border-white/5 hover:border-indigo-500/30 text-white text-center py-4 rounded-xl font-bold transition duration-200 cursor-pointer">
+                        <button type="button" data-plan="Ultimate" data-price="83.99" class="js-plan-button w-full bg-slate-900 hover:bg-slate-800 border border-white/5 hover:border-indigo-500/30 text-white text-center py-4 rounded-xl font-bold transition duration-200 hover:scale-[1.02] cursor-pointer">
                             Thuê Gói Ultimate
                         </button>
                     </div>
@@ -1614,7 +1635,7 @@
             </div>
 
             <div class="text-xs text-center text-slate-500">
-                *Quyền lợi tài khoản TradingView sẽ tự động kích hoạt trong vòng 5-10 phút sau khi hệ thống ghi nhận giao dịch.
+                * Hỗ trợ trực tiếp: 0988 886 719 (Mr Tiến).
             </div>
 
             <button type="button" data-close-payment class="w-full bg-slate-800 hover:bg-slate-700 border border-white/5 text-white py-3.5 rounded-xl font-bold transition cursor-pointer">
