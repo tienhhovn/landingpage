@@ -17,7 +17,7 @@
     <meta name="robots" content="index, follow">
 
     <!-- TODO SEO: Khi lên domain thật, đổi canonical và og:image thành URL chính thức của anh. -->
-    <link rel="canonical" href="https://wynalgo.ai/">
+    <link rel="canonical" href="https://wynalgo.vn/">
     <meta property="og:type" content="website">
     <meta property="og:title" content="WynAlgo - Theo Dấu Dòng Tiền Thông Minh">
     <meta property="og:description" content="Hệ thống chỉ báo kỹ thuật cao cấp hỗ trợ giao dịch chứng khoán, crypto và forex. Giúp nhà đầu tư dễ dàng theo dấu dòng tiền lớn và tối ưu hóa điểm mua bán.">
@@ -89,19 +89,19 @@
         body {
             background-color: var(--bg-page-color);
             color: #f1f5f9;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Plus Jakarta Sans', Inter, sans-serif;
             overflow-x: hidden;
             position: relative;
         }
 
         h1, h2, h3, h4, h5, h6, p, a, button, span, li, td, th {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Plus Jakarta Sans', Inter, sans-serif;
         }
 
         .font-sans,
         .font-display,
         .font-mono {
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            font-family: 'Plus Jakarta Sans', Inter, sans-serif !important;
         }
 
         .hero-title {
@@ -693,8 +693,48 @@
     }
 }
 
+/* --- CSS CHO PHẦN BĂNG CHUYỀN MỚI --- */
 
-  
+/* 1. Cửa sổ hiển thị: Cắt ảnh thừa và làm mờ biên sát mép chạy */
+        #about-indicators .carousel-window {
+            height: 420px;
+            overflow: hidden;
+            position: relative;
+            /* Làm mờ biên trên và dưới của đúng vùng chạy ảnh, chỉnh % */
+            mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+        }
+
+        /* 2. Dải chạy: Chứa danh sách ảnh */
+        #about-indicators .carousel-track {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Khoảng cách giữa các card */
+            animation: slide-up-seamless 15s linear infinite; /* Chạy đều không khựng */
+            will-change: transform;
+        }
+
+        /* 3. Thẻ Card chứa ảnh: Bo góc 40px theo phong cách mẫu */
+        #about-indicators .indicator-card {
+            background-color: #080a14;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 0px; /* Padding viền ảnh chạy dưới rộng hơn để tạo độ thoáng */
+            flex: none; /* Giữ kích thước cố định */
+            width: 100%;
+        }
+
+        /* 4. Logic Animation: Trôi đúng 1/2 dải ảnh (vì ta đã nhân bản 2 bộ) */
+        @keyframes slide-up-seamless {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(calc(-50% - 10px)); } 
+            /* -50% để trôi hết bộ 1, -10px để bù trừ khoảng cách gap */
+        }
+
+        /* Dừng khi di chuột vào nếu muốn người dùng xem kỹ */
+        #about-indicators .carousel-window:hover .carousel-track {
+            animation-play-state: paused;
+        }
     </style>
 </head>
 <body id="top" class="antialiased">
@@ -857,72 +897,82 @@
            🚀 SECTION: GIỚI THIỆU HỆ THỐNG CHỈ BÁO CAO CẤP WYN_ALGO
            Sử dụng hiệu ứng ánh sáng nền rực rỡ chiếu rải rác dưới nền các card để tăng độ chiều sâu thẩm mỹ
            ========================================================================= -->
-         
-                
-        <!-- chỉ báo 1 -->
-       
+         <!--test caroul -->
         <section id="about-indicators" class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
     
-    <div class="text-center max-w-3xl mx-auto space-y-4 mb-16 relative z-10">
-        <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2 pt-2">
-            Sẵn sàng <br class="sm:hidden"><span class="font-extrabold">Đón Đầu Xu Hướng</span>
+    <div class="text-center max-w-3xl mx-auto space-y-6 mb-16">
+        <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.6] pt-4">
+            <span class="textGradient-ttl text-transparent bg-clip-text inline-block py-2">Sẵn sàng Đón Đầu Xu Hướng
+            </span>
         </h2>
-        <p class="text-[#f0fdff] text-lg sm:text-xl">Dễ dàng truy cập & thêm vào yêu thích. </p>
-        
+        <p class="text-[#f0fdff] text-lg sm:text-xl opacity-80">Dễ dàng truy cập & thêm vào yêu thích.</p>
     </div>
     
-    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full">
-        <div class="relative">
+    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full p-8 md:p-10">
+        <div class="flex flex-col md:flex-row items-center gap-12">
             
-            <div class="flex flex-col-reverse md:flex-row items-center gap-6 md:gap-12">
-                
-                <div class="w-full pb-8 md:py-12 md:-ml-8 lg:-ml-16">
-                    
-                    <div class="bg-slate-950/80 rounded-r-3xl md:rounded-l-none rounded-l-3xl p-4 sm:p-6 md:p-10 border-y border-r border-white/5 shadow-2xl">
-                            <svg class="w-full h-auto" viewBox="0 0 200 100">
-                                <line x1="10" y1="80" x2="190" y2="80" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
-                                <line x1="10" y1="50" x2="190" y2="50" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="2,2" />
-                                
-                                <line x1="30" y1="75" x2="30" y2="55" stroke="#ef4444" stroke-width="1.5" />
-                                <rect x="26" y="60" width="8" height="10" fill="#ef4444" />
-                                
-                                <line x1="70" y1="65" x2="70" y2="35" stroke="#10b981" stroke-width="1.5" />
-                                <rect x="66" y="42" width="8" height="18" fill="#10b981" />
-                                <text x="67" y="78" fill="#10b981" font-size="9" font-weight="bold">▲</text>
-                                
-                                <rect x="80" y="35" width="35" height="10" fill="rgba(6, 182, 212, 0.08)" stroke="rgba(6, 182, 212, 0.3)" stroke-width="0.5" stroke-dasharray="2,2" />
-                                <text x="88" y="42" fill="#06b6d4" font-size="6" font-family="monospace">VÙNG GAP</text>
-
-                                <line x1="130" y1="40" x2="130" y2="15" stroke="#10b981" stroke-width="1.5" />
-                                <rect x="126" y="20" width="8" height="15" fill="#10b981" />
-                                <text x="125" y="50" fill="#10b981" font-size="9" font-weight="bold">▲+</text>
-                                <line x1="170" y1="30" x2="170" y2="10" stroke="#ef4444" stroke-width="1.5" />
-                                <rect x="166" y="15" width="8" height="10" fill="#ef4444" />
-                                <text x="167" y="38" fill="#ef4444" font-size="9" font-weight="bold">▼</text>
+            <div class="w-full md:w-1/2">
+                <div class="carousel-window">
+                    <div class="carousel-track">
+                        
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
                             </svg>
                         </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
+                            </svg>
+                        </div>
+
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
+                            </svg>
+                        </div>
+
                     </div>
+                </div>
+            </div>
 
-                    <div class="w-full px-8 pt-8 md:pl-0 md:pr-12 md:py-12 xl:pr-24 space-y-6">
-                        <div class="space-y-4">
-                            <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2"> Chỉ báo BigMoney</h2>
-                            <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
-                                <strong>Truy dấu dòng tiền lớn:</strong> Định vị chính xác hành vi gom hàng hoặc xả hàng của nhà đầu tư tổ chức ngay trên từng cây nến. Không đoán tương lai, phản ánh trực quan sự thật dòng tiền.
-                            </p>
-                        </div>
-
-                        <div class="space-y-2">
-                            <div class="flex items-start gap-2 text-sm text-slate-300">
-                                <span class="text-emerald-400 mt-1"><i class="fa-solid fa-tag"></i></span>
-                                <span><strong>Nhãn mua bán:</strong> Hiện nhãn ▲/▲+ khi gom, ▼/▼+ khi xả.</span>
-                            </div>
-                            <div class="flex items-start gap-2 text-sm text-slate-300">
-                                <span class="text-emerald-400 mt-1"><i class="fa-solid fa-circle-nodes"></i></span>
-                                <span><strong>Tích hợp thông minh:</strong> Tìm GAP, vẽ phân kỳ & vùng S/R cứng.</span>
-                            </div>
-                        </div>
-
-                        <a href="https://vn.tradingview.com/script/lTeNB8SC-WynAlgo-BigMoney/" target="_blank" rel="noopener" 
+            <div class="w-full md:w-1/2 space-y-6">
+                <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2"> Chỉ báo BigMoney</h2>
+                <p class="text-slate-300 text-lg leading-relaxed text-pretty">
+                    <strong>Truy dấu dòng tiền lớn:</strong> Định vị chính xác hành vi gom hàng hoặc xả hàng của nhà đầu tư tổ chức ngay trên từng cây nến. Không đoán tương lai, phản ánh trực quan sự thật dòng tiền.
+                </p>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3 text-slate-300">
+                        <i class="fa-solid fa-check text-emerald-400"></i>
+                        <span>Nhãn ▲/▲+ khi gom, ▼/▼+ khi xả.</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-slate-300">
+                        <i class="fa-solid fa-check text-emerald-400"></i>
+                        <span>Tìm GAP & vùng S/R cứng tự động.</span>
+                    </div>
+                </div>
+                <a href="https://vn.tradingview.com/script/lTeNB8SC-WynAlgo-BigMoney/" target="_blank" rel="noopener" 
                            class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
                             <div class="flex items-center gap-2">
                                 <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
@@ -938,59 +988,87 @@
                                 <span>Sử dụng trên biểu đồ</span>
                             </div>                            <!--span class="font-normal text-xs text-emerald-400/70">(Chuyển hướng đến TradingView®)</span-->
                         </a>
-                    </div>
-                </div>
             </div>
+            
         </div>
     </div>
 </section>
-
-<!--chỉ báo 2 -->
-<section class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
+   
+   <!-- chỉ báo 2 -->
+<section id="about-indicators" class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
     
-    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full">
-        <div class="relative">
+    <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+        <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.4] pt-4">
+            <span class="textGradient-ttl text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 inline-block">Sẵn sàng Đón Đầu Xu Hướng</span>
+        </h2>
+        <p class="text-[#f0fdff] text-lg sm:text-xl opacity-80">Dễ dàng truy cập & thêm vào yêu thích.</p>
+    </div>
+    
+    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full p-8 md:p-10">
+        <div class="flex flex-col md:flex-row items-center gap-12">
             
-            <div class="flex flex-col-reverse md:flex-row items-center gap-6 md:gap-12">
-                
-                <div class="w-full pb-8 md:py-12 md:-ml-8 lg:-ml-16">
-                    
-                    <div class="bg-slate-950/80 rounded-r-3xl md:rounded-l-none rounded-l-3xl p-4 sm:p-6 md:p-10 border-y border-r border-white/5 shadow-2xl">
-                            <svg class="w-full h-auto" viewBox="0 0 200 100">
-                                <path d="M10 80 Q 40 90, 60 60 T 110 50 T 160 25" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
-                                <circle cx="60" cy="60" r="5" fill="#06b6d4" />
-                                <polygon points="56,66 64,66 60,59" fill="#fff" />
-                                <text x="70" y="64" fill="#06b6d4" font-size="8.5" font-weight="bold">ENTRY BUY</text>
-                                <rect x="60" y="25" width="100" height="35" fill="rgba(16, 185, 129, 0.08)" stroke="rgba(16, 185, 129, 0.3)" stroke-width="0.5" />
-                                <text x="115" y="35" fill="#10b981" font-size="7" font-family="monospace">TP Target: +18.5%</text>
-                                <rect x="60" y="60" width="100" height="15" fill="rgba(239, 68, 68, 0.08)" stroke="rgba(239, 68, 68, 0.3)" stroke-width="0.5" />
-                                <text x="115" y="70" fill="#ef4444" font-size="7" font-family="monospace">SL Limit: -5.2%</text>
+            <div class="w-full md:w-1/2">
+                <div class="carousel-window">
+                    <div class="carousel-track">
+                        
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
                             </svg>
                         </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
+                            </svg>
+                        </div>
+
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
+                            </svg>
+                        </div>
+
                     </div>
+                </div>
+            </div>
 
-                    <div class="w-full px-8 pt-8 md:pl-0 md:pr-12 md:py-12 xl:pr-24 space-y-6">
-                        <div class="space-y-4">
-                            <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2">
-                                Chỉ báo BigTrade
-                            </h2>
-                            <p class="text-slate-300 text-base sm:text-lg leading-relaxed font-medium">
-                                <strong>Vị thế vàng & MTF:</strong> Điểm vào lệnh chuẩn xác không vẽ lại nến (No-repaint). Tích hợp sẵn bảng quản lý danh mục đa khung thời gian để theo dõi mượt mà.
-                            </p>
-                        </div>
-
-                        <div class="space-y-2">
-                            <div class="flex items-start gap-2 text-sm text-slate-300">
-                                <span class="text-cyan-400 mt-1"><i class="fa-solid fa-circle-check"></i></span>
-                                <span><strong>Cung cấp SL & TP:</strong> Đưa ra mức dừng lỗ, chốt lời tự động.</span>
-                            </div>
-                            <div class="flex items-start gap-2 text-sm text-slate-300">
-                                <span class="text-cyan-400 mt-1"><i class="fa-solid fa-desktop"></i></span>
-                                <span><strong>Quản lý 6 mã cùng lúc:</strong> Bảng điều khiển MTF sắc sảo.</span>
-                            </div>
-                        </div>
-
-                        <a href="https://vn.tradingview.com/script/lqlCTPHZ-WynAlgo-BigTrade/" target="_blank" rel="noopener" 
+            <div class="w-full md:w-1/2 space-y-6">
+                <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2"> Chỉ báo BigTrade</h2>
+                <p class="text-slate-300 text-lg leading-relaxed text-pretty">
+                    <strong>Vị thế vàng & MTF:</strong> Điểm vào lệnh chuẩn xác không vẽ lại nến (No-repaint). Tích hợp sẵn bảng quản lý danh mục đa khung thời gian để theo dõi mượt mà.
+                </p>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3 text-slate-300">
+                        <i class="fa-solid fa-check text-emerald-400"></i>
+                        <span>Cung cấp SL & TP: Đưa ra mức dừng lỗ, chốt lời tự động.</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-slate-300">
+                        <i class="fa-solid fa-check text-emerald-400"></i>
+                        <span>Quản lý 6 mã cùng lúc: Bảng điều khiển MTF sắc sảo.</span>
+                    </div>
+                </div>
+                <a href="https://vn.tradingview.com/script/lqlCTPHZ-WynAlgo-BigTrade/" target="_blank" rel="noopener" 
                            class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
                             <div class="flex items-center gap-2">
                                 <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
@@ -1007,53 +1085,78 @@
                             </div>
                             <!--span class="font-normal text-xs text-[#436fff]">(Chuyển hướng đến TradingView®)</span-->
                         </a>
+                </div>
+            
+        </div>
+    </div>
+</section>    
+            
+
+<!-- chỉ báo 3 -->
+<section id="about-indicators" class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
+    
+    <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+        <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.4] pt-4">
+            <span class="textGradient-ttl text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 inline-block">Sẵn sàng Đón Đầu Xu Hướng</span>
+        </h2>
+        <p class="text-[#f0fdff] text-lg sm:text-xl opacity-80">Dễ dàng truy cập & thêm vào yêu thích.</p>
+    </div>
+    
+    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full p-8 md:p-10">
+        <div class="flex flex-col md:flex-row items-center gap-12">
+            
+            <div class="w-full md:w-1/2">
+                <div class="carousel-window">
+                    <div class="carousel-track">
+                        
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
+                            </svg>
+                        </div>
+
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
+                            </svg>
+                        </div>
+
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
 
-<!-- chỉ báo 3 -->
-<section class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
-    
-    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full">
-        <div class="relative">
-            <div class="flex flex-col-reverse md:flex-row items-center gap-6 md:gap-12">
-                
-                <div class="w-full pb-8 md:py-12 md:-ml-8 lg:-ml-16">
-                    <div class="bg-slate-950/80 rounded-r-3xl md:rounded-l-none rounded-l-3xl p-4 sm:p-6 md:p-10 border-y border-r border-white/5 shadow-2xl">
-                        
-                        <div class="flex items-center justify-between text-[10px] text-slate-500 border-b border-white/5 pb-2 mb-4">
-                            <span class="text-purple-400 flex items-center gap-1">
-                                <span class="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse"></span> ACTIVE
-                            </span>
-                        </div>
-                            <svg class="w-full h-auto" viewBox="0 0 200 100">
-                                <circle cx="100" cy="50" r="45" fill="none" stroke="rgba(168, 85, 247, 0.1)" stroke-width="1" />
-                                <circle cx="100" cy="50" r="30" fill="none" stroke="rgba(168, 85, 247, 0.15)" stroke-width="1" />
-                                <line x1="100" y1="50" x2="135" y2="20" stroke="rgba(168, 85, 247, 0.6)" stroke-width="1.5" />
-                                <circle cx="65" cy="30" r="4" fill="#10b981" />
-                                <text x="50" y="20" fill="#10b981" font-size="7" font-family="monospace">BĐS +12%</text>
-                                <circle cx="140" cy="65" r="4" fill="#ef4444" />
-                                <text x="145" y="70" fill="#ef4444" font-size="7" font-family="monospace">Dầu khí -4%</text>
-                                <circle cx="120" cy="25" r="5" fill="#a855f7" />
-                                <text x="128" y="22" fill="#a855f7" font-size="7" font-family="monospace">BANK +28%</text>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div class="w-full px-8 pt-8 md:pl-0 md:pr-12 md:py-12 xl:pr-24 space-y-6">
-                        <div class="space-y-4">
-                            <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2">
-                                Chỉ báo SignalEye
-                            </h2>
-                            <p class="text-slate-300 text-base sm:text-lg leading-relaxed font-medium">
-                                <strong>Mắt thần quét đa tầng:</strong> Tổng hợp tối tân giúp quét cùng lúc nhiều mã cổ phiếu, phát hiện dòng tiền xoay vòng giữa các nhóm ngành để bạn luôn đi trước một bước.
-                            </p>
-                        </div>
-
-                        <div class="space-y-2">
+            <div class="w-full md:w-1/2 space-y-6">
+                <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2"> Chỉ báo SignalEye</h2>
+                <p class="text-slate-300 text-lg leading-relaxed text-pretty">
+                    <strong>Mắt thần quét đa tầng:</strong> Tổng hợp tối tân giúp quét cùng lúc nhiều mã cổ phiếu, phát hiện dòng tiền xoay vòng giữa các nhóm ngành để bạn luôn đi trước một bước.
+                </p>
+                <div class="space-y-2">
                             <div class="flex items-start gap-2 text-sm text-slate-300">
                                 <span class="text-purple-400 mt-1"><i class="fa-solid fa-layer-group"></i></span>
                                 <span><strong>Đa khung thời gian:</strong> Tự động giao thoa dữ liệu 3H và 1D.</span>
@@ -1081,12 +1184,11 @@
                             </div>
                             <!--span class="font-normal text-xs text-purple-400/70">(Chuyển hướng đến TradingView®)</span-->
                         </a>
-                    </div>
                 </div>
-            </div>
+            
         </div>
     </div>
-</section>
+</section>  
 
         <!-- SECTION PRICING CARDS -->
         <section id="pricing" class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
@@ -1934,8 +2036,8 @@
     }, { passive: true });
 });
 
-    /* Bảng giá nhấp nháy */
-   
+    /* Băng chuyền */
+  
     </script>
 </body>
 </html>
