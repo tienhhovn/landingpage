@@ -693,48 +693,57 @@
     }
 }
 
-/* --- CSS CHO PHẦN BĂNG CHUYỀN MỚI --- */
+/* --- CSS CHO BĂNG CHUYỀN RESPONSIVE --- */
 
-/* 1. Cửa sổ hiển thị: Cắt ảnh thừa và làm mờ biên sát mép chạy */
-        #about-indicators .carousel-window {
-            height: 420px;
-            overflow: hidden;
-            position: relative;
-            /* Làm mờ biên trên và dưới của đúng vùng chạy ảnh, chỉnh % */
-            mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
-            -webkit-mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
-        }
+/* Cửa sổ: Mặc định dọc (cho desktop), ngang (cho mobile) */
+#about-indicators .carousel-window {
+    height: 420px; /* Chiều cao mặc định desktop */
+    overflow: hidden;
+    position: relative;
+    /* Mask mặc định chiều dọc */
+    mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+}
 
-        /* 2. Dải chạy: Chứa danh sách ảnh */
-        #about-indicators .carousel-track {
-            display: flex;
-            flex-direction: column;
-            gap: 20px; /* Khoảng cách giữa các card */
-            animation: slide-up-seamless 15s linear infinite; /* Chạy đều không khựng */
-            will-change: transform;
-        }
+#about-indicators .carousel-track {
+    display: flex;
+    flex-direction: column; /* Dọc trên Desktop */
+    gap: 20px;
+    animation: slide-up-seamless 15s linear infinite;
+    will-change: transform;
+}
 
-        /* 3. Thẻ Card chứa ảnh: Bo góc 40px theo phong cách mẫu */
-        #about-indicators .indicator-card {
-            background-color: #080a14;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 40px;
-            padding: 0px; /* Padding viền ảnh chạy dưới rộng hơn để tạo độ thoáng */
-            flex: none; /* Giữ kích thước cố định */
-            width: 100%;
-        }
+/* RESPONSIVE: Khi màn hình nhỏ (Mobile) */
+@media (max-width: 767px) {
+    #about-indicators .carousel-window {
+        height: 200px; /* Chiều cao băng chuyền ngang thấp hơn */
+        /* Đổi chiều mask sang ngang */
+        mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    }
+    
+    #about-indicators .carousel-track {
+        flex-direction: row; /* Ngang trên Mobile */
+        animation: slide-left-seamless 15s linear infinite;
+    }
 
-        /* 4. Logic Animation: Trôi đúng 1/2 dải ảnh (vì ta đã nhân bản 2 bộ) */
-        @keyframes slide-up-seamless {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(calc(-50% - 10px)); } 
-            /* -50% để trôi hết bộ 1, -10px để bù trừ khoảng cách gap */
-        }
+    #about-indicators .indicator-card {
+        min-width: 280px; /* Độ rộng thẻ khi chạy ngang */
+    }
+}
 
-        /* Dừng khi di chuột vào nếu muốn người dùng xem kỹ */
-        #about-indicators .carousel-window:hover .carousel-track {
-            animation-play-state: paused;
-        }
+/* Animation ngang */
+@keyframes slide-left-seamless {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Animation dọc cũ */
+@keyframes slide-up-seamless {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(calc(-50% - 10px)); }
+}
+
     </style>
 </head>
 <body id="top" class="antialiased">
@@ -909,9 +918,9 @@
     </div>
     
     <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full p-8 md:p-10">
-        <div class="flex flex-col md:flex-row items-center gap-12">
+        <div class="flex flex-col-reverse md:flex-row items-center gap-12">
             
-            <div class="w-full md:w-1/2">
+            <div class="w-full md:w-1/2 order-2 md:order-1">
                 <div class="carousel-window">
                     <div class="carousel-track">
                         
@@ -957,8 +966,8 @@
                 </div>
             </div>
 
-            <div class="w-full md:w-1/2 space-y-6">
-                <h2 class="text-3xl sm:text-5xl text-pretty font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2"> Chỉ báo BigMoney</h2>
+            <div class="w-full md:w-1/2 order-1 md:order-2 space-y-6">
+                <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2"> Chỉ báo BigMoney</h2>
                 <p class="text-slate-300 text-lg leading-relaxed text-pretty">
                     <strong>Truy dấu dòng tiền lớn:</strong> Định vị chính xác hành vi gom hàng hoặc xả hàng của nhà đầu tư tổ chức ngay trên từng cây nến. Không đoán tương lai, phản ánh trực quan sự thật dòng tiền.
                 </p>
