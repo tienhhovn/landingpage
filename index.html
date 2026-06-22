@@ -724,6 +724,7 @@
     
     #about-indicators .carousel-track {
         flex-direction: row; /* Ngang trên Mobile */
+        width: max-content; /* Quan trọng: Độ rộng bằng tổng các card */
         animation: slide-left-seamless 15s linear infinite;
     }
 
@@ -731,6 +732,7 @@
         min-width: 280px; /* Độ rộng thẻ khi chạy ngang */
     }
 }
+
 
 /* Animation ngang */
 @keyframes slide-left-seamless {
