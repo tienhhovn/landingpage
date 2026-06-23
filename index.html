@@ -506,6 +506,2037 @@
     border-bottom: 1px solid #334a66;
     padding: 10px 0;
     cursor: default;
+    -webkit-user-select: none;
+    mask-image: linear-gradient(to right, transparent, black 25%, black 75%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 25%, black 75%, transparent);
+    
+    /* Ẩn thanh cuộn (scrollbar) trên các trình duyệt để giữ giao diện sạch đẹp */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+.marquee-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* 🌟 DÒNG THAY ĐỔI: Loại bỏ thuộc tính animation CSS cũ, chúng ta sẽ chuyển sang điều khiển bằng JS để hỗ trợ cả vuốt kéo */
+.marquee-track {
+    display: flex;
+    white-space: nowrap;
+    width: max-content;
+    will-change: transform; /* Tối ưu hóa card đồ họa phần cứng */
+}
+
+.keyword {
+    color: #a0aab8;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    margin: 0 60px;
+    text-transform: uppercase;
+}
+        
+        /* =========================================================================
+   ⚡ NÚT NHẬN 30 NGÀY MIỄN PHÍ - HIỆU ỨNG VIỀN XOAY CONIC GRADIENT
+   ========================================================================= */
+
+/* 1. Khung bọc ngoài (Wrapper): Xử lý xoay màu và tạo viền */
+.rotating-border-wrapper {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 9999px; 
+    background: transparent;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    text-decoration: none; /* Đảm bảo không bị gạch chân khi dùng thẻ <a> */
+    box-shadow: 0 0 5px -5px rgba(6, 182, 212, 1); /* viền sáng xung quanh */ 
+}
+
+/* Hiệu ứng phóng to nhẹ & tăng độ sáng bóng khi hover/touch */
+.rotating-border-wrapper:hover {
+    transform: translateY(-2px) scale(1.02); /* Phóng to nhẹ khi tương tác */
+    box-shadow: 
+        0 0 15px rgba(6, 182, 212, 0.6); /* Vầng sáng phát quang tỏa đều 360 độ */
+}
+
+/* Lớp mặt nạ đục rỗng ruột viền cực kỳ thanh lịch để lộ nền thật ở phía sau */
+.rotating-border-glow-layer {
+    position: absolute;
+    inset: -1.5px; /* Đẩy nhẹ ra ngoài mép nút chỉ 1.2px cực kỳ thanh lịch */
+    padding: 2px; /* Viền siêu mảnh mang tính thẩm mỹ cao */
+    border-radius: 9999px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+
+    /* Đục rỗng phần ruột bằng công nghệ mặt nạ loại trừ */
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+/* Tạo dải màu chuyển động chạy tròn phía sau lớp mặt nạ */
+.rotating-border-gradient {
+    position: absolute;
+    width: 135%;
+    height: 135%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(
+        from 0deg, 
+        #67e8f9, /* Xanh Cyan 06b6d4*/
+        #7c3aed, /* Tím huyền ảo a855f7*/
+        #34d399, /* Xanh Emerald 10b981*/
+        #67e8f9  
+    );
+    /* 👇 TỐC ĐỘ XOAY VIỀN: 4.5s xoay mượt mà, càng nhỏ xoay càng nhanh */
+    animation: rotate-border-gradient 4.5s linear infinite;
+}
+
+@keyframes rotate-border-gradient {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* 2. Phần nút nội dung phía bên trong che khuất lõi gradient tạo hiệu ứng viền phát sáng */
+.rotating-border-btn {
+    position: relative;
+    z-index: 2;
+    /* 👇 Nền tối mờ trong suốt (Glassmorphism) hòa quyện mây tinh vân phía sau */
+    background: rgba(255, 255, 255, 0.05) ; /* rgba(7, 15, 43, 0.3) đến rgba(28, 28, 30, 0.50) */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Sợi chỉ trắng siêu mỏng định hình khung */
+    color: #e5e7eb;
+    padding: 8px 22px; /* ĐỔI KHOẢNG CÁCH ĐỆM (Size nút): py-4 (trên dưới) và px-8 (trái phải) */
+    border-radius: 9999px; /* Đồng bộ độ bo tròn với wrapper */
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    box-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.1),
+        inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+/* Đổi màu nền nút tối sẫm hơn một chút khi hover */
+.rotating-border-btn:hover {
+    background-color: rgba(179, 170, 229, 0.2); /* Làm nền sáng hơn */
+    border-color: rgba(255, 255, 255, 0.7); /* Làm viền sắc nét hơn */
+    box-shadow: 
+                0 0 15px rgba(255, 255, 255, 0.4), /* Phát quang lan tỏa mạnh hơn */
+                0 0 35px rgba(79, 70, 229, 0.4), /* Thêm hiệu ứng màu xanh tím rực rỡ */
+                inset 0 1px 1px rgba(255, 255, 255, 0.6); /* Tăng độ sáng lõm */
+    
+}
+/* Ẩn dải màu */
+.rotating-border-wrapper:hover .rotating-border-gradient {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* Gạch chân MENU */
+.underline-from-center {
+    position: relative;
+    text-decoration: none;
+}
+
+.underline-from-center::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -4px;
+    left: 50%; /* Bắt đầu từ giữa */
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+.underline-from-center:hover::after {
+    width: 100%;
+    left: 0; /* Mở rộng sang hai bên */
+}
+.responsive-text {
+    /* Chữ sẽ tự co giãn từ 10px đến 14px tùy theo độ rộng màn hình */
+    font-size: clamp(12px, 3vw, 16px);
+}
+/* hiệu ứng chữ #00bce6, #2962ff 50.31%, #d500f9*/
+.textGradient-ttl {
+    animation: text-animation-title-ttl 6s ease-in-out infinite;
+    background: linear-gradient(90deg, #34d399, #2962ff 50.31%, #d600f8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-repeat: no-repeat;
+    background-size: 200%;
+}
+
+@keyframes text-animation-title-ttl {
+    0% {
+        background-position:0
+    }
+
+    50% {
+        background-position:80%
+    }
+
+    to {
+        background-position:0
+    }
+}
+
+/* --- CSS CHO BĂNG CHUYỀN RESPONSIVE --- */
+
+/* Cửa sổ: Mặc định dọc (cho desktop), ngang (cho mobile) */
+.about-indicators .carousel-window {
+    height: 420px; /* Chiều cao mặc định desktop */
+    overflow: hidden;
+    position: relative;
+    -webkit-user-select: none;
+    /* Mask mặc định chiều dọc */
+    mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+}
+
+.about-indicators .carousel-track {
+    display: flex;
+    flex-direction: column; /* Dọc trên Desktop */
+    gap: 20px;
+    animation: slide-up-seamless 15s linear infinite;
+    will-change: transform;
+}
+
+/* RESPONSIVE: Khi màn hình nhỏ (Mobile) */
+@media (max-width: 767px) {
+    .about-indicators .carousel-window {
+        height: auto; /* Chiều cao băng chuyền ngang thấp hơn 200px*/
+        min-height: 150px; /* Chỉ cần đặt tối thiểu */
+        mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    }
+    
+    .about-indicators .carousel-track {
+        flex-direction: row; /* Ngang trên Mobile */
+        width: max-content; /* Quan trọng: Độ rộng bằng tổng các card */
+        animation: slide-left-seamless 15s linear infinite;
+    }
+
+    .about-indicators .indicator-card {
+        min-width: 280px; /* Độ rộng thẻ khi chạy ngang */
+    }
+}
+
+
+/* Animation ngang */
+@keyframes slide-left-seamless {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Animation dọc cũ */
+@keyframes slide-up-seamless {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(calc(-50% - 10px)); }
+}
+
+/* Dừng khi di chuột vào nếu muốn người dùng xem kỹ */
+.about-indicators .carousel-window:hover .carousel-track {
+    animation-play-state: paused;
+}
+
+    </style>
+</head>
+<body id="top" class="antialiased">
+
+    <!-- 🌌 BỘ LỌC ĐỘNG SVG ĐỂ XÉ NHỎ VÀ TẠO VÂN KHÓI SẮC NÉT (Chỉ áp dụng ở Hero Section) -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <filter id="aurora-turbulent-filter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.006 0.015" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="120" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+            
+            <filter id="nebula-turbulent-filter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.008 0.018" numOctaves="4" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="90" xChannelSelector="R" yChannelSelector="G" />
+            </filter>c
+        </defs>
+    </svg>
+
+    <!-- 🌌 ĐỒ HỌA NỀN CỰC QUANG VÀ KHÔNG GIAN ĐÊM (Cố định ở khu vực Hero 980px đầu tiên) -->
+    <div class="cosmic-background">
+        <div class="aurora-container">
+            <div class="aurora-curtain curtain-1"></div>
+            <div class="aurora-curtain curtain-2"></div>
+            <div class="aurora-curtain curtain-3"></div>
+            <div class="aurora-curtain curtain-4"></div>
+        </div>
+        <div class="nebula-wisps">
+            <div class="central-bloom-glow"></div>
+        </div>
+
+        <div class="stars-background">
+            <div class="stars-glow-layer"></div>
+            <div class="stars-glow-layer-medium"></div>
+        </div>
+    </div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="fixed top-0 left-0 w-full z-40 border-b border-white/5 nav-blur bg-slate-950/15 transition-all duration-200 gpu-layer will-change-transform">
+        <div class="max-w-7xl mx-auto px-7 sm:px-8 lg:px-8 py-5 flex items-center justify-between relative z-50">
+            
+            <!-- Brand Logo chính thức mới -->
+            <a href="#top" class="flex items-center group relative h-10 w-44" aria-label="Về đầu trang WynAlgo">
+                <div class="absolute -inset-2 bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative w-full h-full flex items-center scale-100 group-hover:scale-100 transition-transform duration-200">
+                    <svg class="w-full h-full" viewBox="0 0 1384 414" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+                        <g>
+                            <g>
+                                <path d="M174.364,349.43c26.604,-38.667 53.209,-77.328 79.813,-115.989c26.451,38.656 52.903,77.312 79.349,115.973c0,0 -26.388,-38.703 0,0l39.115,-60.448l135.591,-209.553l-31.765,-79.412l-146.308,226.116l-76.035,-110.596l-0.005,0l-76.046,110.596l-146.308,-226.116l-31.765,79.412c45.151,69.92 174.364,270.017 174.364,270.017" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M135.752,0.03l-88.108,0l138.779,214.186l45.289,-65.872l-95.959,-148.313Z" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M254.094,112.185l-77.111,-112.148l154.265,-0.037l-77.154,112.185Z" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M321.72,214.178l-45.257,-65.82l96.007,-148.355l88.118,0l-138.81,214.212" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M43.972,55.562c-0.744,0 -0.749,1.161 0,1.161c0.744,0 0.749,-1.161 0,-1.161" style="fill:#fff;fill-rule:nonzero;"/>
+                            </g>
+                            <g>
+                                <path d="M621.261,176.867l-48.493,0l-35.518,133.963l-1.946,0l-34.707,-133.963l-50.277,0l58.873,172.563l-1.46,5.514c-2.433,14.11 -9.569,22.381 -30.977,22.381c-4.866,0 -11.353,-0.487 -14.272,-1.135l0,32.437c4.541,0.973 14.759,1.946 24.652,1.946c45.249,0 62.116,-23.679 74.118,-55.305l4.379,-11.839c0.649,-1.946 55.629,-166.562 55.629,-166.562Z" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M626.335,349.43l45.574,0l0,-99.094c0,-25.138 13.137,-37.464 32.437,-37.464c18.165,0 31.626,9.731 31.626,36.491l0,100.067l45.574,0l0,-113.366c0,-40.708 -24.814,-61.792 -59.035,-61.792c-27.733,0 -44.276,15.083 -49.79,28.22l-1.946,0l0,-25.625l-44.438,0l0,172.563Z" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M834.301,349.43l16.543,-54.98l72.009,0l16.381,54.98l50.115,0l-72.983,-221.38l-55.629,0l-73.307,221.38l46.871,0Zm53.845,-177.266l25.625,87.741l-53.683,0l25.949,-87.741l2.108,0Z" style="fill:#fff;fill-rule:nonzero;"/>
+                                <rect x="992.963" y="116.372" width="45.736" height="233.057" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M1130.865,380.083c-18.975,0 -29.842,-8.109 -31.95,-19.462l-43.952,0c0.811,27.085 23.03,52.71 74.604,52.71c42.168,0 82.551,-16.705 82.551,-66.171l0,-170.293l-44.925,0l0,25.463l-1.946,0c-6.325,-15.083 -21.895,-27.571 -48.817,-27.571c-38.6,0 -65.036,29.031 -65.036,78.821l0,15.083c0,50.115 26.922,78.335 64.711,78.335c24.49,0 42.33,-11.839 48.655,-27.085l1.946,0l0,24.328c0,22.868 -11.677,35.843 -35.843,35.843Zm2.271,-169.319c20.597,0 33.41,18.165 33.41,45.249l0,13.948c0,25.463 -12.326,43.303 -33.248,43.303c-20.597,0 -35.194,-15.57 -35.194,-44.276l0,-12.975c0,-28.544 13.786,-45.249 35.032,-45.249Z" style="fill:#fff;fill-rule:nonzero;"/>
+                                <path d="M1303.962,173.785c-52.71,0 -80.119,35.356 -80.119,83.362l0,11.353c0,51.899 27.409,84.011 80.119,84.011c52.385,0 79.632,-32.437 79.632,-84.173l0,-11.353c0,-48.979 -27.247,-83.2 -79.632,-83.2Zm-0.162,34.869c26.436,0 33.572,24.003 33.572,48.979l0,10.866c0,24.49 -6.812,48.979 -33.572,48.979c-26.76,0 -33.896,-24.652 -33.896,-48.979l0,-10.866c0,-24.814 7.46,-48.979 33.896,-48.979Z" style="fill:#fff;fill-rule:nonzero;"/>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+            </a>
+            
+            <!-- Navigation Links -->
+            <nav class="hidden lg:flex items-center gap-8 text-[14px] font-medium text-slate-300 absolute left-1/2 -translate-x-1/2">
+                <a href="#intro" class="hover:text-white transition-all duration-200 font-bold underline-from-center" >Bộ Chỉ Báo</a>
+                <a href="#features" class="hover:text-white transition-all duration-200 font-bold underline-from-center">Tính năng</a>
+                <a href="#compare" class="hover:text-white transition-all duration-200 font-bold underline-from-center">So sánh</a>
+                <a href="#pricing" class="hover:text-white transition-all duration-200 font-bold flex items-center gap-1 underline-from-center">Bảng giá</a>
+                <a href="#faq" class="hover:text-white transition-all duration-200 font-bold underline-from-center">Q & A</a>
+            </nav>
+
+            <div class="hidden lg:flex items-center gap-3">
+                <!--a href="#about-indicators" class="px-5 py-2 rounded-full font-bold text-sm btn-ghost">Xem thực tế</a-->
+                <a href="#pricing" class="px-5 py-2 rounded-full bg-white text-slate-950 font-bold text-sm hover:bg-slate-200 active:scale-95 transition-all duration-200 shadow-md">Nhận truy cập</a>
+            </div>
+
+            <!-- Hamburger menu di động -->
+            <button id="menu-btn" type="button" aria-label="Mở menu điều hướng" aria-controls="mobile-menu" aria-expanded="false" class="lg:hidden p-2 text-slate-400 hover:text-white border border-white/5 rounded-xl hover:bg-white/5 transition-all cursor-pointer">
+                <svg id="menu-icon-open" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" x2="20" y1="12" y2="12"></line>
+                    <line x1="4" x2="20" y1="6" y2="6"></line>
+                    <line x1="4" x2="20" y1="18" y2="18"></line>
+                </svg>
+                <svg id="menu-icon-close" class="hidden" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="relative z-10 pt-20">
+        <!-- HERO SECTION (Chỉ phần này có dải cực quang động) #436fff #1bd1d7 [linear-gradient(180deg,rgba(59,171,246,1)_0%,rgba(59,171,246,1)_35%,rgba(103,232,249,1)_45%,rgba(255,255,255,1)_50%,rgba(103,232,249,1)_55%,rgba(59,130,246,1)_65%,rgba(25,83,255,1)_100%)]-->
+        <section class="relative pt-24 pb-16 px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-7 sm:space-y-8">
+            <h1 class="hero-fluid-title font-extrabold tracking-tight text-white max-w-5xl mx-auto hero-title font-sans">
+                Thấu hiểu thị trường như<br> 
+                <span class="text-transparent bg-clip-text font-extrabold bg-[linear-gradient(180deg,rgba(59,171,246,1)_0%,rgba(59,171,246,1)_35%,rgba(103,232,249,1)_45%,rgba(255,255,255,1)_50%,rgba(103,232,249,1)_55%,rgba(59,130,246,1)_70%,rgba(25,83,255,1)_100%)]">Dòng Tiền Thông Minh</span><br>
+            </h1>
+            <p class="text-slate text-xl sm:text-2xl max-w-3xl mx-auto hero-copy font-normal text-center">
+                <span class="block">
+                    Hệ thống chỉ báo kỹ thuật 
+                    <br class="sm:hidden"> theo dấu dòng tiền.
+                </span>
+                <span class="block">
+                    Ngừng dự đoán thị trường & 
+                    <br class="sm:hidden"> bắt đầu theo chân dòng tiền lớn.
+                </span>
+            </p>
+        </section>
+        
+        <div class="flex justify-center mb-10 px-6 relative z-30">
+            <a href="#pricing" class="rotating-border-wrapper" aria-label="Nhận miễn phí">
+                <!-- Khung viền xoay siêu tinh tế mảnh 1.2px có đục rỗng CSS mask -->
+                <div class="rotating-border-glow-layer">
+                    <div class="rotating-border-gradient"></div>
+                </div>
+                
+                <!-- Nút bấm mờ trong suốt (Glassmorphism) nền Slate mờ hòa vào tối không gian -->
+                <span class="rotating-border-btn whitespace-nowrap responsive-text">
+                    Trải nghiệm 30 ngày không rủi ro 
+                    <!-- Icon SVG Arrow Right sắc nét -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#e5e7eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                        <path d="M4 12H20"/>
+                        <path d="M15 7L20 12L15 17"/>
+                    </svg>
+                </span>
+            </a>
+        </div>          
+
+        <!--DẢI MARQUEE CHẠY NGANG-->
+        <div class="section-wrapper mt-6">
+            <h2 class="title text-xs text-slate-100 font-normal"> CÁC THỊ TRƯỜNG HỖ TRỢ </h2>
+            <div class="marquee-container">
+                <div class="marquee-track">
+                    <span class="keyword">✦ CHỈ SỐ</span>
+                    <span class="keyword">✦ CỔ PHIẾU</span>
+                    <span class="keyword">✦ CRYPTO</span>
+                    <span class="keyword">✦ HÀNG HÓA</span>
+                    <span class="keyword">✦ FOREX</span>
+                    <span class="keyword">✦ CHỈ SỐ</span>
+                    <span class="keyword">✦ CỔ PHIẾU</span>
+                    <span class="keyword">✦ CRYPTO</span>
+                    <span class="keyword">✦ HÀNG HÓA</span>
+                    <span class="keyword">✦ FOREX</span>
+                    <span class="keyword">✦ CHỈ SỐ</span>
+                    <span class="keyword">✦ CỔ PHIẾU</span>
+                    <span class="keyword">✦ CRYPTO</span>
+                    <span class="keyword">✦ HÀNG HÓA</span>
+                    <span class="keyword">✦ FOREX</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================================================================
+           🚀 SECTION: GIỚI THIỆU HỆ THỐNG CHỈ BÁO CAO CẤP WYN_ALGO
+           Sử dụng hiệu ứng ánh sáng nền rực rỡ chiếu rải rác dưới nền các card để tăng độ chiều sâu thẩm mỹ
+           ========================================================================= -->
+         <!--test caroul -->
+        <section id="intro" class="about-indicators relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
+    
+    <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+        <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.6] pt-4">
+            <span class="textGradient-ttl text-transparent bg-clip-text inline-block py-2">Sẵn sàng <br class="md:hidden">Đón Đầu Xu Hướng
+            </span>
+        </h2>
+        <p class="text-[#f0fdff] text-lg sm:text-xl opacity-80">Dễ dàng truy cập & thêm vào yêu thích.</p>
+    </div>
+    
+    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full p-8 md:p-10">
+        <div class="flex flex-col md:flex-row items-center gap-12">
+            
+            <div class="w-full md:w-1/2 order-2 md:order-1">
+                <div class="carousel-window">
+                    <div class="carousel-track">
+                        
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
+                            </svg>
+                        </div>
+
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
+                            </svg>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full md:w-1/2 order-1 md:order-2 space-y-6">
+                <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2"> Chỉ báo BigMoney</h2>
+                <p class="text-slate-300 text-lg leading-relaxed text-pretty">
+                    <strong>Truy dấu dòng tiền lớn:</strong> Định vị chính xác hành vi gom hàng hoặc xả hàng của nhà đầu tư tổ chức ngay trên từng cây nến. Không đoán tương lai, phản ánh trực quan sự thật dòng tiền.
+                </p>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3 text-slate-300">
+                        <i class="fa-solid fa-check text-emerald-400"></i>
+                        <span>Nhãn ▲/▲+ khi gom, ▼/▼+ khi xả.</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-slate-300">
+                        <i class="fa-solid fa-check text-emerald-400"></i>
+                        <span>Tìm GAP & vùng S/R cứng tự động.</span>
+                    </div>
+                </div>
+                <a href="https://vn.tradingview.com/script/lTeNB8SC-WynAlgo-BigMoney/" target="_blank" rel="noopener" 
+                           class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
+                            <div class="flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+            <g transform="matrix(1,0,0,1,-5.5,-5.5)">
+                <g transform="matrix(1,0,0,1,-2.5,-1.5)">
+                    <path d="M46,27L46,15.06C46,13.453 45.362,11.912 44.225,10.775C43.088,9.638 41.547,9 39.94,9C33.297,9 22.702,9 16.06,9C14.453,9 12.911,9.638 11.775,10.775C10.638,11.911 10,13.453 10,15.06C10,21.914 10,33.012 10,39.888C10,43.263 12.736,46 16.112,46C20.986,46 27,46 27,46"/>
+                    <path d="M44,33L44,52"/>
+                    <path d="M34,42.5L53,42.5"/>
+                    <path d="M18,32C18.018,31.968 25,25 25,25L32,32L39,25"/>
+                </g>
+            </g>
+        </svg>
+                                <span>Sử dụng trên biểu đồ</span>
+                            </div>                            <!--span class="font-normal text-xs text-emerald-400/70">(Chuyển hướng đến TradingView®)</span-->
+                        </a>
+            </div>
+            
+        </div>
+    </div>
+</section>
+   
+   <!-- chỉ báo 2 -->
+<section class="about-indicators relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
+    
+    <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+        <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.4] pt-4">
+            <span class="textGradient-ttl text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 inline-block">Sẵn sàng Đón Đầu Xu Hướng</span>
+        </h2>
+        <p class="text-[#f0fdff] text-lg sm:text-xl opacity-80">Dễ dàng truy cập & thêm vào yêu thích.</p>
+    </div>
+    
+    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full p-8 md:p-10">
+        <div class="flex flex-col md:flex-row items-center gap-12">
+            
+            <div class="w-full md:w-1/2 order-2 md:order-1">
+                <div class="carousel-window">
+                    <div class="carousel-track">
+                        
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
+                            </svg>
+                        </div>
+
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
+                            </svg>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full md:w-1/2 order-1 md:order-2 space-y-6">
+                <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2"> Chỉ báo BigTrade</h2>
+                <p class="text-slate-300 text-lg leading-relaxed text-pretty">
+                    <strong>Vị thế vàng & MTF:</strong> Điểm vào lệnh chuẩn xác không vẽ lại nến (No-repaint). Tích hợp sẵn bảng quản lý danh mục đa khung thời gian để theo dõi mượt mà.
+                </p>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3 text-slate-300">
+                        <i class="fa-solid fa-check text-emerald-400"></i>
+                        <span>Cung cấp SL & TP: Đưa ra mức dừng lỗ, chốt lời tự động.</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-slate-300">
+                        <i class="fa-solid fa-check text-emerald-400"></i>
+                        <span>Quản lý 6 mã cùng lúc: Bảng điều khiển MTF sắc sảo.</span>
+                    </div>
+                </div>
+                <a href="https://vn.tradingview.com/script/lqlCTPHZ-WynAlgo-BigTrade/" target="_blank" rel="noopener" 
+                           class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
+                            <div class="flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+            <g transform="matrix(1,0,0,1,-5.5,-5.5)">
+                <g transform="matrix(1,0,0,1,-2.5,-1.5)">
+                    <path d="M46,27L46,15.06C46,13.453 45.362,11.912 44.225,10.775C43.088,9.638 41.547,9 39.94,9C33.297,9 22.702,9 16.06,9C14.453,9 12.911,9.638 11.775,10.775C10.638,11.911 10,13.453 10,15.06C10,21.914 10,33.012 10,39.888C10,43.263 12.736,46 16.112,46C20.986,46 27,46 27,46"/>
+                    <path d="M44,33L44,52"/>
+                    <path d="M34,42.5L53,42.5"/>
+                    <path d="M18,32C18.018,31.968 25,25 25,25L32,32L39,25"/>
+                </g>
+            </g>
+        </svg>
+                                <span>Sử dụng trên biểu đồ</span>
+                            </div>
+                            <!--span class="font-normal text-xs text-[#436fff]">(Chuyển hướng đến TradingView®)</span-->
+                        </a>
+                </div>
+            
+        </div>
+    </div>
+</section>    
+            
+
+<!-- chỉ báo 3 -->
+<section class="about-indicators relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
+    
+    <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+        <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.4] pt-4">
+            <span class="textGradient-ttl text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 inline-block">Sẵn sàng Đón Đầu Xu Hướng</span>
+        </h2>
+        <p class="text-[#f0fdff] text-lg sm:text-xl opacity-80">Dễ dàng truy cập & thêm vào yêu thích.</p>
+    </div>
+    
+    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full p-8 md:p-10">
+        <div class="flex flex-col md:flex-row items-center gap-12">
+            
+            <div class="w-full md:w-1/2 order-2 md:order-1">
+                <div class="carousel-window">
+                    <div class="carousel-track">
+                        
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
+                            </svg>
+                        </div>
+
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
+                            </svg>
+                        </div>
+                        <div class="indicator-card">
+                            <svg viewBox="0 0 200 100" class="w-full h-auto">
+                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
+                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
+                            </svg>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full md:w-1/2 order-1 md:order-2 space-y-6">
+                <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2"> Chỉ báo SignalEye</h2>
+                <p class="text-slate-300 text-lg leading-relaxed text-pretty">
+                    <strong>Mắt thần quét đa tầng:</strong> Tổng hợp tối tân giúp quét cùng lúc nhiều mã cổ phiếu, phát hiện dòng tiền xoay vòng giữa các nhóm ngành để bạn luôn đi trước một bước.
+                </p>
+                <div class="space-y-2">
+                            <div class="flex items-start gap-2 text-sm text-slate-300">
+                                <span class="text-purple-400 mt-1"><i class="fa-solid fa-check"></i></span>
+                                <span><strong>Đa khung thời gian:</strong> Tự động giao thoa dữ liệu 3H và 1D.</span>
+                            </div>
+                            <div class="flex items-start gap-2 text-sm text-slate-300">
+                                <span class="text-purple-400 mt-1"><i class="fa-solid fa-check"></i></span>
+                                <span><strong>Xoay vòng ngành:</strong> Định vị dòng tiền vào Ngân hàng, BĐS, Thép...</span>
+                            </div>
+                        </div>
+
+                        <a href="https://vn.tradingview.com/script/fBV4cYvS-WynAlgo-SignalEye/" target="_blank" rel="noopener" 
+                           class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
+                            <div class="flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+            <g transform="matrix(1,0,0,1,-5.5,-5.5)">
+                <g transform="matrix(1,0,0,1,-2.5,-1.5)">
+                    <path d="M46,27L46,15.06C46,13.453 45.362,11.912 44.225,10.775C43.088,9.638 41.547,9 39.94,9C33.297,9 22.702,9 16.06,9C14.453,9 12.911,9.638 11.775,10.775C10.638,11.911 10,13.453 10,15.06C10,21.914 10,33.012 10,39.888C10,43.263 12.736,46 16.112,46C20.986,46 27,46 27,46"/>
+                    <path d="M44,33L44,52"/>
+                    <path d="M34,42.5L53,42.5"/>
+                    <path d="M18,32C18.018,31.968 25,25 25,25L32,32L39,25"/>
+                </g>
+            </g>
+        </svg>
+                                <span>Sử dụng trên biểu đồ</span>
+                            </div>
+                            <!--span class="font-normal text-xs text-purple-400/70">(Chuyển hướng đến TradingView®)</span-->
+                        </a>
+                </div>
+            
+        </div>
+    </div>
+</section>  
+
+        <!-- SECTION PRICING CARDS -->
+        <section id="pricing" class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
+            <div class="text-center space-y-4 mb-6">
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">
+                <span class=" text-white font-extrabold">Chọn Ngay Kế Hoạch Của Bạn</span></h2>
+            </div>
+
+            <div class="flex flex-col items-center justify-center gap-y-4 pt-4 px-4 max-w-md mx-auto relative z-20">
+                <div class="px-5 py-2 border border-white/10 bg-slate-950/40 rounded-xl text-slate-200 text-xs sm:text-sm font-semibold tracking-normal shadow-md">
+                    Thanh toán theo năm, tiết kiệm thêm đến <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400 font-extrabold animate-pulse">45% chi phí!</span>
+                </div>
+                
+                <div class="inline-flex p-1 bg-slate-950/80 border border-white/10 rounded-full w-full max-w-[280px] shadow-2xl">
+                    <button id="toggle-monthly" type="button" aria-pressed="true" class="flex-1 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-white bg-white/10 border border-white/10 shadow-md">
+                        Việt Nam
+                    </button>
+                    <button id="toggle-yearly" type="button" aria-pressed="false" class="flex-1 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-slate-400 hover:text-white border border-transparent">
+                        Quốc Tế
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 🔦 Ánh sáng cực quang ngọc lục bảo lớn, rực rỡ và tỏa rộng ngay sau hệ thống Bảng Giá -->
+            <div class="ambient-glow-orb glow-emerald w-[750px] h-[650px] top-10 left-1/2 -translate-x-1/2"></div>
+
+            <!-- CHÚ Ý py-12 lg:py-12: Bổ dung padding dọc trực tiếp vào khung cuộn để tránh viền phát quang bị cắt ngang khi tràn viền -->
+            <div class="flex overflow-x-auto lg:grid lg:grid-cols-3 gap-4 lg:gap-8 items-stretch relative -mx-6 px-6 lg:mx-0 lg:px-0 snap-x snap-mandatory scroll-smooth py-12 lg:py-12 no-scrollbar relative z-10">
+                
+                <!-- Plan 1: Starter -->
+                <div class="pricing-card flex-shrink-0 w-[80vw] sm:w-[360px] lg:w-auto snap-center border-2 border-emerald-500 rounded-3xl p-8 bg-slate-950/40 hover:border-emerald-400 hover:-translate-y-2 hover:shadow-[0_0_35px_rgba(20,184,166,0.35)] transition-all duration-300 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs uppercase tracking-normal font-bold text-cyan-400">Gói Cơ Bản</span>
+                            <span class="bg-slate-900 text-slate-400 text-[10px] px-2.5 py-1 rounded-md font-bold uppercase border border-white/5">Starter</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Starter Pack</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed font-medium">Cung cấp các công cụ cốt lõi để theo dõi xu hướng, hỗ trợ đắc lực cho những người mới gia nhập thị trường.</p>
+                        
+                        <div class="py-4 border-t border-b border-white/5 space-y-1">
+                            <div class="text-slate-600 line-through text-xs" id="starter-strike">$39.99</div>
+                            <div class="flex items-baseline">
+                                <span class="text-xl font-bold text-white">$</span>
+                                <span class="text-5xl font-extrabold tracking-normal text-white" id="starter-price">29.99</span>
+                                <span class="text-slate-400 ml-1.5 text-xs" id="starter-period">/tháng</span>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-3 pt-2">
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i class="fa-solid text-emerald-400 fa-circle-check"></i>
+                                Bộ chỉ báo Xu hướng cơ bản
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i class="fa-solid text-emerald-400 fa-circle-check"></i>
+                                Tín hiệu Buy/Sell độ trễ thấp
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i class="fa-solid text-emerald-400 fa-circle-check"></i>
+                                Cảnh báo qua Telegram/Discord cơ bản
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-500 line-through">
+                                <i class="fa-solid text-slate-700 fa-circle-xmark"></i>
+                                1,000 AI Credits hỗ trợ phân tích
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="pt-8">
+                        <button type="button" data-plan="Starter" data-price="29.99" class="js-plan-button w-full bg-slate-900 hover:bg-slate-800 border border-white/5 hover:border-cyan-500/30 text-white text-center py-4 rounded-xl font-bold transition duration-200 hover:scale-[1.02] cursor-pointer">
+                            Thuê Gói Starter
+                        </button>
+                    </div>
+                </div>
+
+<!-- Plan 2: Premium -->
+                <div id="premium-card" class="pricing-card flex-shrink-0 w-[80vw] sm:w-[360px] lg:w-auto snap-center border-2 border-[#436fff] rounded-3xl p-8 bg-[#02092080] flex flex-col justify-between relative shadow-[0_0_35px_rgba(6,182,212,0.25)] shadow-[0_0_45px_rgba(0,66,255,0.45)] hover:-translate-y-2 hover:border-blue-400 transition-all duration-300">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[linear-gradient(172deg,rgba(59,171,246,0.8)_0%,rgba(59,171,246,1)_20%,rgba(103,232,249,1)_40%,rgba(255,255,255,1)_50%,rgba(103,232,249,1)_60%,rgba(59,130,246,1)_80%,rgba(25,83,255,0.8)_100%)] text-slate-950 px-5 py-1.5 rounded-full text-xs font-bold shadow-lg shadow-cyan-500/25 tracking-normal whitespace-nowrap z-30">PHỔ BIẾN NHẤT</div>
+                    <svg class="absolute top-6 left-6 w-8 h-8 text-blue-400" viewBox="0 0 876.3 693.44" fill="currentColor">
+                                <path class="cls-1" d="M238.49,206.55l143.41,422.7c5.45,16.07-15.4,27.75-26.26,14.71L3.57,221.26c-8.3-9.97-1.21-25.1,11.76-25.1h208.66c6.56,0,12.39,4.18,14.5,10.39ZM552.69,9.72l56.17,143.29c3.94,10.04-3.47,20.89-14.25,20.89h-312.92c-10.78,0-18.19-10.85-14.25-20.89L323.61,9.72c2.3-5.86,7.95-9.72,14.25-9.72h200.58c6.3,0,11.95,3.86,14.25,9.72ZM610.98,216.38l-158.33,466.67c-4.7,13.85-24.29,13.85-28.99,0l-158.33-466.67c-3.37-9.93,4.01-20.23,14.5-20.23h316.66c10.48,0,17.86,10.3,14.5,20.23ZM652.31,196.16h208.66c12.98,0,20.07,15.13,11.76,25.1l-352.07,422.7c-10.86,13.04-31.71,1.35-26.26-14.71l143.41-422.7c2.11-6.21,7.94-10.39,14.5-10.39ZM858.57,173.9h-207.18c-6.3,0-11.95-3.86-14.25-9.72l-56.17-143.29c-3.94-10.04,3.47-20.89,14.25-20.89h136.15c4.38,0,8.54,1.87,11.45,5.15l127.2,143.29c8.77,9.87,1.76,25.47-11.45,25.47ZM144.93,0h136.15c10.78,0,18.19,10.85,14.25,20.89l-56.17,143.29c-2.3,5.86-7.95,9.72-14.25,9.72H17.73c-13.2,0-20.21-15.6-11.45-25.47L133.48,5.15c2.91-3.27,7.07-5.15,11.45-5.15Z"/>
+                            </svg>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs uppercase tracking-normal font-bold text-blue-500">Gói Chuyên Nghiệp</span>
+                            <span class="bg-blue-500/20 text-blue-500 border border-blue-500/40 text-[10px] px-2.5 py-1 rounded-md font-bold uppercase">PREMIUM</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mt-1">Premium Suite</h3>
+                        <p class="text-xs text-slate-200 leading-relaxed font-medium">Bộ chỉ báo nâng cao hoàn chỉnh kèm trợ lý AI hỗ trợ đa dạng mọi loại tài sản giao dịch, tối ưu hóa điểm vào/ra lệnh.</p>
+                        
+                        <div class="py-4 border-t border-white/10 border-b border-white/10 space-y-1">
+                            <div class="text-cyan-400/60 line-through text-xs" id="premium-strike">$67.99</div>
+                            <div class="flex items-baseline">
+                                <span class="text-xl font-bold text-cyan-400">$</span>
+                                <span class="text-5xl font-extrabold tracking-normal text-white" id="premium-price">57.79</span>
+                                <span class="text-slate-300 ml-1.5 text-xs" id="premium-period">/tháng</span>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-3 pt-2">
+                            <li class="flex items-center gap-3 text-xs text-slate-200 font-semibold">
+                                <i class="fa-solid fa-circle-check text-slate-200"></i>
+                                Đầy đủ chỉ báo chuyên sâu TienCK_SignalEye
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-200">
+                                <i class="fa-solid fa-circle-check text-slate-200"></i>
+                                Cơ chế lọc nhiễu sóng Sideway vượt trội
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-200">
+                                <i class="fa-solid fa-circle-check text-slate-200"></i>
+                                Tự động vẽ vùng Cung & Cầu cứng OrderBlock
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-200">
+                                <i class="fa-solid fa-circle-check text-slate-200"></i>
+                                Quyền truy cập phòng tín hiệu VIP Discord
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="pt-8">
+                        <button type="button" data-plan="Premium" data-price="57.79" class="js-plan-button w-full bg-[linear-gradient(172deg,rgba(59,171,246,0.8)_0%,rgba(59,171,246,1)_20%,rgba(103,232,249,1)_40%,rgba(255,255,255,1)_50%,rgba(103,232,249,1)_60%,rgba(59,130,246,1)_80%,rgba(25,83,255,0.8)_100%)] hover:from-emerald-300 hover:via-cyan-200 hover:to-violet-500 text-slate-950 text-center py-4 rounded-xl font-bold shadow-xl hover:scale-[1.02] transition-all duration-200 cursor-pointer">
+                            Thuê Gói Premium ngay
+                        </button>
+                    </div>
+                </div>
+
+<!-- Plan 3: Ultimate bg-gradient-to-r from-emerald-400 via-cyan-300 to-violet-600 hover:from-emerald-300 -->
+                <div class="pricing-card flex-shrink-0 w-[80vw] sm:w-[360px] lg:w-auto snap-center border-2 border-violet-600 rounded-3xl p-8 bg-[#02092080] hover:border-purple-400 hover:-translate-y-2 hover:shadow-[0_0_35px_rgba(168,85,247,0.35)] transition-all duration-300 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs uppercase tracking-normal font-bold text-indigo-400">Gói Tối Thượng</span>
+                            <span class="bg-[#020920cc] text-indigo-400 border border-indigo-500/20 text-[10px] px-2.5 py-1 rounded-md font-bold uppercase">ULTIMATE</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Ultimate Auto-Trade</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed font-medium">Kết nối Webhook trực tiếp tới bot giao dịch, nhân bản chiến lược AI tự động toàn diện không cần can thiệp thủ công.</p>
+                        
+                        <div class="py-4 border-t border-b border-white/5 space-y-1">
+                            <div class="text-slate-600 line-through text-xs" id="ultimate-strike">$119.99</div>
+                            <div class="flex items-baseline">
+                                <span class="text-xl font-bold text-cyan-400">$</span>
+                                <span class="text-5xl font-extrabold tracking-normal text-white" id="ultimate-price">83.99</span>
+                                <span class="text-slate-300 ml-1.5 text-xs" id="ultimate-period">/tháng</span>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-3 pt-2">
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i class="fa-solid fa-circle-check text-violet-400"></i>
+                                Đầy đủ quyền lợi của gói Premium
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i class="fa-solid fa-circle-check text-violet-400"></i>
+                                Quyền xuất tín hiệu Webhook để auto-trade
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i class="fa-solid fa-circle-check text-violet-400"></i>
+                                Chiến lược backtest AI định kỳ hàng tuần
+                            </li>
+                            <li class="flex items-center gap-3 text-xs text-slate-300">
+                                <i class="fa-solid fa-circle-check text-violet-400"></i>
+                                Hỗ trợ cấu hình Bot VIP 1-1 trực tiếp
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="pt-8">
+                        <button type="button" data-plan="Ultimate" data-price="83.99" class="js-plan-button w-full bg-slate-900 hover:bg-slate-800 border border-white/5 hover:border-indigo-500/30 text-white text-center py-4 rounded-xl font-bold transition duration-200 hover:scale-[1.02] cursor-pointer">
+                            Thuê Gói Ultimate
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chỉ bảo kéo ngang trực quan cho mobile -->
+            <div class="flex lg:hidden justify-center items-center gap-1.5 mt-2 text-slate-500 text-xs">
+                <i class="fa-solid fa-angles-left animate-pulse"></i>
+                <span>Vuốt ngang để xem các gói</span>
+                <i class="fa-solid fa-angles-right animate-pulse"></i>
+            </div>
+
+            <div class="text-center space-y-4 mb-6">
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">
+                <span class=" text-white font-extrabold">Đừng lo lắng, Bạn luôn được bảo vệ</span></h2>
+            </div>
+
+            <!-- CHÍNH SÁCH BẢO HÀNH HOÀN TIỀN -->
+            <div class="mt-16 bg-gradient-to-r from-slate-950/85 to-slate-900/60 border border-emerald-500/30 rounded-3xl p-6 sm:p-10 max-w-4xl mx-auto relative overflow-hidden shadow-2xl z-10">
+                <div class="flex flex-col lg:flex-row items-center lg:items-start gap-8 relative z-10">
+                    <div class="w-20 h-20 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-4xl flex-shrink-0 border border-emerald-500/25 shadow-lg shadow-emerald-500/5">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div class="space-y-4 text-center lg:text-left">
+                        <div class="flex items-center gap-2.5 flex-wrap justify-center lg:justify-start">
+                            <span class="text-[10px] uppercase tracking-widest font-extrabold text-emerald-400 bg-[#02092080] px-2.5 py-1 rounded-full border border-emerald-500/30">WynAlgo Trust Policy</span>
+                            <h4 class="font-extrabold text-white text-xl sm:text-2xl">Chính Sách Cam Kết Vàng Hoàn Tiền 100%</h4>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed font-medium">
+                            Chúng tôi tuyệt đối tin tưởng vào chất lượng và giá trị thực chiến của hệ thống chỉ báo WynAlgo. Nếu sau khi trải nghiệm bạn không hài lòng về bộ công cụ hoặc thấy không phù hợp với phương pháp giao dịch của mình trong <strong>30 ngày đầu tiên</strong>, hãy liên hệ với chúng tôi để được hoàn trả 100% phí thuê bao ngay lập tức.
+                        </p>
+                        
+                        <!-- 3 cột điều khoản minh bạch -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-white/5 text-left">
+                            <div class="flex items-center gap-2">
+                                <div class="w-5 h-5 rounded-full bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></div>
+                                <span class="text-xs text-slate-200 font-bold">Không yêu cầu lý do phức tạp</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-5 h-5 rounded-full bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></div>
+                                <span class="text-xs text-slate-200 font-bold">Xử lý hoàn tiền trong 24 Giờ</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-5 h-5 rounded-full bg-emerald-500/15 text-emerald-400 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></div>
+                                <span class="text-xs text-slate-200 font-bold">Bảo hành chính chủ nhà sáng lập</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION FEATURES DETAILED EXPLANATION -->
+        <section id="features" class="relative overflow-hidden max-w-7xl mx-auto px-6 lg:px-8 py-16 border-t border-white/5 z-10">
+            <!-- 🔦 Đèn cực quang tĩnh chiếu hắt rực rỡ từ nền lên bên góc phải -->
+            <div class="ambient-glow-orb glow-purple w-[600px] h-[500px] top-12 -right-36"></div>
+
+            <div class="absolute inset-0 ambient-soft-spotlight pointer-events-none"></div>
+            <div class="text-center max-w-3xl mx-auto space-y-4 mb-12 relative z-10">
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">Tại Sao Nên Chọn <span class="text-cyan-400">WynAlgo Indicators</span>?</h2>
+                <p class="text-slate-400 text-lg">Môi trường phân tích giao dịch tự động hóa cao nhất, giảm thiểu tối đa yếu tố nhiễu của thị trường.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 relative z-10">
+                <!-- Feature 1 -->
+                <div class="glass-panel rounded-3xl p-8 hover:border-cyan-500/40 hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-6 group-hover:bg-cyan-400 group-hover:text-slate-950 transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Tín Hiệu Giao Dịch Sắc Nét</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed font-medium">Bộ chỉ báo phát sinh tín hiệu Buy/Sell tức thời ngay trên đồ thị nến. Các thuật toán thế hệ mới lọc sạch nhiễu trong giai đoạn Sideway.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glass-panel rounded-3xl p-8 hover:border-indigo-500/40 hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-6 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Xác Định Cung Cầu Tự Động</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed font-medium">Vẽ vùng Hỗ trợ (Demand) & Kháng cự (Supply) chính xác dựa trên cấu trúc khối lệnh (Order Block) giúp quản lý dừng lỗ tối ưu.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glass-panel rounded-3xl p-8 hover:border-purple-500/40 hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-6 group-hover:bg-purple-500 group-hover:text-white transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67(6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Cảnh Báo Chớp Nhoáng</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed font-medium">Được thiết kế để không bỏ lỡ bất kỳ cơ hội nào nhờ liên kết cảnh báo tốc độ cao qua kênh Telegram và Discord cá nhân.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION FEATURE COMPARISON MATRIX -->
+        <section id="compare" class="relative max-w-7xl mx-auto px-6 lg:px-8 py-16 border-t border-white/5 overflow-hidden z-10">
+            <div class="absolute inset-0 ambient-soft-spotlight pointer-events-none"></div>
+            <!-- 🔦 Đèn cực quang tĩnh hắt sáng rõ nét từ chân bảng so sánh lên -->
+            <div class="ambient-glow-orb glow-cyan w-[600px] h-[500px] -bottom-20 -left-20"></div>
+            
+            <div class="text-center max-w-3xl mx-auto space-y-4 mb-12 relative z-10">
+                <h2 class="text-3xl font-extrabold text-white">Bảng So Sánh Tính Năng Chi Tiết</h2>
+                <p class="text-slate-400 text-sm">Lựa chọn giải pháp phù hợp nhất cho mục tiêu tài chính của bạn.</p>
+            </div>
+
+            <div class="glass-panel rounded-3xl overflow-hidden shadow-2xl border border-white/5 relative z-10">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[650px]">
+                        <thead>
+                            <tr class="bg-[#02092080] border-b border-white/5">
+                                <th class="p-5 text-sm font-bold text-slate-300">Tính năng cung cấp</th>
+                                <th class="p-5 text-sm font-bold text-slate-400 text-center">Starter</th>
+                                <th class="p-5 text-sm font-bold text-cyan-400 text-center bg-cyan-500/5">Premium</th>
+                                <th class="p-5 text-sm font-bold text-indigo-400 text-center">Ultimate</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5 text-sm">
+                            <!-- Row 1 -->
+                            <tr>
+                                <td class="p-5 font-medium text-slate-200">Trọn bộ chỉ báo kỹ thuật cơ bản</td>
+                                <td class="p-5 text-center text-emerald-400"><i class="fa-solid fa-circle-check"></i></td>
+                                <td class="p-5 text-center text-emerald-400 bg-cyan-500/5"><i class="fa-solid fa-circle-check"></i></td>
+                                <td class="p-5 text-center text-emerald-400"><i class="fa-solid fa-circle-check"></i></td>
+                            </tr>
+                            <!-- Row 2 -->
+                            <tr>
+                                <td class="p-5 font-medium text-slate-200">Bộ lọc nhiễu sóng cao cấp (Sideway-Filter)</td>
+                                <td class="p-5 text-center text-slate-600"><i class="fa-solid fa-circle-minus"></i></td>
+                                <td class="p-5 text-center text-emerald-400 bg-cyan-500/5"><i class="fa-solid fa-circle-check"></i></td>
+                                <td class="p-5 text-center text-emerald-400"><i class="fa-solid fa-circle-check"></i></td>
+                            </tr>
+                            <!-- Row 3 -->
+                            <tr>
+                                <td class="p-5 font-medium text-slate-200">Tự động vẽ vùng cung cầu cứng (OrderBlock)</td>
+                                <td class="p-5 text-center text-slate-600"><i class="fa-solid fa-circle-minus"></i></td>
+                                <td class="p-5 text-center text-emerald-400 bg-cyan-500/5"><i class="fa-solid fa-circle-check"></i></td>
+                                <td class="p-5 text-center text-emerald-400"><i class="fa-solid fa-circle-check"></i></td>
+                            </tr>
+                            <!-- Row 4 -->
+                            <tr>
+                                <td class="p-5 font-medium text-slate-200">Cảnh báo thời gian thực qua Webhook</td>
+                                <td class="p-5 text-center text-slate-600"><i class="fa-solid fa-circle-minus"></i></td>
+                                <td class="p-5 text-center text-slate-600 bg-cyan-500/5"><i class="fa-solid fa-circle-minus"></i></td>
+                                <td class="p-5 text-center text-emerald-400"><i class="fa-solid fa-circle-check"></i></td>
+                            </tr>
+                            <!-- Row 5 -->
+                            <tr>
+                                <td class="p-5 font-medium text-slate-200">Kênh hỗ trợ VIP riêng tư</td>
+                                <td class="p-5 text-center text-slate-600"><i class="fa-solid fa-circle-minus"></i></td>
+                                <td class="p-5 text-center text-slate-400 bg-cyan-500/5">Cơ bản</td>
+                                <td class="p-5 text-center text-indigo-400 font-bold">Đặc quyền 24/7</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION TESTIMONIALS -->
+        <section class="relative max-w-7xl mx-auto px-6 lg:px-8 py-16 border-t border-white/5 overflow-hidden z-10">
+            <div class="absolute inset-x-0 top-0 h-40 ambient-soft-spotlight pointer-events-none"></div>
+            <!-- 🔦 Đèn cực quang tĩnh nền tím huyền bí chiếu sáng góc bên phải -->
+            <div class="ambient-glow-orb glow-purple w-[550px] h-[450px] top-1/4 -right-28"></div>
+            
+            <div class="text-center max-w-3xl mx-auto space-y-4 mb-12 relative z-10">
+                <h2 class="text-3xl font-extrabold text-white">Chia Sẻ Từ Các Nhà Giao Dịch</h2>
+                <p class="text-slate-400 text-sm">Xem cảm nhận từ cộng đồng của chúng tôi sau khi tích hợp WynAlgo vào chiến thuật trade.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+                <!-- Testimonial 1 -->
+                <div class="glass-panel rounded-2xl p-6 space-y-4 hover:border-cyan-500/30 transition-all duration-300">
+                    <div class="flex items-center gap-1.5 text-amber-400 text-sm">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">"Bộ lọc nhiễu sideway của WynAlgo thực sự cứu tôi khỏi rất nhiều lệnh thua lỗ vô nghĩa. Các vùng OrderBlock vẽ tự động chuẩn xác không thua kém gì các trader kinh nghiệm vẽ tay."</p>
+                    <div class="border-t border-white/5 pt-4 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-[#02092080] flex items-center justify-center font-bold text-xs text-cyan-400">HA</div>
+                        <div>
+                            <h4 class="font-bold text-xs text-white">Hoàng Anh</h4>
+                            <p class="text-[10px] text-slate-500">Crypto Scalper</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="glass-panel rounded-2xl p-6 space-y-4 hover:border-cyan-500/30 transition-all duration-300">
+                    <div class="flex items-center gap-1.5 text-amber-400 text-sm">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">"Gói Ultimate Auto-trade kết hợp Webhook chạy bot đỉnh chóp! Tín hiệu bắn thẳng sang sàn không bị trễ nải một giây nào. Đây là giải pháp tiết kiệm thời gian tuyệt nhất."</p>
+                    <div class="border-t border-white/5 pt-4 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-[#02092080] flex items-center justify-center font-bold text-xs text-indigo-400">MT</div>
+                        <div>
+                            <h4 class="font-bold text-xs text-white">Minh Tuấn</h4>
+                            <p class="text-[10px] text-slate-500">Crypto Swinger</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="glass-panel rounded-2xl p-6 space-y-4 hover:border-cyan-500/30 transition-all duration-300">
+                    <div class="flex items-center gap-1.5 text-amber-400 text-sm">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-medium">"Tôi đã dùng qua rất nhiều gói chỉ báo khác nhau, nhưng hệ thống của Tiến thực sự làm tôi ấn tượng ở khả năng bám xu hướng mượt mà, hạn chế tối đa tin tức ảo."</p>
+                    <div class="border-t border-white/5 pt-4 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-[#02092080] flex items-center justify-center font-bold text-xs text-purple-400">KT</div>
+                        <div>
+                            <h4 class="font-bold text-xs text-white">Khánh Trình</h4>
+                            <p class="text-[10px] text-slate-500">Phái Sinh Việt Nam</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ SECTION -->
+        <section id="faq" class="relative max-w-4xl mx-auto px-6 lg:px-8 py-16 border-t border-white/5 overflow-hidden z-10">
+            <div class="absolute inset-0 ambient-soft-spotlight pointer-events-none"></div>
+            <!-- 🔦 Đèn cực quang tĩnh nền xanh rực sáng ở khu vực cuối trang -->
+            <div class="ambient-glow-orb glow-cyan w-[650px] h-[550px] bottom-10 left-1/2 -translate-x-1/2"></div>
+            
+            <div class="text-center space-y-4 mb-12 relative z-10">
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Các câu hỏi thường gặp</h2>
+                <p class="text-slate-400 text-sm">Mọi thông tin bạn cần nắm rõ trước khi tham gia cộng đồng WynAlgo.</p>
+            </div>
+
+            <div class="space-y-4 relative z-10">
+                <!-- Accordion item 1 -->
+                <div class="border border-white/5 rounded-2xl bg-[#02092080] overflow-hidden">
+                    <button type="button" class="faq-toggle w-full flex items-center justify-between p-5 text-left font-bold text-slate-200 hover:text-white transition-colors duration-200 cursor-pointer" aria-expanded="false" aria-controls="faq-answer-1">
+                        <span>Tôi có cần kiến thức phân tích kỹ thuật chuyên sâu để dùng không?</span>
+                        <i class="fa-solid fa-plus text-slate-500 transition-transform duration-300"></i>
+                    </button>
+                    <div id="faq-answer-1" class="faq-content hidden p-5 pt-0 text-sm text-slate-400 leading-relaxed border-t border-white/5">
+                        Không hề. Hệ thống chỉ báo được thiết kế trực quan hóa mức tối đa. Với tín hiệu Buy/Sell vẽ trực tiếp và vùng kháng cự, bạn chỉ cần bám theo kế hoạch quản lý vốn để tối ưu lợi nhuận.
+                    </div>
+                </div>
+
+                <!-- Accordion item 2 -->
+                <div class="border border-white/5 rounded-2xl bg-[#02092080] overflow-hidden">
+                    <button type="button" class="faq-toggle w-full flex items-center justify-between p-5 text-left font-bold text-slate-200 hover:text-white transition-colors duration-200 cursor-pointer" aria-expanded="false" aria-controls="faq-answer-2">
+                        <span>Chỉ báo này có thể cài đặt trên sàn giao dịch nào?</span>
+                        <i class="fa-solid fa-plus text-slate-500 transition-transform duration-300"></i>
+                    </button>
+                    <div id="faq-answer-2" class="faq-content hidden p-5 pt-0 text-sm text-slate-400 leading-relaxed border-t border-white/5">
+                        Bộ chỉ báo hoạt động mượt mà trên TradingView, do đó có thể cài đặt để trade Crypto, Chứng khoán Việt Nam, Forex, Vàng (XAUUSD)...
+                    </div>
+                </div>
+
+                <!-- Accordion item 3 -->
+                <div class="border border-white/5 rounded-2xl bg-[#02092080] overflow-hidden">
+                    <button type="button" class="faq-toggle w-full flex items-center justify-between p-5 text-left font-bold text-slate-200 hover:text-white transition-colors duration-200 cursor-pointer" aria-expanded="false" aria-controls="faq-answer-3">
+                        <span>Chỉ báo của WynAlgo có bị vẽ lại nến (Repaint) không?</span>
+                        <i class="fa-solid fa-plus text-slate-500 transition-transform duration-300"></i>
+                    </button>
+                    <div id="faq-answer-3" class="faq-content hidden p-5 pt-0 text-sm text-slate-400 leading-relaxed border-t border-white/5">
+                        Không. Chúng tôi đảm bảo 100% các tín hiệu giao dịch đều cố định ngay khi đóng cây nến hiện thời. Không có hiện tượng Repaint (tín hiệu biến mất sau khi xuất hiện).
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="relative border-t border-white/5 py-16 px-6 lg:px-8 max-w-7xl mx-auto text-center text-slate-400 text-sm space-y-6 z-10 overflow-hidden">
+        <!-- Soft background spotlight under footer -->
+        <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-cyan-950/15 to-transparent pointer-events-none"></div>
+        
+        <div class="flex items-center justify-center gap-2 relative z-10">
+            <span class="font-sans font-bold text-white text-xl tracking-normal">WynAlgo</span>
+            <span class="text-[10px] text-cyan-400 font-sans tracking-normal uppercase bg-cyan-500/20 px-2.5 py-0.5 rounded-full font-bold">Indicators</span>
+        </div>
+        <p class="max-w-3xl mx-auto leading-relaxed relative z-10 text-justify">
+            WynAlgo chỉ cung cấp công cụ phân tích kỹ thuật và nhằm mục đích giáo dục.<br>    
+            Giao dịch và đầu tư chứng khoán, hàng hóa, tiền điện tử và các tài sản tài chính khác tiềm ẩn rủi ro đáng kể, bao gồm nguy cơ mất toàn bộ vốn đầu tư. Nội dung trên trang web này chỉ mang tính chất tham khảo, không cấu thành lời khuyên tài chính, đầu tư hay pháp lý. Mọi quyết định đầu tư nên được đưa ra sau khi tham vấn các chuyên gia tài chính có chuyên môn và đánh giá kỹ lưỡng về tình hình tài chính cá nhân. Hiệu suất đầu tư trong quá khứ không phản ánh cũng như không đảm bảo kết quả trong tương lai. Hãy luôn giao dịch có trách nhiệm.<br>
+            Hiệu suất giao dịch giả định hoặc mô phỏng có những hạn chế cố hữu. Dữ liệu mô phỏng không phản ánh các giao dịch đã thực hiện trong điều kiện thị trường thực. Kết quả mô phỏng thường được tối ưu hóa dựa trên dữ liệu lịch sử và không tính đến các yếu tố thực tế như trượt giá, thanh khoản hoặc phí giao dịch. Do đó, không có cam kết nào về việc tài khoản thực tế sẽ đạt được lợi nhuận hoặc thua lỗ tương đương với các kết quả hiển thị.<br>
+            Các ý kiến hoặc lời chứng thực trên trang web chỉ mang tính chất cá biệt và không đại diện cho trải nghiệm của toàn bộ khách hàng, cũng như không đảm bảo cho thành công trên thị trường.<br>
+            Các biểu đồ được tích hợp từ TradingView®. TradingView® là thương hiệu đã đăng ký của TradingView, Inc. (www.TradingView.com) và không có bất kỳ mối quan hệ đối tác hay liên kết nào với dịch vụ của chúng tôi. Dữ liệu thị trường được hiển thị thông qua nền tảng TradingView®. Chúng tôi không cung cấp dữ liệu thị trường và khuyến nghị người dùng kiểm chứng dữ liệu độc lập trước khi thực hiện các quyết định giao dịch.<br>
+            <br>
+            © 2026 WynAlgo.
+        </p>
+        <div class="flex justify-center gap-6 text-xs font-semibold relative z-10">
+            <a href="#" class="hover:text-cyan-400 transition">Điều khoản sử dụng</a>
+            <span class="text-slate-700">|</span>
+            <a href="#" class="hover:text-cyan-400 transition">Chính sách bảo mật</a>
+            <span class="text-slate-700">|</span>
+            <a href="mailto:support@wynalgo.ai" class="hover:text-cyan-400 transition flex items-center gap-1.5"><i class="fa-regular fa-envelope"></i> Liên hệ Hỗ trợ</a>
+        </div>
+    </footer>
+
+    <!-- LỚP PHỦ NỀN ĐỒNG BỘ CHO DI ĐỘNG KHI MỞ MENU -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-slate-950/40 z-20 opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"></div>
+
+    <!-- 📱 MOBILE MENU -->
+    <div 
+        id="mobile-menu"
+        role="navigation"
+        aria-labelledby="mobile-menu-title"
+        aria-hidden="true"
+        class="fixed top-[83px] left-0 right-0 z-30
+        nav-blur bg-slate-950/15
+        border-b border-white/5
+        shadow-2xl shadow-black/30
+        px-7 sm:px-8 py-6
+        flex flex-col gap-4
+        transition-[opacity,transform]
+        duration-300
+        ease-out
+        opacity-0
+        pointer-events-none
+        invisible
+        -translate-y-4
+        overflow-y-auto
+        max-h-[calc(100dvh-83px)]">
+        <h2 id="mobile-menu-title" class="sr-only">Menu điều hướng WynAlgo</h2>
+
+        <!-- MIDDLE NAVIGATION ROWS -->
+        <div class="flex flex-col space-y-3 w-full">
+            <a href="#intro" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-full flex items-center justify-between hover:border-slate-500 hover:bg-slate-900/70 transition-all duration-200">
+                <span class="text-slate-200 text-[15px] font-bold">Bộ Chỉ Báo</span>
+                <!--i class="fa-solid fa-angle-right text-slate-500 text-xs"></i-->
+            </a>
+            <a href="#features" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-full flex items-center justify-between hover:border-slate-500 hover:bg-slate-900/70 transition-all duration-200">
+                <span class="text-slate-200 text-[15px] font-bold">Tính năng</span>
+                <!--i class="fa-solid fa-angle-right text-slate-500 text-xs"></i-->
+            </a>
+            <a href="#compare" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-full flex items-center justify-between hover:border-slate-500 hover:bg-slate-900/70 transition-all duration-200">
+                <span class="text-slate-200 text-[15px] font-bold">So sánh</span>
+                <!--i class="fa-solid fa-angle-right text-slate-500 text-xs"></i-->
+            </a>
+            <a href="#pricing" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-full flex items-center justify-between hover:border-slate-500 hover:bg-slate-900/70 transition-all duration-200 ">
+                <span class="text-slate-200 text-[15px] font-bold flex items-center gap-1.5">Bảng giá</span>
+                <!--i class="fa-solid fa-angle-right text-slate-500 text-xs"></i-->
+            </a>
+            <a href="#faq" class="mobile-nav-link border border-white/5 bg-slate-900/40 px-5 py-5 rounded-full flex items-center justify-between hover:border-slate-500 hover:bg-slate-900/70 transition-all duration-200">
+                <span class="text-slate-200 text-[15px] font-bold">Q & A</span>
+                <!--i class="fa-solid fa-angle-right text-slate-500 text-xs"></i-->
+            </a>
+        </div>
+
+        <!-- BOTTOM ACCOUNT CTAS -->
+        <div class="flex flex-col space-y-3.5 w-full mt-6 mb-4 items-center">
+            <div class="flex items-center justify-center gap-3.5 w-full">
+                <!--a href="#about-indicators" class="mobile-nav-link flex-1 py-4 text-center border border-white/10 bg-slate-900/50 hover:bg-slate-800 text-white font-bold rounded-2xl transition text-sm">Bộ Chỉ Báo</a-->
+                <!--a href="#pricing" class="mobile-nav-link w-fit px-8 py-4 text-center bg-white hover:bg-slate-200 text-slate-950 font-bold rounded-full transition text-sm shadow-lg shadow-white/5">Nhận truy cập</a-->
+                <a href="#pricing" class="mobile-nav-link w-fit px-5 py-5 text-center bg-white hover:bg-slate-200 text-slate-950 font-bold rounded-full transition-all duration-200 text-[15px] active:scale-[0.98] shadow-lg shadow-white/5">Nhận truy cập</a>
+             </div>
+            <!--p class="text-[9px] text-center text-slate-600 tracking-normal uppercase font-mono">Premium Indicators Ecosystem</p-->
+        </div>
+    </div>
+
+    <!-- PAYMENT MODAL -->
+    <div id="payment-modal" role="dialog" aria-modal="true" aria-labelledby="payment-modal-title" aria-hidden="true" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 nav-blur transition-all duration-300">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-md w-full relative space-y-6 shadow-2xl">
+            <button type="button" data-close-payment aria-label="Đóng khung thanh toán" class="absolute right-4 top-4 text-slate-400 hover:text-white p-2 cursor-pointer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-cyan-500/10 text-cyan-400 text-xl mb-2">
+                    <i class="fa-solid fa-credit-card"></i>
+                </div>
+                <h3 id="payment-modal-title" class="text-xl font-bold text-white">Thanh toán & Nhận chỉ báo</h3>
+                <p class="text-sm text-slate-400">Bạn đã chọn thuê gói <span id="modal-plan-name" class="text-cyan-400 font-bold">Premium</span></p>
+            </div>
+
+            <div class="bg-slate-950 p-4 rounded-2xl border border-white/5 text-center space-y-4">
+                <div class="mx-auto w-36 h-36 bg-slate-900 rounded-xl p-2 flex items-center justify-center border border-white/5">
+                    <img id="qr-image" src="https://placehold.co/150x150/040815/06b6d4?text=QR+PAYMENT" alt="QR Thanh toán" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div class="space-y-1">
+                    <p class="text-xs text-slate-500">Số tiền thanh toán:</p>
+                    <p class="text-2xl font-extrabold text-cyan-400">
+                        <span id="modal-plan-price-value">$57.79 USD</span>
+                        <span id="modal-plan-price-period" class="text-xs text-slate-500 font-normal font-sans">/tháng</span>
+                    </p>
+                </div>
+                <div class="text-left space-y-1.5 text-xs text-slate-300 border-t border-white/5 pt-3">
+                    <p>🏦 <strong>Ngân hàng:</strong> Techcombank</p>
+                    <p>💳 <strong>Số tài khoản:</strong> 19028384819002</p>
+                    <p>👤 <strong>Chủ tài khoản:</strong> NGUYEN VAN TIEN</p>
+                    <p>✏️ <strong>Nội dung CK:</strong> <span class="font-sans tabular-nums text-amber-400 font-bold uppercase" id="modal-order-id">TIENCK_PREM_XYS</span></p>
+                </div>
+            </div>
+
+            <div class="text-xs text-center text-slate-500">
+                * Hỗ trợ trực tiếp: 0988 886 719 (Mr Tiến).
+            </div>
+
+            <button type="button" data-close-payment class="w-full bg-slate-800 hover:bg-slate-700 border border-white/5 text-white py-3.5 rounded-xl font-bold transition cursor-pointer">
+                Tôi Đã Chuyển Khoản
+            </button>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // ==========================================
+        // CONFIG DỄ CHỈNH SỬA BẢNG GIÁ
+        // ==========================================
+        const PLAN_PRICES = {
+            Starter: {
+                monthly: '29.99',
+                yearly: '16.49',
+                monthlyStrike: '$39.99',
+                yearlyStrike: '$29.99',
+            },
+            Premium: {
+                monthly: '57.79',
+                yearly: '31.79',
+                monthlyStrike: '$67.99',
+                yearlyStrike: '$57.79',
+            },
+            Ultimate: {
+                monthly: '83.99',
+                yearly: '45.99',
+                monthlyStrike: '$119.99',
+                yearlyStrike: '$83.99',
+            },
+        };
+
+        const OFFER_END_DATE = '';
+
+        const ACTIVE_BILLING_CLASS = 'flex-1 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-white bg-white/10 border border-white/10 shadow-md';
+        const INACTIVE_BILLING_CLASS = 'flex-1 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-slate-400 hover:text-white border border-transparent';
+
+        function lockPageScroll() {
+            document.body.style.overflow = 'hidden';
+            document.body.style.height = '100vh';
+        }
+
+        function unlockPageScroll() {
+            document.body.style.overflow = '';
+            document.body.style.height = '';
+        }
+
+        // =========================================================
+        // MOBILE MENU: Mở/đóng menu tích hợp Overlay và mượt mà hóa
+        // =========================================================
+        const menuBtn = document.getElementById('menu-btn');
+        const menuIconOpen = document.getElementById('menu-icon-open');
+        const menuIconClose = document.getElementById('menu-icon-close');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+        function openMobileMenu() {
+            mobileMenu.classList.remove('opacity-0', 'pointer-events-none', 'invisible', '-translate-y-4');
+            mobileMenu.classList.add('opacity-100', 'pointer-events-auto', 'visible', 'translate-y-0');
+            
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                mobileMenuOverlay.classList.add('opacity-100', 'pointer-events-auto');
+            }
+            
+            menuBtn.setAttribute('aria-expanded', 'true');
+            menuBtn.setAttribute('aria-label', 'Đóng menu điều hướng');
+            mobileMenu.setAttribute('aria-hidden', 'false');
+            menuIconOpen.classList.add('hidden');
+            menuIconClose.classList.remove('hidden');
+        }
+
+        function closeMobileMenu(restoreFocus = false) {
+            mobileMenu.classList.add('opacity-0', 'pointer-events-none', 'invisible', '-translate-y-4');
+            mobileMenu.classList.remove('opacity-100', 'pointer-events-auto', 'visible', 'translate-y-0');
+            
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.classList.add('opacity-0', 'pointer-events-none');
+                mobileMenuOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+            
+            menuBtn.setAttribute('aria-expanded', 'false');
+            menuBtn.setAttribute('aria-label', 'Mở menu điều hướng');
+            mobileMenu.setAttribute('aria-hidden', 'true');
+            menuIconOpen.classList.remove('hidden');
+            menuIconClose.classList.add('hidden');
+            if (restoreFocus) menuBtn.focus();
+        }
+
+        menuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (mobileMenu.classList.contains('visible')) {
+                closeMobileMenu(false);
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                closeMobileMenu(false);
+            });
+        });
+
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', function() {
+                closeMobileMenu(false);
+            });
+        }
+
+        // ==========================================
+        // BILLING SWITCHER: đổi giá giữa tháng và năm
+        // ==========================================
+        const planElements = {
+            Starter: {
+                price: document.getElementById('starter-price'),
+                strike: document.getElementById('starter-strike'),
+                period: document.getElementById('starter-period'),
+            },
+            Premium: {
+                price: document.getElementById('premium-price'),
+                strike: document.getElementById('premium-strike'),
+                period: document.getElementById('premium-period'),
+            },
+            Ultimate: {
+                price: document.getElementById('ultimate-price'),
+                strike: document.getElementById('ultimate-strike'),
+                period: document.getElementById('ultimate-period'),
+            },
+        };
+
+        let isYearly = false;
+        const toggleMonthly = document.getElementById('toggle-monthly');
+        const toggleYearly = document.getElementById('toggle-yearly');
+
+        function setBillingCycle(toYearly) {
+            isYearly = toYearly;
+            toggleYearly.className = isYearly ? ACTIVE_BILLING_CLASS : INACTIVE_BILLING_CLASS;
+            toggleMonthly.className = isYearly ? INACTIVE_BILLING_CLASS : ACTIVE_BILLING_CLASS;
+            toggleYearly.setAttribute('aria-pressed', String(isYearly));
+            toggleMonthly.setAttribute('aria-pressed', String(!isYearly));
+
+            Object.entries(PLAN_PRICES).forEach(([planName, prices]) => {
+                const plan = planElements[planName];
+                plan.price.textContent = isYearly ? prices.yearly : prices.monthly;
+                plan.strike.textContent = isYearly ? prices.yearlyStrike : prices.monthlyStrike;
+                plan.period.textContent = isYearly ? '/tháng (đóng năm)' : '/tháng';
+            });
+        }
+
+        toggleMonthly.addEventListener('click', () => setBillingCycle(false));
+        toggleYearly.addEventListener('click', () => setBillingCycle(true));
+
+        // ==========================================
+        // FAQ ACCORDION: mở/đóng từng câu hỏi
+        // ==========================================
+        const faqToggles = document.querySelectorAll('.faq-toggle');
+        faqToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const content = document.getElementById(toggle.getAttribute('aria-controls'));
+                const icon = toggle.querySelector('i');
+                const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+
+                toggle.setAttribute('aria-expanded', String(!isOpen));
+                content.classList.toggle('hidden', isOpen);
+                icon.className = isOpen
+                    ? 'fa-solid fa-plus text-slate-500 transition-transform duration-300'
+                    : 'fa-solid fa-minus text-cyan-400 transition-transform duration-300 rotate-180';
+            });
+        });
+
+        // ==========================================
+        // PAYMENT MODAL: mở thông tin chuyển khoản cho gói được chọn
+        // ==========================================
+        const paymentModal = document.getElementById('payment-modal');
+        const modalPlanName = document.getElementById('modal-plan-name');
+        const modalPlanPriceValue = document.getElementById('modal-plan-price-value');
+        const modalPlanPricePeriod = document.getElementById('modal-plan-price-period');
+        const modalOrderId = document.getElementById('modal-order-id');
+        const planButtons = document.querySelectorAll('.js-plan-button');
+        const paymentCloseButtons = document.querySelectorAll('[data-close-payment]');
+        let lastFocusedElement = null;
+
+        function generateOrderSuffix() {
+            if (window.crypto && window.crypto.getRandomValues) {
+                const bytes = new Uint8Array(3);
+                window.crypto.getRandomValues(bytes);
+                return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('').toUpperCase();
+            }
+            return Date.now().toString(36).slice(-6).toUpperCase();
+        }
+
+        function openPaymentModal(plan) {
+            const prices = PLAN_PRICES[plan];
+            if (!prices) return;
+
+            const finalPrice = isYearly ? prices.yearly : prices.monthly;
+            lastFocusedElement = document.activeElement;
+            modalPlanName.textContent = plan;
+            modalPlanPriceValue.textContent = `$${finalPrice} USD`;
+            modalPlanPricePeriod.textContent = isYearly ? '/tháng (trả hàng năm)' : '/tháng';
+            modalOrderId.textContent = `TIENCK_${plan.toUpperCase()}_${generateOrderSuffix()}`;
+            paymentModal.classList.remove('hidden');
+            paymentModal.setAttribute('aria-hidden', 'false');
+            lockPageScroll();
+
+            const closePaymentButton = paymentModal.querySelector('[data-close-payment]');
+            if (closePaymentButton) closePaymentButton.focus();
+        }
+
+        function closePaymentModal() {
+            paymentModal.classList.add('hidden');
+            paymentModal.setAttribute('aria-hidden', 'true');
+            unlockPageScroll();
+            if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+                lastFocusedElement.focus();
+            }
+        }
+
+        planButtons.forEach(button => {
+            button.addEventListener('click', () => openPaymentModal(button.dataset.plan));
+        });
+
+        paymentCloseButtons.forEach(button => {
+            button.addEventListener('click', closePaymentModal);
+        });
+
+        paymentModal.addEventListener('click', event => {
+            if (event.target === paymentModal) closePaymentModal();
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key !== 'Escape') return;
+            if (!paymentModal.classList.contains('hidden')) {
+                closePaymentModal();
+            } else if (mobileMenu.classList.contains('visible')) {
+                closeMobileMenu(true);
+            }
+        });
+        
+    // MARQUEE
+        document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.marquee-container');
+    const track = document.querySelector('.marquee-track');
+    if (!container || !track) return;
+
+    // Nhân bản nội dung để tạo vòng lặp cuộn vô tận mượt mà
+    const originalContent = track.innerHTML;
+    track.innerHTML = originalContent + originalContent + originalContent;
+
+    let speed = 1; // Tốc độ chạy tự động (tăng số này nếu muốn chạy nhanh hơn)
+    let isPaused = false;
+    let animationFrameId = null;
+
+    // Hàm thực hiện cuộn tự động đều đặn
+    function step() {
+        if (!isPaused) {
+            container.scrollLeft += speed;
+            
+            // Nếu cuộn gần hết phân đoạn nhân bản, reset về vị trí ban đầu để tạo vòng lặp vô tận
+            if (container.scrollLeft >= track.scrollWidth / 3) {
+                container.scrollLeft = 0;
+            }
+        }
+        animationFrameId = requestAnimationFrame(step);
+    }
+
+    // Kích hoạt chạy tự động
+    animationFrameId = requestAnimationFrame(step);
+
+    /* =========================================================================
+       💻 XỬ LÝ TRÊN MÁY TÍNH (PC/LAPTOP): Di chuột vào thì dừng, bỏ ra chạy tiếp
+       ========================================================================= */
+    track.addEventListener('mouseenter', () => {
+        isPaused = true;
+    });
+    track.addEventListener('mouseleave', () => {
+        isPaused = false;
+    });
+
+    /* =========================================================================
+       📱 XỬ LÝ TRÊN DI ĐỘNG (TOUCH EVENTS): Chạm dừng, vuốt kéo tự do, thả ra chạy tiếp
+       ========================================================================= */
+    container.addEventListener('touchstart', () => {
+        isPaused = true; // Dừng chạy tự động lập tức khi chạm tay
+    }, { passive: true });
+
+    container.addEventListener('touchend', () => {
+        // Tạo một khoảng trễ nhỏ 200ms sau khi thả tay để trải nghiệm mượt mà hơn
+        setTimeout(() => {
+            isPaused = false;
+        }, 200);
+    }, { passive: true });
+});
+
+    /* Băng chuyền */
+  
+    </script>
+</body>
+</html>                            100: '#e0f2fe',
+                            500: '#06b6d4', /* Cyan */
+                            600: '#0891b2',
+                            900: '#164e63',
+                        },
+                        wynDark: '#020920', 
+                        wynCard: '#090d1a'   
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font thống nhất toàn trang -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* =========================================================================
+           🎨 BIẾN ĐỔI MÀU NỀN TRANG DỄ DÀNG TẠI ĐÂY
+           ========================================================================= */
+        :root {
+            --bg-page-color: #020920; /* ĐỔI MÀU NỀN CHÍNH Ở ĐÂY (Ví dụ: #020920, #030611, v.v.) */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Anchor offset: header đang fixed nên cần khoảng trống phía trên khi cuộn tới */
+        section[id] {
+            scroll-margin-top: 112px;
+        }
+
+        @media (max-width: 1023px) {
+            section[id] {
+                scroll-margin-top: 100px;
+            }
+        }
+
+        *, *::before, *::after {
+            letter-spacing: 0;
+        }
+
+        body {
+            background-color: var(--bg-page-color);
+            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        h1, h2, h3, h4, h5, h6, p, a, button, span, li, td, th {
+            font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+        }
+
+        .font-sans,
+        .font-display,
+        .font-mono {
+            font-family: 'Plus Jakarta Sans', Inter, sans-serif !important;
+        }
+
+        .hero-title {
+            font-size: clamp(1.8rem, 5.8vw + 0.5rem, 4.5rem);
+            line-height: 1.35 !important;
+        }
+
+        @media (min-width: 640px) {
+            .hero-title {
+                line-height: 1.12;
+            }
+        }
+
+        .hero-copy {
+            line-height: 1.75;
+        }
+
+        /* =========================================================================
+           🌌 CONTAINER CHỨA HIỆU ỨNG NỀN VŨ TRỤ - CHỈ DÀNH CHO PHẦN HERO TRÁNH NẶNG TRANG
+           ========================================================================= */
+        .cosmic-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 690px; /* Điều chỉnh để cực quang kết thúc gần khu vực marquee */
+            pointer-events: none;
+            z-index: 0; 
+            overflow: hidden;
+        }
+
+        /* Hiệu ứng cực quang động mượt mà chỉ chạy ở phân vùng đầu trang */
+        .aurora-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.95;
+            mask-image: linear-gradient(to bottom, black 25%, black 60%, rgba(0,0,0,0.65) 78%, rgba(0,0,0,0.2) 88%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 25%, black 60%, rgba(0,0,0,0.65) 78%, rgba(0,0,0,0.2) 88%, transparent 100%);
+            filter: url(#aurora-turbulent-filter) blur(30px);
+            -webkit-filter: url(#aurora-turbulent-filter) blur(20px);
+        }
+
+        .aurora-curtain {
+            position: absolute;
+            top: -25%;
+            width: 42vw;
+            height: 140%;
+            transform-origin: top center;
+            mix-blend-mode: screen;
+        }
+        
+        @media (max-width: 768px) {
+            .aurora-curtain {
+                width: 60vw;   /*120 Cho phép dải màu xòe rộng hẳn ra ngoài khung nhìn di động */
+                height: 140%;   /* Thu ngắn chiều cao lại một chút để không bị kéo giãn quá đà */
+                opacity: 0.6;    /* Giảm nhẹ độ mờ để các dải màu lớn đè lên nhau không bị cháy sáng */
+            }
+    
+        }
+
+        .curtain-1 {
+            left: 2%;
+            background: linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.45) 30%, rgba(20, 184, 166, 0.75) 50%, rgba(6, 182, 212, 0.35) 70%, transparent 100%);
+            animation: wave-movement-1 19s infinite ease-in-out alternate;
+        }
+
+        .curtain-2 {
+            left: 35%;
+            background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.5) 25%, rgba(59, 130, 246, 0.5) 50%, rgba(99, 102, 241, 0.5) 70%, transparent 100%); /* rgba(99, 102, 241, 0.45) 25%, rgba(59, 130, 246, 0.5) 50%, rgba(99, 102, 241, 0.5) 75% rgba(6, 182, 212, 0.28)*/
+            animation: wave-movement-2 20s infinite ease-in-out alternate;
+            animation-delay: -3s;
+        }
+        
+        .curtain-3 {
+            left: 60%;
+            background: linear-gradient(90deg, transparent 0%, rgba(20, 184, 166, 0.2) 20%, rgba(6, 182, 212, 0.35) 45%, rgba(168, 85, 247, 0.5) 75%, transparent 100%);
+            animation: wave-movement-3 22s infinite ease-in-out alternate;
+            animation-delay: -6s;
+        }
+
+        .curtain-4 {
+            right: -2%;
+            background: linear-gradient(90deg, transparent 0%, rgba(168, 85, 247, 0.35) 30%, rgba(99, 102, 241, 0.3) 65%, transparent 100%);
+            animation: wave-movement-4 24s infinite ease-in-out alternate;
+            animation-delay: -9s;
+        }
+
+        @keyframes wave-movement-1 {
+            0% { transform: skewX(-15deg) scaleX(0.95) translateY(0); opacity: 0.65; }
+            50% { transform: skewX(-6deg) scaleX(1.25) translateY(-30px); opacity: 1; }
+            100% { transform: skewX(-25deg) scaleX(0.85) translateY(20px); opacity: 0.55; }
+        }
+        @keyframes wave-movement-2 {
+            0% { transform: skewX(10deg) scaleX(0.8) translateY(-20px); opacity: 0.6; }
+            50% { transform: skewX(22deg) scaleX(1.2) translateY(25px); opacity: 0.95; }
+            100% { transform: skewX(4deg) scaleX(0.9) translateY(-10px); opacity: 0.7; }
+        }
+        @keyframes wave-movement-3 {
+            0% { transform: skewX(-8deg) scaleX(1.2) translateY(15px); opacity: 0.85; }
+            50% { transform: skewX(-20deg) scaleX(0.8) translateY(-25px); opacity: 0.55; }
+            100% { transform: skewX(-4deg) scaleX(1.1) translateY(15px); opacity: 1; }
+        }
+        @keyframes wave-movement-4 {
+            0% { transform: skewX(16deg) scaleX(0.85) translateY(-25px); opacity: 0.5; }
+            50% { transform: skewX(2deg) scaleX(1.3) translateY(15px); opacity: 0.95; }
+            100% { transform: skewX(12deg) scaleX(0.75) translateY(-20px); opacity: 0.6; }
+        }
+        
+        /* Tinh vân khói Nebula nhẹ ở phần trên */
+        .nebula-wisps {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            z-index: 2;
+            opacity: 0.85;
+            filter: url(#nebula-turbulent-filter) blur(12px);
+            -webkit-filter: url(#nebula-turbulent-filter) blur(12px);
+            mask-image: linear-gradient(to bottom, black 35%, rgba(0,0,0,0.7) 65%, transparent 95%);
+            -webkit-mask-image: linear-gradient(to bottom, black 30%, rgba(0,0,0,0.7) 60%, transparent 95%);
+        }
+
+        .central-bloom-glow {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translate(-50%, -10%) scale(1);
+            width: 75vw;
+            height: 420px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, rgba(6, 182, 212, 0.05) 30%, rgba(99, 102, 241, 0.02) 60%, transparent 85%);
+            filter: blur(40px);
+            mix-blend-mode: screen;
+            z-index: 1;
+            animation: core-pulse 12s infinite alternate ease-in-out;
+        }
+
+        @keyframes core-pulse {
+            0% { transform: translate(-50%, -10%) scale(0.95); opacity: 0.8; }
+            100% { transform: translate(-50%, -10%) scale(1.05); opacity: 1; }
+        }
+
+        .wisp {
+            position: absolute;
+            mix-blend-mode: screen;
+        }
+
+        /* =========================================================================
+           ✨ LỚP NỀN SAO TĨNH ĐƯỢC TỐI ƯU HÓA PHẦN CỨNG GPU BẰNG BOX-SHADOW (CÁCH 1)
+           Tăng mật độ gấp 5 lần (X5 Density) bằng phương pháp liệt kê tọa độ lẻ ngẫu nhiên.
+           ========================================================================= */
+        .stars-background {
+            position: fix;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 980px; 
+            z-index: 2; 
+            pointer-events: none;
+            /* Tăng tốc đồ họa phần cứng bằng GPU */
+            transform: translate3d(0, 0, 0);
+            -webkit-transform: translate3d(0, 0, 0);
+            will-change: transform;
+            opacity: 0.95;
+            overflow: hidden;
+            mask-image: linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 65%, transparent 90%);
+            -webkit-mask-image: linear-gradient(to bottom, black 30%, rgba(0,0,0,0.5) 65%, transparent 90%);
+        }
+
+        /* Lớp sao mịn nhỏ (1px) - Mật độ cực cao, ngẫu nhiên hoàn toàn */
+        .stars-glow-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            box-shadow: 
+                /* --- DANH SÁCH SAO GỐC --- */
+                43px 83px rgba(255,255,255,0.95), 183px 212px rgba(255,255,255,0.85), 297px 115px #fff,
+                341px 290px rgba(255,255,255,0.95), 580px 175px #fff, 715px 95px rgba(255,255,255,0.9),
+                845px 320px #fff, 912px 145px rgba(255,255,255,0.85), 1120px 240px #fff,
+                135px 480px rgba(255,255,255,0.9), 450px 390px #fff, 620px 520px rgba(255,255,255,0.9),
+                890px 380px #fff, 1040px 600px rgba(255,255,255,0.7), 1280px 510px #fff,
+                210px 730px rgba(255,255,255,0.6), 650px 780px #fff, 1150px 690px rgba(255,255,255,0.7),
+                380px 890px rgba(255,255,255,0.5), 940px 920px rgba(255,255,255,0.45),
+              
+                /* --- [GHI CHÚ]: SAO NHỎ BỔ SUNG GẤP 5 LẦN (Y < 350) --- */
+                12px 141px rgba(255,255,255,0.8), 34px 82px rgba(255,255,255,0.9), 51px 123px rgba(255,255,255,0.65),
+                79px 252px rgba(255,255,255,0.7), 123px 94px #fff, 153px 321px rgba(255,255,255,0.85),
+                174px 192px rgba(255,255,255,0.5), 181px 112px rgba(255,255,255,0.9), 213px 267px rgba(255,255,255,0.7),
+                289px 43px rgba(255,255,255,0.85), 312px 165px #fff, 356px 234px rgba(255,255,255,0.9),
+                389px 98px rgba(255,255,255,0.6), 414px 321px rgba(255,255,255,0.8), 436px 143px #fff,
+                456px 111px rgba(255,255,255,0.7), 467px 290px rgba(255,255,255,0.95), 490px 234px rgba(255,255,255,0.8),
+                512px 56px rgba(255,255,255,0.6), 532px 189px rgba(255,255,255,0.95), 558px 123px #fff,
+                578px 256px rgba(255,255,255,0.75), 590px 56px rgba(255,255,255,0.85), 617px 345px rgba(255,255,255,0.6),
+                637px 278px rgba(255,255,255,0.9), 656px 123px #fff, 689px 190px rgba(255,255,255,0.75),
+                711px 256px rgba(255,255,255,0.95), 735px 289px rgba(255,255,255,0.6), 758px 167px rgba(255,255,255,0.85),
+                781px 91px #fff, 804px 234px rgba(255,255,255,0.95), 834px 111px rgba(255,255,255,0.65),
+                856px 156px rgba(255,255,255,0.8), 890px 234px rgba(255,255,255,0.9), 923px 123px #fff,
+                945px 321px rgba(255,255,255,0.75), 968px 289px rgba(255,255,255,0.85), 1012px 145px rgba(255,255,255,0.9),
+                1034px 234px rgba(255,255,255,0.6), 1056px 123px #fff, 1078px 189px rgba(255,255,255,0.85),
+                1095px 321px rgba(255,255,255,0.7), 1135px 123px rgba(255,255,255,0.95), 1156px 280px #fff,
+                1180px 190px rgba(255,255,255,0.8), 1210px 145px rgba(255,255,255,0.9), 1245px 230px #fff,
+                1278px 90px rgba(255,255,255,0.75), 1312px 185px rgba(255,255,255,0.9), 1350px 312px rgba(255,255,255,0.8),
+                1385px 240px #fff, 1420px 150px rgba(255,255,255,0.7),
+                
+                /* --- [GHI CHÚ]: SAO NHỎ BỔ SUNG GIỮA TRANG (Y: 350 - 650) - THƯA HƠN --- */
+                56px 456px rgba(255,255,255,0.6), 142px 567px rgba(255,255,255,0.5), 234px 434px rgba(255,255,255,0.55),
+                356px 610px rgba(255,255,255,0.45), 450px 480px rgba(255,255,255,0.6), 512px 623px rgba(255,255,255,0.5),
+                618px 432px rgba(255,255,255,0.6), 724px 580px rgba(255,255,255,0.4), 834px 412px rgba(255,255,255,0.55),
+                942px 615px rgba(255,255,255,0.45), 1056px 450px rgba(255,255,255,0.6), 1150px 590px rgba(255,255,255,0.35),
+                1256px 410px rgba(255,255,255,0.5), 1342px 620px rgba(255,255,255,0.4),
+                
+                /* --- [GHI CHÚ]: SAO NHỎ BỔ SUNG ĐÁY TRANG (Y > 650) - RẤT THƯA THỚT --- */
+                120px 810px rgba(255,255,255,0.3), 340px 790px rgba(255,255,255,0.25), 580px 880px rgba(255,255,255,0.35),
+                820px 760px rgba(255,255,255,0.25), 1050px 890px rgba(255,255,255,0.2), 1290px 790px rgba(255,255,255,0.3);
+        }
+
+        /* Lớp sao vừa (2px) - Ánh sáng cao rõ rệt tạo chiều sâu */
+        .stars-glow-layer-medium {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 2px;
+            background: transparent;
+            box-shadow: 
+                /* --- DANH SÁCH SAO GỐC --- */
+                95px 120px rgba(255,255,255,0.95), 250px 75px #fff, 530px 210px rgba(255,255,255,0.95),
+                780px 310px #fff, 1150px 150px rgba(255,255,255,0.95), 1380px 280px #fff,
+                310px 490px rgba(255,255,255,0.85), 810px 540px rgba(255,255,255,0.8), 1210px 440px #fff,
+                140px 650px rgba(255,255,255,0.7), 620px 690px #fff, 1050px 610px rgba(255,255,255,0.6),
+                
+                /* --- [GHI CHÚ]: SAO TRUNG BỔ SUNG GẤP 5 LẦN (Y < 350) --- */
+                45px 112px #fff, 112px 189px rgba(255,255,255,0.9), 180px 56px #fff,
+                212px 290px rgba(255,255,255,0.85), 290px 145px #fff, 389px 212px rgba(255,255,255,0.9),
+                423px 78px rgba(255,255,255,0.95), 498px 167px #fff, 567px 90px rgba(255,255,255,0.85),
+                612px 280px rgba(255,255,255,0.9), 678px 112px #fff, 745px 189px rgba(255,255,255,0.8),
+                834px 95px rgba(255,255,255,0.95), 890px 210px #fff, 956px 143px rgba(255,255,255,0.9),
+                1012px 280px rgba(255,255,255,0.85), 1089px 123px #fff, 1145px 234px rgba(255,255,255,0.9),
+                1212px 78px rgba(255,255,255,0.95), 1290px 189px #fff, 1345px 120px rgba(255,255,255,0.85),
+                1390px 290px rgba(255,255,255,0.9),
+                
+                /* --- [GHI CHÚ]: SAO TRUNG BỔ SUNG GIỮA VÀ ĐÁY TRANG (Y > 350) --- */
+                215px 420px rgba(255,255,255,0.7), 490px 512px rgba(255,255,255,0.65), 720px 380px #fff,
+                980px 530px rgba(255,255,255,0.6), 1140px 490px rgba(255,255,255,0.7), 1310px 420px #fff,
+                380px 720px rgba(255,255,255,0.4), 850px 810px rgba(255,255,255,0.35), 1220px 760px rgba(255,255,255,0.4),
+                /* ===== CỤM SAO PHẢI - THIẾT KẾ LẠI ===== */
+
+                /* Cụm 1 */
+                1478px 78px rgba(255,255,255,0.95),1486px 92px rgba(255,255,255,0.75),1498px 84px rgba(255,255,255,0.85),1510px 102px rgba(255,255,255,0.65),
+
+                /* Cụm 2 */
+                1422px 386px rgba(255,255,255,0.95),1434px 472px rgba(255,255,255,0.8),1448px 495px rgba(255,255,255,0.7),1460px 378px rgba(255,255,255,0.9),
+
+                /* Sao sáng nổi bật */
+                1628px 58px #fff,1605px 148px #fff,1632px 245px rgba(255,255,255,0.95),1688px 308px #fff,1615px 392px rgba(255,255,255,0.9),1668px 468px rgba(255,255,255,0.85),1622px 575px rgba(255,255,255,0.8),1695px 738px rgba(255,255,255,0.75),
+
+                /* Sao ngẫu nhiên */
+                1688px 46px rgba(255,255,255,0.55),1715px 112px rgba(255,255,255,0.7),1742px 63px rgba(255,255,255,0.45),1664px 142px rgba(255,255,255,0.8),1586px 92px rgba(255,255,255,0.6),
+
+                1508px 282px rgba(255,255,255,0.55),1648px 338px rgba(255,255,255,0.7),1696px 412px rgba(255,255,255,0.45),1675px 448px rgba(255,255,255,0.65),1638px 528px rgba(255,255,255,0.55),
+
+                1725px 618px rgba(255,255,255,0.4),1588px 572px rgba(255,255,255,0.5),1558px 652px rgba(255,255,255,0.45),1535px 690px rgba(255,255,255,0.35),
+
+                1602px 805px rgba(255,255,255,0.3),1665px 842px rgba(255,255,255,0.25),1642px 878px rgba(255,255,255,0.3),1618px 826px rgba(255,255,255,0.28);
+        }
+
+      
+        /* Tùy chỉnh kính mờ Menu */
+        .nav-blur {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .gpu-layer {
+            transform: translateZ(0);
+        }
+
+        /* =========================================================================
+           🎨 QUẦNG SÁNG CỰC QUANG TĨNH NGHỆ THUẬT SIÊU NỔI BẬT DƯỚI NỀN (HIỂN THỊ RÕ RỆT)
+           ========================================================================= */
+        .ambient-glow-orb {
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
+            border-radius: 9999px;
+            mix-blend-mode: screen;
+            will-change: filter;
+        }
+
+        /* Quầng sáng xanh Cyan thương hiệu rộng */
+        .glow-cyan {
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.28) 0%, rgba(6, 182, 212, 0.08) 50%, transparent 75%);
+            filter: blur(100px);
+            -webkit-filter: blur(100px);
+        }
+
+        /* Quầng sáng tím Indigo huyền ảo sâu */
+        .glow-purple {
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.24) 0%, rgba(99, 102, 241, 0.06) 55%, transparent 75%);
+            filter: blur(110px);
+            -webkit-filter: blur(110px);
+        }
+
+        /* Quầng sáng xanh ngọc lục bảo rực rỡ (Đặt biệt tôn dáng cho Bảng Giá) */
+        .glow-emerald {
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.26) 0%, rgba(20, 184, 166, 0.08) 50%, transparent 75%);
+            filter: blur(95px);
+            -webkit-filter: blur(95px);
+        }
+
+        .glass-panel {
+            background: #02092080;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        
+        .glass-panel-glow {
+            background: rgba(9, 13, 26, 0.75);
+            border: 1px solid rgba(6, 182, 212, 0.15);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 0 35px -10px rgba(6, 182, 212, 0.2);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #f1f5f9;
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-page-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 9999px;
+            border: 2px solid var(--bg-page-color);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.001ms !important;
+            }
+        }
+        
+        /* =========================================================================
+   📺 HỆ THỐNG MARQUEE CẢI TIẾN: HỖ TRỢ VUỐT KÉO TRÊN DI ĐỘNG
+   ========================================================================= */
+
+.section-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    color: #ffffff;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    font-weight: 300;
+    text-align: center;
+}
+
+/* 🌟 DÒNG THAY ĐỔI: Thêm `overflow-x: auto` trên di động để cho phép vuốt kéo tự do, ẩn thanh cuộn xấu xí đi */
+.marquee-container {
+    width: 92%;
+    overflow-x: auto; /* Cho phép cuộn ngang tự nhiên khi vuốt tay */
+    overflow-y: hidden;
+    background-color: #0209204d;
+    border-top: 1px solid #334a66;
+    border-bottom: 1px solid #334a66;
+    padding: 10px 0;
+    cursor: default;
     mask-image: linear-gradient(to right, transparent, black 25%, black 75%, transparent);
     -webkit-mask-image: linear-gradient(to right, transparent, black 25%, black 75%, transparent);
     
