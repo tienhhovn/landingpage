@@ -755,7 +755,8 @@
 
 /* Khi Hover vào thẻ Cha (.rotating-border-wrapper) 
    -> Hãy kích hoạt Animation lên thẻ Con có class (.hover-blink-svg) */
-.rotating-border-wrapper:hover .hover-blink-svg {
+.rotating-border-wrapper:hover .hover-blink-svg,
+.rotating-border-wrapper.is-touched .hover-blink-svg {
     animation: svg-blink 1s infinite ease-in-out;
 }
 @keyframes svg-blink {
@@ -1051,8 +1052,11 @@
 <section class="about-indicators relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
     
     <div class="text-center max-w-4xl mx-auto space-y-4 mb-16">
-        <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.4] pt-4">
-            <span class="textGradient-ttl text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 inline-block ">Dành cho những nỗ lực<br>muốn vươn đến các vì sao</span>
+        <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.3] pt-4">
+        <span class="textGradient-ttl text-transparent bg-clip-text block py-2 leading-[1]">
+        Dành cho những nỗ lực<br>
+        <span class="mt-2 block">muốn vươn đến các vì sao</span>
+        </span>
         </h2>
         <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-99">Thành công được tạo ra bởi hành trình kiên trì và bền bỉ mỗi ngày,<br>không phải một đoạn đường ngắn.</p>
     </div>
@@ -1149,10 +1153,13 @@
 <section class="about-indicators relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
     
     <div class="text-center max-w-5xl mx-auto space-y-4 mb-16">
-        <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.6] pt-4">
-            <span class="textGradient-ttl text-transparent bg-clip-text inline-block py-2">Nhanh nhạy trong một ánh nhìn<br>để đi đến những quyết định quan trọng.</span>
+        <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.3] pt-4">
+        <span class="textGradient-ttl text-transparent bg-clip-text block py-2 leading-[1]">
+        Nhanh nhạy trong một ánh nhìn,<br>
+        <span class="mt-2 block">đi đến những quyết định quan trọng.</span>
+        </span>
         </h2>
-        <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-80">Nhanh nhạy trong một ánh nhìn<br>để đi đến những quyết định quan trọng</p>
+        <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-80">Quan sát trọn vẹn cả thị trường để dễ dàng thấy được bức tranh toàn cảnh.</p>
     </div>
     
     <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full p-8 md:p-10">
@@ -1391,7 +1398,7 @@
 
 <!-- Plan 3: Ultimate bg-gradient-to-r from-emerald-400 via-cyan-300 to-violet-600 hover:from-emerald-300 -->
                 <div class="pricing-card flex-shrink-0 w-[80vw] sm:w-[360px] lg:w-auto snap-center border-2 border-violet-600 rounded-3xl p-8 bg-[#02092080] hover:border-purple-400 hover:-translate-y-2 hover:shadow-[0_0_35px_rgba(168,85,247,0.35)] transition-all duration-300 flex flex-col justify-between relative">
-                    <div class="absolute top-0 left-0 w-40 h-40 bg-[radial-gradient(circle_at_top_left,_rgba(147,51,234,0.8)_0%,_rgba(224,109,252,0.25)_45%,_transparent_75%)] rounded-tl-[22px] pointer-events-none z-0"></div>
+                    <div class="absolute top-0 left-0 w-40 h-40 bg-[radial-gradient(circle_at_top_left,_rgba(230,80,255,0.8)_0%,_rgba(230,40,252,0.25)_45%,_transparent_75%)] rounded-tl-[22px] pointer-events-none z-0"></div>
                     <svg class="absolute top-1 left-2 w-[115px] h-[115px] text-white" viewBox="0 0 876.3 693.44" fill="currentColor">
                                 <path class="cls-1" d="M83.15,297.99c1.88,5.9,7.65,9.52,13.62,8.55,10.54-1.71,21.08-3.42,31.62-5.13,2.1-.34,4.25-.3,6.34.11,31.52,6.27,63.04,12.54,94.57,18.81,2.26.45,4.59.46,6.85.02,32.89-6.32,65.78-12.63,98.67-18.95,1.8-.35,3.64-.41,5.46-.2,11.75,1.38,23.49,2.77,35.24,4.15,5.97.7,11.56-3.12,13.23-9.05l11.69-41.46c1.05-3.74-1.75-7.45-5.64-7.45H75.01c-3.97,0-6.79,3.86-5.58,7.64l13.72,42.93Z"/>
                                 <path class="cls-1" d="M439.86,115c2.51-8.91-4.86-17.48-13.78-16.01-27.47,4.53-54.95,9.06-82.42,13.6-4.29.71-8.62-.96-11.41-4.39-27-33.24-54-66.49-81.01-99.73-9.33-11.49-26.94-11.27-35.98.45-25.82,33.47-51.65,66.95-77.47,100.42-2.85,3.69-7.46,5.45-11.97,4.57-29.26-5.76-58.52-11.53-87.78-17.29-9.22-1.82-16.95,7.21-14.02,16.37,12.39,38.77,24.78,77.55,37.18,116.32,1.42,4.46,5.57,7.48,10.25,7.48h325.93c4.82,0,9.05-3.2,10.35-7.84,10.71-37.99,21.42-75.97,32.12-113.96Z"/>
@@ -1409,7 +1416,7 @@
                             
                         </div>
                         <h3 class=" text-2xl font-bold text-white ">Premium Y</h3>
-                        <p class="text-sm text-slate-200 leading-relaxed font-medium">365 ngày sử dụng.<br>Luôn vững vàng trên chuyến hành trình tìm kiếm tự do tài chính.</p>
+                        <p class="text-sm text-slate-200 leading-relaxed font-medium">365 ngày sử dụng.<br>Luôn luôn vững vàng trên suốt hành trình tìm kiếm tự do tài chính.</p>
                         
                         <div class="py-4 border-t border-b border-white/5 space-y-1">
                             <div class="text-slate-600 line-through text-xs" id="ultimate-strike">$119.99</div>
@@ -2130,8 +2137,20 @@
     }, { passive: true });
 });
 
-    /* Băng chuyền */
-  
+    /* touch trial button */
+  const btn = document.querySelector('.rotating-border-wrapper');
+
+// Kích hoạt khi bắt đầu chạm
+btn.addEventListener('touchstart', () => {
+    btn.classList.add('is-touched');
+}, { passive: true });
+
+// Tắt khi nhấc ngón tay
+btn.addEventListener('touchend', () => {
+    setTimeout(() => {
+        btn.classList.remove('is-touched');
+    }, 500); // Đợi 0.5s để người dùng nhìn thấy icon nháy trước khi tắt
+}, { passive: true });
     </script>
 </body>
 </html>
