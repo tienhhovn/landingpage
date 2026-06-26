@@ -673,7 +673,7 @@
 /* hiệu ứng chữ #00bce6, #2962ff 50.31%, #d500f9*/
 .textGradient-ttl {
     animation: text-animation-title-ttl 6s ease-in-out infinite;
-    background: linear-gradient(90deg, #34d399, #2962ff 50.31%, #d600f8);
+    background: linear-gradient(90deg, #34d399, #2962ff 50.29%, #d600f8);
     -webkit-background-clip: text;
     background-clip: text;
     background-repeat: no-repeat;
@@ -751,6 +751,22 @@
 /* Dừng khi di chuột vào nếu muốn người dùng xem kỹ */
 .about-indicators .carousel-window:hover .carousel-track {
     animation-play-state: paused;
+}
+
+/* Khi Hover vào thẻ Cha (.rotating-border-wrapper) 
+   -> Hãy kích hoạt Animation lên thẻ Con có class (.hover-blink-svg) */
+.rotating-border-wrapper:hover .hover-blink-svg {
+    animation: svg-blink 1s infinite ease-in-out;
+}
+@keyframes svg-blink {
+    0%, 100% { 
+        opacity: 1; 
+        filter: drop-shadow(0 0 2px rgba(176,225,245,0.4)); 
+    }
+    50% { 
+        opacity: 0.5; /* Giảm nhẹ độ mờ của nét vẽ */
+        filter: drop-shadow(0 0 10px rgba(34,211,238,0.9)); /* Tạo quầng phát sáng neon tỏa rộng cực đẹp */
+    }
 }
 
     </style>
@@ -878,11 +894,30 @@
                 <!-- Nút bấm mờ trong suốt (Glassmorphism) nền Slate mờ hòa vào tối không gian -->
                 <span class="rotating-border-btn whitespace-nowrap responsive-text">
                     Trải nghiệm 30 ngày không rủi ro 
-                    <!-- Icon SVG Arrow Right sắc nét -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 199.9 123.09" class="hover-blink-svg transition-all duration-300 w-[55px] h-auto">
+                      <defs>
+                        <!-- Gộp tất cả gradient trùng nhau bằng xlink:href, lược bỏ tọa độ thừa -->
+                        <linearGradient id="g" x1="177.11" y1="57.86" x2="46.34" y2="-.05" gradientUnits="userSpaceOnUse">
+                          <stop offset="0" stop-color="#fff"/>
+                          <stop offset=".26" stop-color="#e0f3fb"/>
+                          <stop offset=".59" stop-color="#bde6f6"/>
+                          <stop offset=".77" stop-color="#b0e1f5"/>
+                        </linearGradient>
+                      </defs>
+                      
+                      <!-- Group chung quy định tất cả thuộc tính viền giống nhau (Stroke, Cap, Miter, Width) -->
+                      <g fill="none" stroke="url(#g)" stroke-linecap="round" stroke-miterlimit="10" stroke-width="5">
+                        <path d="M67.57,44.78l-30.2-11.11c-2.67-.98-2.3-4.87.51-5.34L194.17,2.54c2.67-.44,4.32,2.81,2.39,4.71l-65.89,64.72c-.82.8-2.04,1.02-3.08.55l-24.11-10.85c-.85-.38-1.82-.31-2.61.18l-22.71,14.24c-2.42,1.52-5.27-1.17-3.9-3.68l10.05-18.35c.29-.54.76-.96,1.31-1.21l73.4-32.32"/>
+                        <path d="M62.2,85.75L2.5,120.59"/>
+                        <path d="M27.63,89.26l-18.08,10.55"/>
+                        <path d="M62.2,68.99l-18.95,11.06"/>
+                      </g>
+                    </svg>
+                    <!-- Icon SVG Arrow Right sắc nét >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#e5e7eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
                         <path d="M4 12H20"/>
                         <path d="M15 7L20 12L15 17"/>
-                    </svg>
+                    </svg-->
                 </span>
             </a>
         </div>          
@@ -923,7 +958,7 @@
             <span class="textGradient-ttl text-transparent bg-clip-text inline-block py-2">Sẵn sàng <br class="md:hidden">Đón Đầu Xu Hướng
             </span>
         </h2>
-        <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-80">Hành trình cùng WynAlgo, bạn đã nắm trong tay chiếc chìa khóa.</p>
+        <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-80">Song hành cùng WynAlgo, bạn đã nắm trong tay chiếc chìa khóa.</p>
     </div>
     
     <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full p-8 md:p-10">
@@ -976,7 +1011,7 @@
             </div>
 
             <div class="w-full md:w-1/2 order-1 md:order-2 space-y-6">
-                <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2"> Chỉ báo BigMoney</h2>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white bg-clip-text inline-block pb-2"> Chỉ báo BigMoney</h2>
                 <p class="text-slate-300 text-lg leading-relaxed text-pretty">
                     <strong>Truy dấu dòng tiền lớn:</strong> Định vị chính xác hành vi gom hàng hoặc xả hàng của nhà đầu tư tổ chức ngay trên từng cây nến. Không đoán tương lai, phản ánh trực quan sự thật dòng tiền.
                 </p>
@@ -1015,9 +1050,9 @@
    <!-- chỉ báo 2 -->
 <section class="about-indicators relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
     
-    <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+    <div class="text-center max-w-4xl mx-auto space-y-4 mb-16">
         <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.4] pt-4">
-            <span class="textGradient-ttl text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 inline-block ">Dành cho những nỗ lực muốn vươn đến các vì sao</span>
+            <span class="textGradient-ttl text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 inline-block ">Dành cho những nỗ lực<br>muốn vươn đến các vì sao</span>
         </h2>
         <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-99">Thành công được tạo ra bởi hành trình kiên trì và bền bỉ mỗi ngày,<br>không phải một đoạn đường ngắn.</p>
     </div>
@@ -1072,7 +1107,7 @@
             </div>
 
             <div class="w-full md:w-1/2 order-1 md:order-2 space-y-6">
-                <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2"> Chỉ báo BigTrade</h2>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white bg-clip-text inline-block pb-2"> Chỉ báo BigTrade</h2>
                 <p class="text-slate-300 text-lg leading-relaxed text-pretty">
                     <strong>Vị thế vàng & MTF:</strong> Điểm vào lệnh chuẩn xác không vẽ lại nến (No-repaint). Tích hợp sẵn bảng quản lý danh mục đa khung thời gian để theo dõi mượt mà.
                 </p>
@@ -1115,9 +1150,9 @@
     
     <div class="text-center max-w-5xl mx-auto space-y-4 mb-16">
         <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.6] pt-4">
-            <span class="textGradient-ttl text-transparent bg-clip-text inline-block py-2">Thành công được tạo ra bởi hành trình<br>kiên trì và bền bỉ mỗi ngày,<br>không phải một đoạn đường ngắn.</span>
+            <span class="textGradient-ttl text-transparent bg-clip-text inline-block py-2">Nhanh nhạy trong một ánh nhìn<br>để đi đến những quyết định quan trọng.</span>
         </h2>
-        <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-80">Chúng tôi hiểu rằng người dùng luôn cần sự nhanh chóng và chính xác trong một ánh nhìn<br>để đi đến những quyết định quan trọng</p>
+        <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-80">Nhanh nhạy trong một ánh nhìn<br>để đi đến những quyết định quan trọng</p>
     </div>
     
     <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full p-8 md:p-10">
@@ -1170,7 +1205,7 @@
             </div>
 
             <div class="w-full md:w-1/2 order-1 md:order-2 space-y-6">
-                <h2 class="text-3xl sm:text-5xl font-extrabold textGradient-ttl text-transparent bg-clip-text inline-block pb-2"> Chỉ báo SignalEye</h2>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white bg-clip-text inline-block pb-2"> Chỉ báo SignalEye</h2>
                 <p class="text-slate-300 text-lg leading-relaxed text-pretty">
                     <strong>Mắt thần quét đa tầng:</strong> Tổng hợp tối tân giúp quét cùng lúc nhiều mã cổ phiếu, phát hiện dòng tiền xoay vòng giữa các nhóm ngành để bạn luôn đi trước một bước.
                 </p>
@@ -1221,11 +1256,11 @@
                 </div>
                 
                 <div class="inline-flex p-1 bg-slate-950/80 border border-white/10 rounded-full w-full max-w-[280px] shadow-2xl">
-                    <button id="toggle-monthly" type="button" aria-pressed="true" class="flex-1 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-white bg-white/10 border border-white/10 shadow-md">
-                        Việt Nam
+                    <button id="toggle-monthly" type="button" aria-pressed="true" class="flex-1 py-1 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-white bg-white/10 border border-white/10 shadow-md">
+                        Thị trường<br>Việt Nam
                     </button>
-                    <button id="toggle-yearly" type="button" aria-pressed="false" class="flex-1 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-slate-400 hover:text-white border border-transparent">
-                        Quốc Tế
+                    <button id="toggle-yearly" type="button" aria-pressed="false" class="flex-1 py-1 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-slate-400 hover:text-white border border-transparent">
+                        Thị trường<br>Quốc Tế
                     </button>
                 </div>
             </div>
@@ -1262,15 +1297,15 @@
                             <!--span class="text-xs uppercase tracking-normal font-bold text-cyan-400">Gói Cơ Bản</span-->
                             <span class="ml-auto bg-emerald-500/20 text-emerald-400 border border-emerald-400/40 text-[10px] px-2.5 py-1 rounded-md font-bold uppercase">KHÁM PHÁ</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-white">Gói THÁNG</h3>
-                        <p class="text-xs text-slate-200 leading-relaxed font-medium">Cung cấp các công cụ cốt lõi để theo dõi xu hướng, hỗ trợ đắc lực cho những người mới gia nhập thị trường.</p>
+                        <h3 class="text-2xl font-bold text-white">Premium M</h3>
+                        <p class="text-sm text-slate-200 leading-relaxed font-medium">30 ngày sử dụng.<br>Nhanh chóng nắm bắt cơ hội và giảm thiểu rủi ro khi tham gia thị trường.</p>
                         
                         <div class="py-4 border-t border-b border-white/5 space-y-1">
                             <div class="text-slate-600 line-through text-xs" id="starter-strike">$39.99</div>
-                            <div class="flex items-baseline">
-                                <span class="text-xl font-bold text-white">$</span>
-                                <span class="text-5xl font-extrabold tracking-normal text-white" id="starter-price">29.99</span>
-                                <span class="text-slate-400 ml-1.5 text-xs" id="starter-period">/tháng</span>
+                            <div class="flex items-baseline gap-2">
+                                <!--span class="text-xl font-bold text-white">$</span-->
+                                <span class="text-4xl font-extrabold tracking-normal text-white" id="starter-price">495,000</span>
+                                <span class="text-4xl font-extrabold tracking-normal text-white" id="starter-period">VNĐ</span>
                             </div>
                         </div>
 
@@ -1295,8 +1330,8 @@
                     </div>
                     
                     <div class="pt-8">
-                        <button type="button" data-plan="Starter" data-price="29.99" class="js-plan-button w-full bg-gradient-to-r from-emerald-700 to-cyan-500  border border-emerald-700 hover:emerald-700 text-white text-center py-4 rounded-xl font-bold transition duration-200 hover:scale-[1.02] cursor-pointer">
-                            Thuê Gói Starter
+                        <button type="button" data-plan="Starter" data-price="495,000" class="js-plan-button w-full bg-gradient-to-r from-emerald-700 to-cyan-500  border border-emerald-700 hover:emerald-700 text-white text-center py-4 rounded-xl font-bold transition duration-200 hover:scale-[1.02] cursor-pointer">
+                            Đăng ký sử dụng
                         </button>
                     </div>
                 </div>
@@ -1315,15 +1350,15 @@
                             <!--span class="text-xs uppercase tracking-normal font-bold text-blue-500">Gói Chuyên Nghiệp</span-->
                             <span class="ml-auto bg-blue-500/20 text-[#4bd8f9] border border-blue-300/40 text-[10px] px-2.5 py-1 rounded-md font-bold uppercase">CHINH PHỤC</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mt-1">Premium Suite</h3>
-                        <p class="text-xs text-slate-200 leading-relaxed font-medium">Bộ chỉ báo nâng cao hoàn chỉnh kèm trợ lý AI hỗ trợ đa dạng mọi loại tài sản giao dịch, tối ưu hóa điểm vào/ra lệnh.</p>
+                        <h3 class="text-2xl font-bold text-white mt-1">Premium Q</h3>
+                        <p class="text-sm text-slate-200 leading-relaxed font-medium">90 ngày sử dụng.<br>Vượt qua những con sóng đang dịch chuyển trên thị trường một cách chủ động.</p>
                         
                         <div class="py-4 border-t border-white/10 border-b border-white/10 space-y-1">
                             <div class="text-cyan-400/60 line-through text-xs" id="premium-strike">$67.99</div>
-                            <div class="flex items-baseline">
-                                <span class="text-xl font-bold text-cyan-400">$</span>
-                                <span class="text-5xl font-extrabold tracking-normal text-white" id="premium-price">57.79</span>
-                                <span class="text-slate-300 ml-1.5 text-xs" id="premium-period">/tháng</span>
+                            <div class="flex items-baseline gap-2">
+                                <!--span class="text-xl font-bold text-cyan-400">$</span-->
+                                <span class="text-4xl font-extrabold tracking-normal text-white" id="premium-price">1,090,000</span>
+                                <span class="text-4xl font-extrabold tracking-normal text-white" id="premium-period">VNĐ</span>
                             </div>
                         </div>
 
@@ -1348,8 +1383,8 @@
                     </div>
                     
                     <div class="pt-8">
-                        <button type="button" data-plan="Premium" data-price="57.79" class="js-plan-button w-full bg-[linear-gradient(172deg,rgba(59,171,246,0.8)_0%,rgba(59,171,246,1)_20%,rgba(103,232,249,1)_40%,rgba(255,255,255,1)_50%,rgba(103,232,249,1)_60%,rgba(59,130,246,1)_80%,rgba(25,83,255,0.8)_100%)] hover:from-emerald-300 hover:via-cyan-200 hover:to-violet-500 text-slate-950 text-center py-4 rounded-xl font-bold shadow-xl hover:scale-[1.02] transition-all duration-200 cursor-pointer">
-                            Thuê Gói Premium ngay
+                        <button type="button" data-plan="Premium" data-price="1,090,000" class="js-plan-button w-full bg-[linear-gradient(172deg,rgba(59,171,246,0.8)_0%,rgba(59,171,246,1)_20%,rgba(103,232,249,1)_40%,rgba(255,255,255,1)_50%,rgba(103,232,249,1)_60%,rgba(59,130,246,1)_80%,rgba(25,83,255,0.8)_100%)] hover:from-emerald-300 hover:via-cyan-200 hover:to-violet-500 text-slate-950 text-center py-4 rounded-xl font-bold shadow-xl hover:scale-[1.02] transition-all duration-200 cursor-pointer">
+                            Đăng ký sử dụng
                         </button>
                     </div>
                 </div>
@@ -1373,15 +1408,15 @@
                             <span class="ml-auto bg-violet-500/20 text-purple-400 border border-violet-500/40 text-[10px] px-2.5 py-1 rounded-md font-bold uppercase">TẬN HƯỞNG</span>
                             
                         </div>
-                        <h3 class=" text-2xl font-bold text-white ">Ultimate Auto-Trade</h3>
-                        <p class="text-xs text-slate-200 leading-relaxed font-medium">Kết nối Webhook trực tiếp tới bot giao dịch, nhân bản chiến lược AI tự động toàn diện không cần can thiệp thủ công.</p>
+                        <h3 class=" text-2xl font-bold text-white ">Premium Y</h3>
+                        <p class="text-sm text-slate-200 leading-relaxed font-medium">365 ngày sử dụng.<br>Luôn vững vàng trên chuyến hành trình tìm kiếm tự do tài chính.</p>
                         
                         <div class="py-4 border-t border-b border-white/5 space-y-1">
                             <div class="text-slate-600 line-through text-xs" id="ultimate-strike">$119.99</div>
-                            <div class="flex items-baseline">
-                                <span class="text-xl font-bold text-cyan-400">$</span>
-                                <span class="text-5xl font-extrabold tracking-normal text-white" id="ultimate-price">83.99</span>
-                                <span class="text-slate-200 ml-1.5 text-xs" id="ultimate-period">/tháng</span>
+                            <div class="flex items-baseline gap-2">
+                                <!--span class="text-xl font-bold text-cyan-400">$</span-->
+                                <span class="text-4xl font-extrabold tracking-normal text-white" id="ultimate-price">3,990,000</span>
+                                <span class="text-4xl font-extrabold tracking-normal text-white" id="ultimate-price" id="ultimate-period"> VNĐ</span>
                             </div>
                         </div>
 
@@ -1406,8 +1441,8 @@
                     </div>
                     
                     <div class="pt-8">
-                        <button type="button" data-plan="Ultimate" data-price="83.99" class="js-plan-button w-full bg-gradient-to-r from-indigo-600 to-purple-600  border border-indigo-600 hover:border-indigo-600/30 text-white text-center py-4 rounded-xl font-bold transition duration-200 hover:scale-[1.02] cursor-pointer">
-                            Thuê Gói Ultimate
+                        <button type="button" data-plan="Ultimate" data-price="3,990,000" class="js-plan-button w-full bg-gradient-to-r from-indigo-600 to-purple-600  border border-indigo-600 hover:border-indigo-600/30 text-white text-center py-4 rounded-xl font-bold transition duration-200 hover:scale-[1.02] cursor-pointer">
+                            Đăng ký sử dụng
                         </button>
                     </div>
                 </div>
@@ -1783,7 +1818,7 @@
                 <div class="space-y-1">
                     <p class="text-xs text-slate-500">Số tiền thanh toán:</p>
                     <p class="text-2xl font-extrabold text-cyan-400">
-                        <span id="modal-plan-price-value">$57.79 USD</span>
+                        <span id="modal-plan-price-value">1,090,000 VNĐ</span>
                         <span id="modal-plan-price-period" class="text-xs text-slate-500 font-normal font-sans">/tháng</span>
                     </p>
                 </div>
@@ -1812,29 +1847,29 @@
         // ==========================================
         const PLAN_PRICES = {
             Starter: {
-                monthly: '29.99',
-                yearly: '16.49',
+                monthly: '495,000',
+                yearly: '990,000',
                 monthlyStrike: '$39.99',
-                yearlyStrike: '$29.99',
+                yearlyStrike: '$495,000',
             },
             Premium: {
-                monthly: '57.79',
-                yearly: '31.79',
+                monthly: '1,090,000',
+                yearly: '2,170,000',
                 monthlyStrike: '$67.99',
-                yearlyStrike: '$57.79',
+                yearlyStrike: '$1,090,000',
             },
             Ultimate: {
-                monthly: '83.99',
-                yearly: '45.99',
+                monthly: '3,990,000',
+                yearly: '7,690,000',
                 monthlyStrike: '$119.99',
-                yearlyStrike: '$83.99',
+                yearlyStrike: '$3,990,000',
             },
         };
 
         const OFFER_END_DATE = '';
 
-        const ACTIVE_BILLING_CLASS = 'flex-1 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-white bg-white/10 border border-white/10 shadow-md';
-        const INACTIVE_BILLING_CLASS = 'flex-1 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-slate-400 hover:text-white border border-transparent';
+        const ACTIVE_BILLING_CLASS = 'flex-1 py-1 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-white bg-white/10 border border-white/10 shadow-md';
+        const INACTIVE_BILLING_CLASS = 'flex-1 py-1 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer text-slate-400 hover:text-white border border-transparent';
 
         function lockPageScroll() {
             document.body.style.overflow = 'hidden';
@@ -1946,7 +1981,7 @@
                 const plan = planElements[planName];
                 plan.price.textContent = isYearly ? prices.yearly : prices.monthly;
                 plan.strike.textContent = isYearly ? prices.yearlyStrike : prices.monthlyStrike;
-                plan.period.textContent = isYearly ? '/tháng (đóng năm)' : '/tháng';
+                plan.period.textContent = isYearly ? 'VNĐ' : 'VNĐ';
             });
         }
 
@@ -1999,7 +2034,7 @@
             const finalPrice = isYearly ? prices.yearly : prices.monthly;
             lastFocusedElement = document.activeElement;
             modalPlanName.textContent = plan;
-            modalPlanPriceValue.textContent = `$${finalPrice} USD`;
+            modalPlanPriceValue.textContent = `$${finalPrice} VNĐ`;
             modalPlanPricePeriod.textContent = isYearly ? '/tháng (trả hàng năm)' : '/tháng';
             modalOrderId.textContent = `TIENCK_${plan.toUpperCase()}_${generateOrderSuffix()}`;
             paymentModal.classList.remove('hidden');
