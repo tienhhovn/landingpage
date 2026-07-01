@@ -53,6 +53,8 @@
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Font thống nhất toàn trang -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -695,64 +697,217 @@
     }
 }
 
-/* --- CSS CHO BĂNG CHUYỀN RESPONSIVE --- */
 
-/* Cửa sổ: Mặc định dọc (cho desktop), ngang (cho mobile) */
-.about-indicators .carousel-window {
-    height: 420px; /* Chiều cao mặc định desktop */
-    overflow: hidden;
-    position: relative;
-    -webkit-user-select: none;
-    /* Mask mặc định chiều dọc */
-    mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
-    -webkit-mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
-}
+/* CSS cho phần biên mờ mượt mà của danh sách ảnh carousel */
+/* Container cho toàn bộ trang - bảo vệ mép viền trên di động */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
 
-.about-indicators .carousel-track {
-    display: flex;
-    flex-direction: column; /* Dọc trên Desktop */
-    gap: 20px;
-    animation: slide-up-seamless 15s linear infinite;
-    will-change: transform;
-}
+        /* --- CẤU TRÚC SECTION --- */
+        .content-section {
+            display: flex;
+            flex-direction: row; /* Desktop: Trái ảnh (65%), Phải chữ (35%) */
+            height: 70vh;
+            margin-bottom: 80px;
+            background-color: rgba(2, 9, 32, 0.25);
+            border-radius: 16px;
+            overflow: hidden;
+            
+            /* --- THÊM 2 DÒNG NÀY ĐỂ THU HẸP KHUNG SECTION --- */
+            max-width: 1300px;  /* Thay đổi chiều ngang khung theo ý bạn */
+            margin-left: auto;  /* Giúp khung luôn căn giữa */
+            margin-right: auto;
+        }
 
-/* RESPONSIVE: Khi màn hình nhỏ (Mobile) */
-@media (max-width: 767px) {
-    .about-indicators .carousel-window {
-        height: auto; /* Chiều cao băng chuyền ngang thấp hơn 200px*/
-        min-height: 150px; /* Chỉ cần đặt tối thiểu */
-        mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-        -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-    }
-    
-    .about-indicators .carousel-track {
-        flex-direction: row; /* Ngang trên Mobile */
-        width: max-content; /* Quan trọng: Độ rộng bằng tổng các card */
-        animation: slide-left-seamless 15s linear infinite;
-    }
+        /* Khu vực hình ảnh chiếm diện tích lớn hơn (65%) */
+        .image-zone {
+            flex: 0 0 65%;
+            position: relative;
+            overflow: hidden;
+            background-color: rgba(2, 9, 32, 0.1);
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+            
+            /* Ảnh cách cạnh trên/dưới 30px, vùng mờ biên rộng 5px */
+    -webkit-mask-image: linear-gradient(to bottom, 
+        transparent 0px, 
+        transparent 10px,        /* Khoảng cách trống từ đỉnh khung */
+        rgba(0,0,0,1) 10px,      /* Hiện rõ sau 5px mờ biên (30px + 5px) */
+        rgba(0,0,0,1) calc(100% - 10px), /* Bắt đầu mờ ở cuối */
+        transparent calc(100% - 10px),   /* Biến mất hoàn toàn cách đáy 30px */
+        transparent 100%);
+        
+    mask-image: linear-gradient(to bottom, 
+        transparent 0px, 
+        transparent 10px, 
+        rgba(0,0,0,1) 10px, 
+        rgba(0,0,0,1) calc(100% - 10px), 
+        transparent calc(100% - 10px), 
+        transparent 100%);
+        }
+        
+        .image-zone:active {
+            cursor: grabbing;
+        }
 
-    .about-indicators .indicator-card {
-        min-width: 280px; /* Độ rộng thẻ khi chạy ngang */
-    }
-}
+        /* Track chứa các hình ảnh */
+        .image-track {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column; /* Desktop: Chạy dọc từ dưới lên */
+            gap: 25px;
+            padding: 20px 0;
+            will-change: transform;
+        }
 
+        /* Định dạng từng item ảnh đúng tỷ lệ 3:2 */
+        .image-item {
+            width: 85%;
+            margin: 0 auto;
+            aspect-ratio: 3 / 2; /* Ép đúng tỷ lệ hình ảnh 3:2 */
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s;
+            transform-origin: center center;
+        }
 
-/* Animation ngang */
-@keyframes slide-left-seamless {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
 
-/* Animation dọc cũ */
-@keyframes slide-up-seamless {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(calc(-50% - 10px)); }
-}
+        /* Hiệu ứng Hover phóng to trên Desktop (khi không kéo) */
+        .image-zone:not(.dragging) .image-item:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.7);
+            z-index: 10;
+        }
 
-/* Dừng khi di chuột vào nếu muốn người dùng xem kỹ */
-.about-indicators .carousel-window:hover .carousel-track {
-    animation-play-state: paused;
-}
+        /* Khu vực chữ (35%) */
+        .text-zone {
+            flex: 0 0 35%;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            background-color: #020920;
+            border-left: 1px solid #333;
+        }
+
+        .text-zone h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #4ffbdf;
+            font-weight: 700;
+        }
+
+        .text-zone p {
+            color: #cccccc;
+            font-size: 1.05rem;
+            margin-bottom: 30px;
+        }
+
+        /* Nút Get Access */
+        .btn-get-access {
+            display: inline-block;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #121212;
+            background-color: #4ffbdf;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+        }
+
+        .btn-get-access:hover {
+            background-color: #3ce0c4;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 251, 223, 0.3);
+        }
+
+        /* --- ĐÁP ỨNG DI ĐỘNG (MOBILE RESPONSIVE) --- */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px; /* Khung lớn bao ngoài không chạm sát mép viền */
+            }
+
+            .content-section {
+                flex-direction: column; /* Xếp dọc: Trên chữ, Dưới ảnh */
+                height: auto;
+                margin-bottom: 50px;
+            }
+
+            .text-zone {
+                order: 1;
+                flex: none;
+                width: 100%;
+                padding: 30px 24px;
+                border-left: none;
+                border-bottom: 1px solid #333;
+                align-items: center;
+                text-align: center;
+            }
+
+            .text-zone h2 {
+                font-size: 1.8rem;
+            }
+
+            .btn-get-access {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .image-zone {
+                order: 2;
+                flex: none;
+                width: 100%;
+                height: 280px; /* Định chiều cao vùng chứa ảnh vừa vặn trên mobile */
+                
+                /* Đổi vùng biên mờ 5px sang Trái và Phải cho Mobile */
+                -webkit-mask-image: linear-gradient(to right, transparent 0px, transparent 10px, rgba(0,0,0,1) 10px, rgba(0,0,0,1) calc(100% - 10px), transparent calc(100% - 10px), transparent 100%);
+                mask-image: linear-gradient(to right, transparent 0px, transparent 10px, rgba(0,0,0,1) 10px, rgba(0,0,0,1) calc(100% - 10px), transparent calc(100% - 10px),transparent 100%);
+            }
+
+            /* Đổi track thành hàng ngang chạy từ phải qua trái */
+            .image-track {
+                flex-direction: row;
+                height: 100%;
+                width: max-content;
+                top: 0;
+                left: 0;
+                padding: 0 20px;
+                align-items: center;
+            }
+
+            .image-item {
+                height: 75%; /* Định chiều cao tương đối trong vùng chứa */
+                width: auto;
+                aspect-ratio: 3 / 2; /* Giữ nguyên tỉ lệ hiển thị đúng như trên web */
+                flex-shrink: 0;
+                margin: 0;
+            }
+
+            /* Khi chạm giữ trên Mobile */
+            .image-item.touch-active {
+                transform: scale(1.1) !important;
+                z-index: 10;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+            }
+        }
+
 
 /* Khi Hover vào thẻ Cha (.rotating-border-wrapper) 
    -> Hãy kích hoạt Animation lên thẻ Con có class (.hover-blink-svg) */
@@ -953,305 +1108,104 @@
            Sử dụng hiệu ứng ánh sáng nền rực rỡ chiếu rải rác dưới nền các card để tăng độ chiều sâu thẩm mỹ
            ========================================================================= -->
          <!--test caroul -->
-        <section id="intro" class="about-indicators relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
-    
-    <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+
+<div class="container">
+    <div id="intro" class="text-center max-w-3xl mx-auto space-y-4 mb-16">
         <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.6] pt-4">
             <span class="textGradient-ttl text-transparent bg-clip-text inline-block py-2">Sẵn sàng <br class="md:hidden">Đón Đầu Xu Hướng
             </span>
         </h2>
         <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-80">Song hành cùng WynAlgo, bạn đã nắm trong tay chiếc chìa khóa.</p>
     </div>
-    
-    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full p-8 md:p-10">
-        <div class="flex flex-col md:flex-row items-center gap-12">
-            
-            <div class="w-full md:w-1/2 order-2 md:order-1">
-                <div class="carousel-window">
-                    <div class="carousel-track">
-                        
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
-                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
-                            </svg>
-                        </div>
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
-                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
-                            </svg>
-                        </div>
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
-                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
-                            </svg>
-                        </div>
 
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
-                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
-                            </svg>
-                        </div>
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
-                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
-                            </svg>
-                        </div>
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
-                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
-                            </svg>
-                        </div>
-
-                    </div>
+        <section class="content-section">
+            <div class="image-zone">
+                <div class="image-track">
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=1" alt="Ảnh 1"></div>
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=2" alt="Ảnh 2"></div>
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=3" alt="Ảnh 3"></div>
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=4" alt="Ảnh 4"></div>
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=5" alt="Ảnh 5"></div>
                 </div>
             </div>
-
-            <div class="w-full md:w-1/2 order-1 md:order-2 space-y-6">
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-white bg-clip-text inline-block pb-2"> Chỉ báo BigMoney</h2>
-                <p class="text-slate-300 text-lg leading-relaxed text-pretty">
-                    <strong>Truy dấu dòng tiền lớn:</strong> Định vị chính xác hành vi gom hàng hoặc xả hàng của nhà đầu tư tổ chức ngay trên từng cây nến. Không đoán tương lai, phản ánh trực quan sự thật dòng tiền.
-                </p>
-                <div class="space-y-3">
-                    <div class="flex items-center gap-3 text-slate-300">
-                        <i class="fa-solid fa-check text-emerald-400"></i>
-                        <span>Nhãn ▲/▲+ khi gom, ▼/▼+ khi xả.</span>
-                    </div>
-                    <div class="flex items-center gap-3 text-slate-300">
-                        <i class="fa-solid fa-check text-emerald-400"></i>
-                        <span>Tìm GAP & vùng S/R cứng tự động.</span>
-                    </div>
-                </div>
-                <a href="https://vn.tradingview.com/script/lTeNB8SC-WynAlgo-BigMoney/" target="_blank" rel="noopener" 
-                           class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
-                            <div class="flex items-center gap-2">
-                                <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-            <g transform="matrix(1,0,0,1,-5.5,-5.5)">
-                <g transform="matrix(1,0,0,1,-2.5,-1.5)">
-                    <path d="M46,27L46,15.06C46,13.453 45.362,11.912 44.225,10.775C43.088,9.638 41.547,9 39.94,9C33.297,9 22.702,9 16.06,9C14.453,9 12.911,9.638 11.775,10.775C10.638,11.911 10,13.453 10,15.06C10,21.914 10,33.012 10,39.888C10,43.263 12.736,46 16.112,46C20.986,46 27,46 27,46"/>
-                    <path d="M44,33L44,52"/>
-                    <path d="M34,42.5L53,42.5"/>
-                    <path d="M18,32C18.018,31.968 25,25 25,25L32,32L39,25"/>
-                </g>
-            </g>
-        </svg>
-                                <span>Sử dụng trên biểu đồ</span>
-                            </div>                            <!--span class="font-normal text-xs text-emerald-400/70">(Chuyển hướng đến TradingView®)</span-->
-                        </a>
+            <div class="text-zone">
+                <h2>TITLE CONTAIN TEXT 1</h2>
+                <p>Vùng hình ảnh bên trái chiếm diện tích lớn, tự động cuộn liên tục vô tận theo hướng từ dưới lên. Bạn có thể tự do hover phóng to hoặc nắm kéo tương tác tùy ý.</p>
+                <button class="btn-get-access">Get Access</button>
             </div>
-            
-        </div>
-    </div>
-</section>
-   
-   <!-- chỉ báo 2 -->
-<section class="about-indicators relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
-    
-    <div class="text-center max-w-4xl mx-auto space-y-4 mb-16">
+        </section>
+
+        <div class="text-center max-w-4xl mx-auto space-y-4 mb-16">
         <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.3] pt-4">
         <span class="textGradient-ttl text-transparent bg-clip-text block py-2 leading-[1]">
         Dành cho những nỗ lực<br>
-        <span class="mt-2 block">muốn vươn đến các vì sao</span>
+        <span class="mt-2 block">vươn đến các vì sao</span>
         </span>
         </h2>
         <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-99">Thành công được tạo ra bởi hành trình kiên trì và bền bỉ mỗi ngày,<br>không phải một đoạn đường ngắn.</p>
-    </div>
-    
-    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full p-8 md:p-10">
-        <div class="flex flex-col md:flex-row items-center gap-12">
-            
-            <div class="w-full md:w-1/2 order-2 md:order-1">
-                <div class="carousel-window">
-                    <div class="carousel-track">
-                        
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
-                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
-                            </svg>
-                        </div>
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
-                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
-                            </svg>
-                        </div>
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
-                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
-                            </svg>
-                        </div>
+        </div>
 
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
-                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
-                            </svg>
-                        </div>
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
-                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
-                            </svg>
-                        </div>
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
-                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
-                            </svg>
-                        </div>
-
-                    </div>
+        <section class="content-section">
+            <div class="image-zone">
+                <div class="image-track">
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=6" alt="Ảnh 6"></div>
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=7" alt="Ảnh 7"></div>
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=8" alt="Ảnh 8"></div>
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=9" alt="Ảnh 9"></div>
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=10" alt="Ảnh 10"></div>
                 </div>
             </div>
+            <div class="text-zone">
+                <h2>TITLE CONTAIN TEXT 2</h2>
+                <p>Trên giao diện di động, phần chữ sẽ tự động xếp lên trên, nhường không gian bên dưới cho dải hình ảnh cuộn mượt mà từ phải sang trái với biên độ mờ nhẹ 5px tinh tế.</p>
+                <button class="btn-get-access">Get Access</button>
+            </div>
+        </section>
 
-            <div class="w-full md:w-1/2 order-1 md:order-2 space-y-6">
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-white bg-clip-text inline-block pb-2"> Chỉ báo BigTrade</h2>
-                <p class="text-slate-300 text-lg leading-relaxed text-pretty">
-                    <strong>Vị thế vàng & MTF:</strong> Điểm vào lệnh chuẩn xác không vẽ lại nến (No-repaint). Tích hợp sẵn bảng quản lý danh mục đa khung thời gian để theo dõi mượt mà.
-                </p>
-                <div class="space-y-3">
-                    <div class="flex items-center gap-3 text-slate-300">
-                        <i class="fa-solid fa-check text-emerald-400"></i>
-                        <span>Cung cấp SL & TP: Đưa ra mức dừng lỗ, chốt lời tự động.</span>
-                    </div>
-                    <div class="flex items-center gap-3 text-slate-300">
-                        <i class="fa-solid fa-check text-emerald-400"></i>
-                        <span>Quản lý 6 mã cùng lúc: Bảng điều khiển MTF sắc sảo.</span>
-                    </div>
-                </div>
-                <a href="https://vn.tradingview.com/script/lqlCTPHZ-WynAlgo-BigTrade/" target="_blank" rel="noopener" 
-                           class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
-                            <div class="flex items-center gap-2">
-                                <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-            <g transform="matrix(1,0,0,1,-5.5,-5.5)">
-                <g transform="matrix(1,0,0,1,-2.5,-1.5)">
-                    <path d="M46,27L46,15.06C46,13.453 45.362,11.912 44.225,10.775C43.088,9.638 41.547,9 39.94,9C33.297,9 22.702,9 16.06,9C14.453,9 12.911,9.638 11.775,10.775C10.638,11.911 10,13.453 10,15.06C10,21.914 10,33.012 10,39.888C10,43.263 12.736,46 16.112,46C20.986,46 27,46 27,46"/>
-                    <path d="M44,33L44,52"/>
-                    <path d="M34,42.5L53,42.5"/>
-                    <path d="M18,32C18.018,31.968 25,25 25,25L32,32L39,25"/>
-                </g>
-            </g>
-        </svg>
-                                <span>Sử dụng trên biểu đồ</span>
-                            </div>
-                            <!--span class="font-normal text-xs text-[#436fff]">(Chuyển hướng đến TradingView®)</span-->
-                        </a>
-                </div>
-            
-        </div>
-    </div>
-</section>    
-            
-
-<!-- chỉ báo 3 -->
-<section class="about-indicators relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
-    
-    <div class="text-center max-w-5xl mx-auto space-y-4 mb-16">
+        <div class="text-center max-w-5xl mx-auto space-y-4 mb-16">
         <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.3] pt-4">
         <span class="textGradient-ttl text-transparent bg-clip-text block py-2 leading-[1]">
         Nhanh nhạy trong một ánh nhìn,<br>
-        <span class="mt-2 block">đi đến những quyết định quan trọng.</span>
+        <span class="mt-2 block">đi đến quyết định quan trọng.</span>
         </span>
         </h2>
         <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-80">Quan sát trọn vẹn cả thị trường để dễ dàng thấy được bức tranh toàn cảnh.</p>
     </div>
-    
-    <div class="border border-white/10 rounded-2xl bg-[#02092080] relative overflow-hidden w-full p-8 md:p-10">
-        <div class="flex flex-col md:flex-row items-center gap-12">
-            
-            <div class="w-full md:w-1/2 order-2 md:order-1">
-                <div class="carousel-window">
-                    <div class="carousel-track">
-                        
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
-                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
-                            </svg>
-                        </div>
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
-                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
-                            </svg>
-                        </div>
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
-                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
-                            </svg>
-                        </div>
 
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
-                                <text x="50" y="55" fill="#10b981" font-size="14" font-weight="bold">TÍN HIỆU MUA ▲+</text>
-                            </svg>
-                        </div>
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
-                                <text x="60" y="55" fill="#06b6d4" font-size="14" font-weight="bold">VÙNG GAP</text>
-                            </svg>
-                        </div>
-                        <div class="indicator-card">
-                            <svg viewBox="0 0 200 100" class="w-full h-auto">
-                                <rect x="0" y="0" width="200" height="100" rx="10" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
-                                <text x="45" y="55" fill="#f59e0b" font-size="14" font-weight="bold">PHÂN KỲ ĐỈNH/ĐÁY</text>
-                            </svg>
-                        </div>
-
-                    </div>
+        <section class="content-section">
+            <div class="image-zone">
+                <div class="image-track">
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=11" alt="Ảnh 11"></div>
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=12" alt="Ảnh 12"></div>
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=13" alt="Ảnh 13"></div>
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=14" alt="Ảnh 14"></div>
+                    <div class="image-item"><img src="https://picsum.photos/900/600?random=15" alt="Ảnh 15"></div>
                 </div>
             </div>
+            <div class="text-zone">
+                <h2>TITLE CONTAIN TEXT 3</h2>
+                <p>Các tài nguyên hình ảnh có thể dễ dàng thay đổi linh hoạt sau này bằng cách thay thế liên kết trong thẻ img mà không ảnh hưởng tới thuật toán tính toán chuyển động.</p>
+                <button class="btn-get-access">Get Access</button>
+            </div>
+        </section>
 
-            <div class="w-full md:w-1/2 order-1 md:order-2 space-y-6">
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-white bg-clip-text inline-block pb-2"> Chỉ báo SignalEye</h2>
-                <p class="text-slate-300 text-lg leading-relaxed text-pretty">
-                    <strong>Mắt thần quét đa tầng:</strong> Tổng hợp tối tân giúp quét cùng lúc nhiều mã cổ phiếu, phát hiện dòng tiền xoay vòng giữa các nhóm ngành để bạn luôn đi trước một bước.
-                </p>
-                <div class="space-y-2">
-                            <div class="flex items-start gap-2 text-sm text-slate-300">
-                                <span class="text-purple-400 mt-1"><i class="fa-solid fa-check"></i></span>
-                                <span><strong>Đa khung thời gian:</strong> Tự động giao thoa dữ liệu 3H và 1D.</span>
-                            </div>
-                            <div class="flex items-start gap-2 text-sm text-slate-300">
-                                <span class="text-purple-400 mt-1"><i class="fa-solid fa-check"></i></span>
-                                <span><strong>Xoay vòng ngành:</strong> Định vị dòng tiền vào Ngân hàng, BĐS, Thép...</span>
-                            </div>
-                        </div>
-
-                        <a href="https://vn.tradingview.com/script/fBV4cYvS-WynAlgo-SignalEye/" target="_blank" rel="noopener" 
-                           class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
-                            <div class="flex items-center gap-2">
-                                <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-            <g transform="matrix(1,0,0,1,-5.5,-5.5)">
-                <g transform="matrix(1,0,0,1,-2.5,-1.5)">
-                    <path d="M46,27L46,15.06C46,13.453 45.362,11.912 44.225,10.775C43.088,9.638 41.547,9 39.94,9C33.297,9 22.702,9 16.06,9C14.453,9 12.911,9.638 11.775,10.775C10.638,11.911 10,13.453 10,15.06C10,21.914 10,33.012 10,39.888C10,43.263 12.736,46 16.112,46C20.986,46 27,46 27,46"/>
-                    <path d="M44,33L44,52"/>
-                    <path d="M34,42.5L53,42.5"/>
-                    <path d="M18,32C18.018,31.968 25,25 25,25L32,32L39,25"/>
-                </g>
-            </g>
-        </svg>
-                                <span>Sử dụng trên biểu đồ</span>
-                            </div>
-                            <!--span class="font-normal text-xs text-purple-400/70">(Chuyển hướng đến TradingView®)</span-->
-                        </a>
-                </div>
-            
-        </div>
     </div>
-</section>  
 
-        <!-- SECTION PRICING CARDS -->
+
+
+<!-- 
+      ========================================================================
+      KHUNG SECTION CHÍNH (BẠN CÓ THỂ ĐIỀU CHỈNH KÍCH THƯỚC VÀ ĐỘ MỜ NỀN TẠI ĐÂY)
+      ========================================================================
+      - 'max-w-5xl': Chiều rộng tối đa của khung (Có thể đổi thành max-w-4xl, max-w-6xl, max-w-7xl...)
+      - 'bg-slate-900/60': Màu nền tối với độ mờ 60% (Có thể chỉnh thành /40, /50, /80...)
+      - 'backdrop-blur-md': Hiệu ứng làm mờ kính phía sau nền (Có thể chỉnh thành blur-sm, blur-lg, blur-xl...)
+      - 'p-6 md:p-12': Khoảng đệm khoảng cách lề trong của khung
+      - 'rounded-3xl': Bo tròn góc khung cực kỳ hiện đại
+      - 'border-slate-800/80': Đường viền mỏng tinh tế xung quanh khung
+    -->
+
+<!-- SECTION PRICING CARDS -->
         <section id="pricing" class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12 z-10 overflow-hidden">
             <div class="text-center space-y-4 mb-6">
                 <h2 class="text-3xl sm:text-5xl font-extrabold text-white">
@@ -1313,7 +1267,7 @@
                             <div class="flex items-baseline gap-2">
                                 <!--span class="text-xl font-bold text-white">$</span-->
                                 <span class="text-4xl font-extrabold tracking-normal text-white" id="starter-price">495,000</span>
-                                <span class="text-4xl font-extrabold tracking-normal text-white" id="starter-period">VNĐ</span>
+                                <span class="text-2xl font-extrabold tracking-normal text-white" id="starter-period">VNĐ</span>
                             </div>
                         </div>
 
@@ -1366,7 +1320,7 @@
                             <div class="flex items-baseline gap-2">
                                 <!--span class="text-xl font-bold text-cyan-400">$</span-->
                                 <span class="text-4xl font-extrabold tracking-normal text-white" id="premium-price">1,090,000</span>
-                                <span class="text-4xl font-extrabold tracking-normal text-white" id="premium-period">VNĐ</span>
+                                <span class="text-2xl font-extrabold tracking-normal text-white" id="premium-period">VNĐ</span>
                             </div>
                         </div>
 
@@ -1424,7 +1378,7 @@
                             <div class="flex items-baseline gap-2">
                                 <!--span class="text-xl font-bold text-cyan-400">$</span-->
                                 <span class="text-4xl font-extrabold tracking-normal text-white" id="ultimate-price">3,990,000</span>
-                                <span class="text-4xl font-extrabold tracking-normal text-white" id="ultimate-price" id="ultimate-period"> VNĐ</span>
+                                <span class="text-2xl font-extrabold tracking-normal text-white" id="ultimate-price" id="ultimate-period"> VNĐ</span>
                             </div>
                         </div>
 
@@ -2152,6 +2106,177 @@ btn.addEventListener('touchend', () => {
         btn.classList.remove('is-touched');
     }, 500); // Đợi 0.5s để người dùng nhìn thấy icon nháy trước khi tắt
 }, { passive: true });
+
+
+// Script xử lý Logic Cuộn Liên Tục & Kéo Thả (Drag/Swipe)/
+class InfiniteMarquee {
+            constructor(sectionEl) {
+                this.section = sectionEl;
+                this.zone = sectionEl.querySelector('.image-zone');
+                this.track = sectionEl.querySelector('.image-track');
+                this.items = Array.from(this.track.querySelectorAll('.image-item'));
+                
+                this.speed = 0.8; // Tốc độ trượt tự động mượt mà
+                this.isMobile = false;
+                
+                this.currentPos = 0;
+                this.isDragging = false;
+                this.startX = 0;
+                this.startY = 0;
+                this.scrollStart = 0;
+                this.isHovered = false;
+                this.activeTouchItem = null;
+
+                this.init();
+            }
+
+            init() {
+                this.checkBreakpoint();
+                this.cloneItems();
+                this.setupEvents();
+                
+                // Đảm bảo ảnh đã tải để tính toán kích thước loop chuẩn xác nhất
+                window.addEventListener('load', () => {
+                    this.animate();
+                });
+                // Chạy dự phòng nếu sự kiện load đã kích hoạt trước đó
+                if (document.readyState === 'complete') {
+                    this.animate();
+                }
+                
+                window.addEventListener('resize', () => {
+                    const wasMobile = this.isMobile;
+                    this.checkBreakpoint();
+                    if (wasMobile !== this.isMobile) {
+                        this.currentPos = 0; // Reset vị trí khi chuyển breakpoint
+                    }
+                });
+            }
+
+            checkBreakpoint() {
+                this.isMobile = window.innerWidth <= 768;
+            }
+
+            cloneItems() {
+                // Nhân bản mảng 5 ảnh để tạo hiệu ứng vòng lặp liền mạch
+                this.items.forEach(item => {
+                    const clone = item.cloneNode(true);
+                    this.track.appendChild(clone);
+                });
+            }
+
+            getLoopSize() {
+                const gap = 25; // Khớp với khoảng cách gap trong CSS
+                if (this.items.length === 0) return 0;
+                
+                if (this.isMobile) {
+                    const itemWidth = this.items[0].offsetWidth;
+                    return this.items.length * (itemWidth + gap);
+                } else {
+                    const itemHeight = this.items[0].offsetHeight;
+                    return this.items.length * (itemHeight + gap);
+                }
+            }
+
+            setupEvents() {
+                // --- SỰ KIỆN HOVER (Desktop) ---
+                this.zone.addEventListener('mouseenter', () => {
+                    if (!this.isMobile) this.isHovered = true;
+                });
+                this.zone.addEventListener('mouseleave', () => {
+                    if (!this.isMobile) {
+                        this.isHovered = false;
+                        this.isDragging = false;
+                        this.zone.classList.remove('dragging');
+                    }
+                });
+
+                // --- SỰ KIỆN KÉO CHUỘT (Desktop) ---
+                this.zone.addEventListener('mousedown', (e) => {
+                    if (this.isMobile) return;
+                    this.isDragging = true;
+                    this.zone.classList.add('dragging');
+                    this.startY = e.clientY;
+                    this.scrollStart = this.currentPos;
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!this.isDragging || this.isMobile) return;
+                    const deltaY = e.clientY - this.startY;
+                    this.currentPos = this.scrollStart + deltaY;
+                });
+
+                window.addEventListener('mouseup', () => {
+                    if (this.isMobile) return;
+                    this.isDragging = false;
+                    this.zone.classList.remove('dragging');
+                });
+
+                // --- SỰ KIỆN CHẠM VUỐT & PHÓNG TO (Mobile) ---
+                this.zone.addEventListener('touchstart', (e) => {
+                    if (!this.isMobile) return;
+                    this.isDragging = true;
+                    this.startX = e.touches[0].clientX;
+                    this.scrollStart = this.currentPos;
+
+                    const targetItem = e.target.closest('.image-item');
+                    if (targetItem) {
+                        this.activeTouchItem = targetItem;
+                        targetItem.classList.add('touch-active');
+                    }
+                }, { passive: true });
+
+                this.zone.addEventListener('touchmove', (e) => {
+                    if (!this.isDragging || !this.isMobile) return;
+                    const deltaX = e.touches[0].clientX - this.startX;
+                    this.currentPos = this.scrollStart + deltaX;
+                }, { passive: true });
+
+                window.addEventListener('touchend', () => {
+                    if (!this.isMobile) return;
+                    this.isDragging = false;
+                    if (this.activeTouchItem) {
+                        this.activeTouchItem.classList.remove('touch-active');
+                        this.activeTouchItem = null;
+                    }
+                });
+            }
+
+            animate() {
+                const loopSize = this.getLoopSize();
+
+                if (loopSize > 0) {
+                    // Tự động chạy khi không có tương tác người dùng
+                    if (!this.isDragging && !this.isHovered && !this.activeTouchItem) {
+                        this.currentPos -= this.speed;
+                    }
+
+                    // Tính toán trả tọa độ để lặp vô hạn
+                    if (this.currentPos <= -loopSize) {
+                        this.currentPos += loopSize;
+                        if(this.isDragging) this.scrollStart += loopSize;
+                    } else if (this.currentPos > 0) {
+                        this.currentPos -= loopSize;
+                        if(this.isDragging) this.scrollStart -= loopSize;
+                    }
+
+                    // Áp dụng mượt mà bằng Translate3d phần cứng tăng tốc
+                    if (this.isMobile) {
+                        this.track.style.transform = `translate3d(${this.currentPos}px, 0, 0)`;
+                    } else {
+                        this.track.style.transform = `translate3d(0, ${this.currentPos}px, 0)`;
+                    }
+                }
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Khởi chạy độc lập cho cả 3 Section
+        document.querySelectorAll('.content-section').forEach(section => {
+            new InfiniteMarquee(section);
+        });
+    
     </script>
 </body>
 </html>
