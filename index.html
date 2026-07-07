@@ -12,7 +12,7 @@
     
     <title>WynAlgo | Hệ Thống Chỉ Báo Theo Dấu Dòng Tiền Thông Minh</title>
     
-    <meta name="description" content="Hệ thống chỉ báo kỹ thuật cao cấp hỗ trợ giao dịch chứng khoán, crypto và forex. Giúp nhà đầu tư dễ dàng theo dấu dòng tiền lớn và tối ưu hóa điểm mua bán.">
+    <meta name="description" content="Hệ thống chỉ báo kỹ thuật hỗ trợ nhà đầu tư theo dấu dòng tiền thông minh và tối ưu hóa chiến lược giao dịch.">
     <meta name="theme-color" content="#030611">
     <meta name="robots" content="index, follow">
 
@@ -20,7 +20,7 @@
     <link rel="canonical" href="https://wynalgo.vn/">
     <meta property="og:type" content="website">
     <meta property="og:title" content="WynAlgo - Theo Dấu Dòng Tiền Thông Minh">
-    <meta property="og:description" content="Hệ thống chỉ báo kỹ thuật cao cấp hỗ trợ giao dịch chứng khoán, crypto và forex. Giúp nhà đầu tư dễ dàng theo dấu dòng tiền lớn và tối ưu hóa điểm mua bán.">
+    <meta property="og:description" content="Hệ thống chỉ báo kỹ thuật hỗ trợ nhà đầu tư theo dấu dòng tiền thông minh và tối ưu hóa chiến lược giao dịch.">
     <meta property="og:image" content="WynAlgo32.png">
     <meta name="twitter:card" content="summary_large_image">
     
@@ -673,7 +673,7 @@
     /* Chữ sẽ tự co giãn từ 10px đến 14px tùy theo độ rộng màn hình */
     font-size: clamp(12px, 3vw, 16px);
 }
-/* hiệu ứng chữ #00bce6, #2962ff 50.31%, #d500f9*/
+/* hiệu ứng chữ #00bce6, #2962ff 50.31%, #d500f9 d600f8*/
 .textGradient-ttl {
     animation: text-animation-title-ttl 6s ease-in-out infinite;
     background: linear-gradient(90deg, #34d399, #2962ff 50.29%, #d600f8);
@@ -713,6 +713,7 @@
             height: 70vh;
             margin-bottom: 80px;
             background-color: rgba(2, 9, 32, 0.25);
+            border: 1px solid #334a66;
             border-radius: 16px;
             overflow: hidden;
             
@@ -724,7 +725,7 @@
 
         /* Khu vực hình ảnh chiếm diện tích lớn hơn (65%) */
         .image-zone {
-            flex: 0 0 65%;
+            flex: 0 0 60%;
             position: relative;
             overflow: hidden;
             background-color: rgba(2, 9, 32, 0.1);
@@ -769,7 +770,7 @@
 
         /* Định dạng từng item ảnh đúng tỷ lệ 3:2 */
         .image-item {
-            width: 85%;
+            width: 90%;
             margin: 0 auto;
             aspect-ratio: 3 / 2; /* Ép đúng tỷ lệ hình ảnh 3:2 */
             border-radius: 12px;
@@ -788,33 +789,34 @@
 
         /* Hiệu ứng Hover phóng to trên Desktop (khi không kéo) */
         .image-zone:not(.dragging) .image-item:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
             box-shadow: 0 15px 30px rgba(0,0,0,0.7);
             z-index: 10;
         }
 
         /* Khu vực chữ (35%) */
         .text-zone {
-            flex: 0 0 35%;
-            padding: 50px;
+            flex: 0 0 40%;
+            padding: 40px;
+            padding-top: 130px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: flex-start;
-            background-color: #020920;
-            border-left: 1px solid #333;
+            background-color: #02092080;
+            border-left: 1px solid #02092080;
         }
 
         .text-zone h2 {
-            font-size: 2.2rem;
+            font-size: 3rem;
             margin-bottom: 20px;
-            color: #4ffbdf;
-            font-weight: 700;
+            color: #f0fdff;
+            font-weight: 800;
         }
 
-        .text-zone p {
-            color: #cccccc;
-            font-size: 1.05rem;
+        .text-zone p { 
+            color: #f0fdff;
+            font-size: 1.5rem;
             margin-bottom: 30px;
         }
 
@@ -822,7 +824,7 @@
         .btn-get-access {
             display: inline-block;
             padding: 14px 32px;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 600;
             color: #121212;
             background-color: #4ffbdf;
@@ -838,6 +840,17 @@
             box-shadow: 0 5px 15px rgba(79, 251, 223, 0.3);
         }
 
+        /* Trên máy tính: Đảo ngược chiều của riêng khung có class reverse-layout */
+        .content-section.reverse-layout {
+            flex-direction: row-reverse;
+        }
+
+        /* Đổi hướng đường viền ngăn cách từ bên trái sang bên phải của phần chữ */
+        .content-section.reverse-layout .text-zone {
+            border-left: none;
+            border-right: 1px solid #02092080;
+        }
+
         /* --- ĐÁP ỨNG DI ĐỘNG (MOBILE RESPONSIVE) --- */
         @media (max-width: 768px) {
             .container {
@@ -845,7 +858,7 @@
             }
 
             .content-section {
-                flex-direction: column; /* Xếp dọc: Trên chữ, Dưới ảnh */
+                flex-direction: column !important; /* Xếp dọc: Trên chữ, Dưới ảnh */
                 height: auto;
                 margin-bottom: 50px;
             }
@@ -856,7 +869,7 @@
                 width: 100%;
                 padding: 30px 24px;
                 border-left: none;
-                border-bottom: 1px solid #333;
+                border-bottom: 1px solid #020920;
                 align-items: center;
                 text-align: center;
             }
@@ -1029,7 +1042,7 @@
                 Thấu hiểu thị trường như<br> 
                 <span class="text-transparent bg-clip-text font-extrabold bg-[linear-gradient(180deg,rgba(59,171,246,1)_0%,rgba(59,171,246,1)_35%,rgba(103,232,249,1)_45%,rgba(255,255,255,1)_50%,rgba(103,232,249,1)_55%,rgba(59,130,246,1)_70%,rgba(25,83,255,1)_100%)]">Dòng Tiền Thông Minh</span><br>
             </h1>
-            <p class="text-slate text-xl sm:text-2xl max-w-3xl mx-auto hero-copy font-normal text-center">
+            <p class="text-slate text-xl sm:text-[26px] max-w-3xl mx-auto hero-copy font-normal text-center space-y-2">
                 <span class="block">
                     Hệ thống chỉ báo kỹ thuật 
                     <br class="sm:hidden"> theo dấu dòng tiền.
@@ -1115,10 +1128,10 @@
             <span class="textGradient-ttl text-transparent bg-clip-text inline-block py-2">Sẵn sàng <br class="md:hidden">Đón Đầu Xu Hướng
             </span>
         </h2>
-        <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-80">Song hành cùng WynAlgo, bạn đã nắm trong tay chiếc chìa khóa.</p>
+        <p class="text-[#f0fdff] text-xl sm:text-[26px] opacity-95">Song hành cùng WynAlgo, bạn đã nắm trong tay chiếc chìa khóa.</p>
     </div>
 
-        <section class="content-section">
+        <section class="content-section relative overflow-hidden">
             <div class="image-zone">
                 <div class="image-track">
                     <div class="image-item"><img src="https://picsum.photos/900/600?random=1" alt="Ảnh 1"></div>
@@ -1128,11 +1141,41 @@
                     <div class="image-item"><img src="https://picsum.photos/900/600?random=5" alt="Ảnh 5"></div>
                 </div>
             </div>
-            <div class="text-zone">
-                <h2>TITLE CONTAIN TEXT 1</h2>
-                <p>Vùng hình ảnh bên trái chiếm diện tích lớn, tự động cuộn liên tục vô tận theo hướng từ dưới lên. Bạn có thể tự do hover phóng to hoặc nắm kéo tương tác tùy ý.</p>
-                <button class="btn-get-access">Get Access</button>
+            <div class="text-zone relative overflow-hidden">
+                <div class="relative z-10 text-pretty">
+                <h2>Chỉ báo BigMoney</h2>
+                <p class= "leading-normal">Nhận diện hành vi dòng tiền thông minh theo từng giai đoạn của con sóng. Tích hợp điểm báo tín hiệu dòng tiền, vùng hỗ trợ, kháng cự, phân kỳ và nhiều chức năng phân tích kỹ thuật khác trong cùng một hệ thống trực quan. Loại bỏ hiệu quả các tín hiệu nhiễu trên thị trường.</p>
+                
+                <a href="https://vn.tradingview.com/script/lTeNB8SC-WynAlgo-BigMoney/" target="_blank" rel="noopener" 
+                           class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
+                            <div class="flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                                    <g transform="matrix(1,0,0,1,-5.5,-5.5)">
+                                        <g transform="matrix(1,0,0,1,-2.5,-1.5)">
+                                            <path d="M46,27L46,15.06C46,13.453 45.362,11.912 44.225,10.775C43.088,9.638 41.547,9 39.94,9C33.297,9 22.702,9 16.06,9C14.453,9 12.911,9.638 11.775,10.775C10.638,11.911 10,13.453 10,15.06C10,21.914 10,33.012 10,39.888C10,43.263 12.736,46 16.112,46C20.986,46 27,46 27,46"/>
+                                            <path d="M44,33L44,52"/>
+                                            <path d="M34,42.5L53,42.5"/>
+                                            <path d="M18,32C18.018,31.968 25,25 25,25L32,32L39,25"/>
+                                        </g>
+                                    </g>
+                                </svg>
+                                <span>Sử dụng trên biểu đồ</span>
+                            </div>                            <!--span class="font-normal text-xs text-emerald-400/70">(Chuyển hướng đến TradingView®)</span-->
+                </a>
+                </div>
+                <img 
+                    src="img/planet100.webp" 
+                    alt="Decor"
+                    class="absolute w-[300px] -bottom-8 -right-3 blur-[1px] opacity-80 -rotate-12 z-0">
+                <img 
+                    src="img/aurora11.webp" 
+                    alt="Decor"
+                    class="absolute w-full -top-8 -right-32 opacity-95 scale-x-[-1] z-0">
+                
+                
+               
             </div>
+            
         </section>
 
         <div class="text-center max-w-4xl mx-auto space-y-4 mb-16">
@@ -1142,10 +1185,10 @@
         <span class="mt-2 block">vươn đến các vì sao</span>
         </span>
         </h2>
-        <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-99">Thành công được tạo ra bởi hành trình kiên trì và bền bỉ mỗi ngày,<br>không phải một đoạn đường ngắn.</p>
+        <p class="text-[#f0fdff] text-xl sm:text-[26px] leading-normal opacity-95">Thành công được tạo ra bởi hành trình kiên trì và bền bỉ mỗi ngày,<br>không phải một đoạn đường ngắn.</p>
         </div>
 
-        <section class="content-section">
+        <section class="content-section reverse-layout">
             <div class="image-zone">
                 <div class="image-track">
                     <div class="image-item"><img src="https://picsum.photos/900/600?random=6" alt="Ảnh 6"></div>
@@ -1155,37 +1198,97 @@
                     <div class="image-item"><img src="https://picsum.photos/900/600?random=10" alt="Ảnh 10"></div>
                 </div>
             </div>
-            <div class="text-zone">
-                <h2>TITLE CONTAIN TEXT 2</h2>
-                <p>Trên giao diện di động, phần chữ sẽ tự động xếp lên trên, nhường không gian bên dưới cho dải hình ảnh cuộn mượt mà từ phải sang trái với biên độ mờ nhẹ 5px tinh tế.</p>
-                <button class="btn-get-access">Get Access</button>
+            <div class="text-zone relative overflow-hidden">
+                <div class="relative z-10 text-pretty">
+                <h2>Chỉ báo BigTrade</h2>
+                <p class="leading-normal">Các điểm tín hiệu được tối ưu cho chiến lược giao dịch tập trung vào xu hướng, nhằm xác định sự thay đổi của thị trường một cách sớm nhất. Tích hợp bảng quản lý danh mục đa thị trường, đa khung thời gian để phát hiện mọi biến động theo thời gian thực.</p>
+                <a href="https://vn.tradingview.com/script/lqlCTPHZ-WynAlgo-BigTrade/" target="_blank" rel="noopener" 
+                           class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
+                            <div class="flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                                <g transform="matrix(1,0,0,1,-5.5,-5.5)">
+                                    <g transform="matrix(1,0,0,1,-2.5,-1.5)">
+                                        <path d="M46,27L46,15.06C46,13.453 45.362,11.912 44.225,10.775C43.088,9.638 41.547,9 39.94,9C33.297,9 22.702,9 16.06,9C14.453,9 12.911,9.638 11.775,10.775C10.638,11.911 10,13.453 10,15.06C10,21.914 10,33.012 10,39.888C10,43.263 12.736,46 16.112,46C20.986,46 27,46 27,46"/>
+                                        <path d="M44,33L44,52"/>
+                                        <path d="M34,42.5L53,42.5"/>
+                                        <path d="M18,32C18.018,31.968 25,25 25,25L32,32L39,25"/>
+                                    </g>
+                                </g>
+                            </svg>
+                                <span>Sử dụng trên biểu đồ</span>
+                            </div>
+                            <!--span class="font-normal text-xs text-[#436fff]">(Chuyển hướng đến TradingView®)</span-->
+                        </a>
+                </div>
+                <img 
+                    src="img/nebula1.webp" 
+                    alt="Decor"
+                    class="absolute w-full -bottom-[10%] -right-5 opacity-90 rotate-[20deg] blur-[2px] scale-x-[-1] z-0">
+                <img 
+                    src="img/nebula3.webp" 
+                    alt="Decor"
+                    class="absolute w-full -top-[32%] -left-[35%] scale-x-[-1] blur-[2px] rotate-[20deg] opacity-90 z-0">
             </div>
         </section>
 
         <div class="text-center max-w-5xl mx-auto space-y-4 mb-16">
         <h2 class="text-3xl sm:text-5xl font-extrabold leading-[1.3] pt-4">
         <span class="textGradient-ttl text-transparent bg-clip-text block py-2 leading-[1]">
-        Nhanh nhạy trong một ánh nhìn,<br>
-        <span class="mt-2 block">đi đến quyết định quan trọng.</span>
+        Lợi thế của bạn <br>
+        <span class="mt-2 block">đã ở ngay trước mắt</span>
         </span>
         </h2>
-        <p class="text-[#f0fdff] text-xl sm:text-2xl opacity-80">Quan sát trọn vẹn cả thị trường để dễ dàng thấy được bức tranh toàn cảnh.</p>
+        <p class="text-[#f0fdff] text-xl sm:text-[26px] opacity-80">Nhanh nhạy trong một ánh nhìn, đi đến quyết định quan trọng.</p>
     </div>
 
         <section class="content-section">
-            <div class="image-zone">
-                <div class="image-track">
+            <div class="image-zone relative overflow-hidden">
+                <div class="image-track relative z-10">
                     <div class="image-item"><img src="https://picsum.photos/900/600?random=11" alt="Ảnh 11"></div>
                     <div class="image-item"><img src="https://picsum.photos/900/600?random=12" alt="Ảnh 12"></div>
                     <div class="image-item"><img src="https://picsum.photos/900/600?random=13" alt="Ảnh 13"></div>
                     <div class="image-item"><img src="https://picsum.photos/900/600?random=14" alt="Ảnh 14"></div>
                     <div class="image-item"><img src="https://picsum.photos/900/600?random=15" alt="Ảnh 15"></div>
                 </div>
+                <!--img 
+                    src="img/nebula4.webp" 
+                    alt="Decor"
+                    class="absolute w-1/2 bottom-0 -left-[15%] opacity-95 blur-[2px] z-0 pointer-events-none"-->
             </div>
-            <div class="text-zone">
-                <h2>TITLE CONTAIN TEXT 3</h2>
-                <p>Các tài nguyên hình ảnh có thể dễ dàng thay đổi linh hoạt sau này bằng cách thay thế liên kết trong thẻ img mà không ảnh hưởng tới thuật toán tính toán chuyển động.</p>
-                <button class="btn-get-access">Get Access</button>
+            <div class="text-zone relative overflow-hidden">
+                <div class="relative z-10">
+                <h2>Chỉ báo SignalEye</h2>
+                <p>Công cụ phân tích đa tầng tổng hợp các tín hiệu của BigMoney & BigTrade, được thiết kế để phân tích chuyển động dòng tiền trên nhiều tài sản với 2 khung thời gian cùng lúc, giúp nhà đầu tư quan sát toàn cảnh mọi biến động trên thị trường.</p>
+                <a href="https://vn.tradingview.com/script/fBV4cYvS-WynAlgo-SignalEye/" target="_blank" rel="noopener" 
+                           class="w-fit flex flex-col items-center justify-center gap-0.5 py-3 px-6 rounded-full bg-cyan-500/10 hover:bg-[#f0fdff] text-[#f0fdff] hover:text-slate-950/80 border border-[#f0fdff] hover:border-cyan-500/10 transition-all duration-300 font-bold text-sm text-center">
+                            <div class="flex items-center gap-2">
+                                <svg width="20" height="20" viewBox="0 0 47 47" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                                    <g transform="matrix(1,0,0,1,-5.5,-5.5)">
+                                        <g transform="matrix(1,0,0,1,-2.5,-1.5)">
+                                            <path d="M46,27L46,15.06C46,13.453 45.362,11.912 44.225,10.775C43.088,9.638 41.547,9 39.94,9C33.297,9 22.702,9 16.06,9C14.453,9 12.911,9.638 11.775,10.775C10.638,11.911 10,13.453 10,15.06C10,21.914 10,33.012 10,39.888C10,43.263 12.736,46 16.112,46C20.986,46 27,46 27,46"/>
+                                            <path d="M44,33L44,52"/>
+                                            <path d="M34,42.5L53,42.5"/>
+                                            <path d="M18,32C18.018,31.968 25,25 25,25L32,32L39,25"/>
+                                        </g>
+                                    </g>
+                                </svg>
+                                <span>Sử dụng trên biểu đồ</span>
+                            </div>
+                            <!--span class="font-normal text-xs text-purple-400/70">(Chuyển hướng đến TradingView®)</span-->
+                        </a>
+                </div>  
+                <img 
+                    src="img/planet3.webp" 
+                    alt="Decor"
+                    class="absolute w-[80%] max-w-none h-auto -bottom-20 -left-[70px] rotate-[30deg] scale-x-[-1] blur-none opacity-95 z-0">     
+                <img 
+                    src="img/nebula6.webp" 
+                    alt="Decor"
+                    class="absolute w-[100%] max-w-none h-auto -bottom-[90px] -right-[220px] opacity-0 z-0">
+                <img 
+                    src="img/nebula4.webp" 
+                    alt="Decor"
+                    class="absolute w-[100%] -top-[50%] -right-[100px] max-w-none opacity-95 rotate-[120deg] blur z-0 pointer-events-none">
             </div>
         </section>
 
@@ -1259,7 +1362,7 @@
                             <!--span class="text-xs uppercase tracking-normal font-bold text-cyan-400">Gói Cơ Bản</span-->
                             <span class="ml-auto bg-emerald-500/20 text-emerald-400 border border-emerald-400/40 text-[10px] px-2.5 py-1 rounded-md font-bold uppercase">KHÁM PHÁ</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-white">Premium M</h3>
+                        <h3 class="text-3xl font-bold text-white">Premium M30</h3>
                         <p class="text-sm text-slate-200 leading-relaxed font-medium">30 ngày sử dụng.<br>Nhanh chóng nắm bắt cơ hội và giảm thiểu rủi ro khi tham gia thị trường.</p>
                         
                         <div class="py-4 border-t border-b border-white/5 space-y-1">
@@ -1312,7 +1415,7 @@
                             <!--span class="text-xs uppercase tracking-normal font-bold text-blue-500">Gói Chuyên Nghiệp</span-->
                             <span class="ml-auto bg-blue-500/20 text-[#4bd8f9] border border-blue-300/40 text-[10px] px-2.5 py-1 rounded-md font-bold uppercase">CHINH PHỤC</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mt-1">Premium Q</h3>
+                        <h3 class="text-3xl font-bold text-white mt-1">Premium Q90</h3>
                         <p class="text-sm text-slate-200 leading-relaxed font-medium">90 ngày sử dụng.<br>Vượt qua những con sóng đang dịch chuyển trên thị trường một cách chủ động.</p>
                         
                         <div class="py-4 border-t border-white/10 border-b border-white/10 space-y-1">
@@ -1370,8 +1473,8 @@
                             <span class="ml-auto bg-violet-500/20 text-purple-400 border border-violet-500/40 text-[10px] px-2.5 py-1 rounded-md font-bold uppercase">TẬN HƯỞNG</span>
                             
                         </div>
-                        <h3 class=" text-2xl font-bold text-white ">Premium Y</h3>
-                        <p class="text-sm text-slate-200 leading-relaxed font-medium">365 ngày sử dụng.<br>Luôn luôn vững vàng trên suốt hành trình tìm kiếm tự do tài chính.</p>
+                        <h3 class=" text-3xl font-bold text-white ">Premium Y365</h3>
+                        <p class="text-sm text-slate-200 leading-relaxed font-medium">365 ngày sử dụng.<br>Tâm thế luôn vững vàng trên suốt hành trình tìm kiếm tự do tài chính.</p>
                         
                         <div class="py-4 border-t border-b border-white/5 space-y-1">
                             <div class="text-slate-600 line-through text-xs" id="ultimate-strike">$119.99</div>
