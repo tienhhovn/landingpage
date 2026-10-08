@@ -2808,7 +2808,7 @@ document.addEventListener("DOMContentLoaded", () => {
         template: 'compact2'
     };
 
-    // ĐƯỜNG DẪN BACKEND RENDER CỦA BẠN (Thay đúng URL Render của bạn vào đây)
+    // ĐƯỜNG DẪN BACKEND RENDER (Hãy thay đúng URL Render của bạn)
     const RENDER_BACKEND_URL = 'https://wynalgo-backend.onrender.com';
 
     // 2. TÌM CÁC PHẦN TỬ DOM
@@ -2839,7 +2839,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!paymentModal) return;
 
-    // 3. HÀM TẠO SỐ HẬU TỐ NGẪU NHIÊN (5 ký tự)
+    // 3. HÀM TẠO MÃ HẬU TỐ NGẪU NHIÊN (5 KÝ TỰ)
     function generateOrderSuffix() {
         if (window.crypto && window.crypto.getRandomValues) {
             const bytes = new Uint8Array(3);
@@ -2878,7 +2878,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 : `${finalPrice} VNĐ`;
         }
 
-        // Reset về Bước 1
+        // Reset giao diện về Bước 1
         resetModalToStep1();
 
         paymentModal.classList.remove('hidden');
@@ -2895,6 +2895,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (stepEmailInput) stepEmailInput.classList.remove('hidden');
         if (stepQrDisplay) stepQrDisplay.classList.add('hidden');
         if (modalOrderId) modalOrderId.textContent = '---';
+        if (qrImage) qrImage.src = '';
     }
 
     // 6. ĐÓNG MODAL
@@ -2908,7 +2909,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 7. CHUYỂN SANG BƯỚC 2: TẠO MÃ MỚI, GỬI ĐƠN VỀ BACKEND & HIỂN THỊ VIETQR
+    // 7. CHUYỂN SANG BƯỚC 2: TẠO MÃ MỚI & TẠO VIETQR
     async function generateVietQR() {
         if (!customerEmailInput) return;
 
@@ -2923,23 +2924,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (emailError) emailError.classList.add('hidden');
 
-        // A. XÁC ĐỊNH CHÍNH XÁC PREFIX & PACKAGE KEY CHO BACKEND
-        // Ví dụ: Market GL + Gói M30 => Prefix là 'GLM30', PackageKey là 'GL_M30'
+        // A. CHUẨN HÓA PREFIX VÀ PACKAGE KEY
         const marketPrefix = isCurrentGlobal ? 'GL' : 'VN';
         const planCode = currentSelectedPlan.toUpperCase().replace(/[^A-Z0-9]/g, ''); // 'M30', 'Q90', 'Y365'
         
-        const prefix = `${marketPrefix}${planCode}`; // Kết quả: 'GLM30', 'VNQ90',...
-        const packageKey = `${marketPrefix}_${planCode}`; // Kết quả: 'GL_M30', 'VN_Q90',...
+        const prefix = `${marketPrefix}${planCode}`; // Ví dụ: 'GLM30'
+        const packageKey = `${marketPrefix}_${planCode}`; // Ví dụ: 'GL_M30'
 
-        // B. SINH MÃ ĐƠN HÀNG MỚI ĐỘC NHẤT GẮN VỚI EMAIL HIỆN TẠI (Ví dụ: GLM30A8K9P)
-        const orderCode = `${prefix}${generateOrderSuffix()}`;
+        // B. LUÔN SINH MÃ ĐƠN HÀNG MỚI HOÀN TOÀN TẠI THỜI ĐIỂM BẤM NÚT
+        const newOrderCode = `${prefix}${generateOrderSuffix()}`; // Ví dụ: 'GLM30X8K9P'
 
-        // Hiển thị mã đơn lên UI Modal
-        if (modalOrderId) modalOrderId.textContent = orderCode;
+        // Cập nhật lại mã đơn hàng hiển thị trên giao diện Modal
+        if (modalOrderId) modalOrderId.textContent = newOrderCode;
 
         const rawPrice = modalPlanPriceValue ? modalPlanPriceValue.textContent.replace(/[^0-9]/g, '') : '';
 
-        // C. GỬI REQUEST ĐĂNG KÝ ĐƠN HÀNG LÊN BACKEND RENDER
+        // C. GỬI ĐƠN HÀNG VỚI MÃ MỚI VÀ EMAIL MỚI LÊN BACKEND RENDER
         try {
             if (btnGenerateQr) {
                 btnGenerateQr.disabled = true;
@@ -2950,19 +2950,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    orderCode: orderCode,
+                    orderCode: newOrderCode,
                     email: email,
                     packageKey: packageKey
                 })
             });
 
             if (!response.ok) {
-                throw new Error("Không thể lưu đơn hàng chờ trên máy chủ.");
+                throw new Error("Không thể khởi tạo đơn hàng trên máy chủ.");
             }
 
-            // D. TẠO ANH VIETQR VÀ CHUYỂN SANG BƯỚC 2
+            // D. TẠO ẢNH VIETQR THEO MÃ MỚI VÀ HIỂN THỊ
             if (rawPrice && qrImage) {
-                const qrUrl = `https://img.vietqr.io/image/${BANK_CONFIG.bankId}-${BANK_CONFIG.accountNo}-${BANK_CONFIG.template}.png?amount=${rawPrice}&addInfo=${encodeURIComponent(orderCode)}&accountName=${encodeURIComponent(BANK_CONFIG.accountName)}`;
+                const qrUrl = `https://img.vietqr.io/image/${BANK_CONFIG.bankId}-${BANK_CONFIG.accountNo}-${BANK_CONFIG.template}.png?amount=${rawPrice}&addInfo=${encodeURIComponent(newOrderCode)}&accountName=${encodeURIComponent(BANK_CONFIG.accountName)}`;
 
                 qrImage.src = qrUrl;
 
@@ -2973,7 +2973,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (err) {
             console.error("[Create Order Error]:", err);
-            alert("Có lỗi kết nối đến máy chủ thanh toán. Vui lòng thử lại!");
+            alert("Không thể kết nối đến máy chủ thanh toán. Vui lòng thử lại!");
         } finally {
             if (btnGenerateQr) {
                 btnGenerateQr.disabled = false;
@@ -3001,15 +3001,18 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Nút "Sửa Email": Quay lại Bước 1 và chuẩn bị cho lượt tạo mã mới
     if (btnEditEmail) {
         btnEditEmail.addEventListener('click', (e) => {
             e.preventDefault();
             if (stepQrDisplay) stepQrDisplay.classList.add('hidden');
             if (stepEmailInput) stepEmailInput.classList.remove('hidden');
+            if (modalOrderId) modalOrderId.textContent = '---';
             if (customerEmailInput) customerEmailInput.focus();
         });
     }
 
+    // Nút "Tạo mã QR thanh toán": Mỗi lần bấm sẽ gọi generateVietQR() để sinh mã đơn hàng mới
     if (btnGenerateQr) {
         btnGenerateQr.addEventListener('click', (e) => {
             e.preventDefault();
