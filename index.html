@@ -2069,70 +2069,96 @@
     <!-- PAYMENT MODAL -->
     
 <!-- PAYMENT MODAL -->
-<div id="payment-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
-    <div class="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl text-white">
+<!-- [EDIT 1]: Thêm pt-12 sm:pt-4 để đẩy Modal xuống tránh bị thanh trạng thái iPhone che khuất, điều chỉnh my-auto để căn giữa đẹp mắt -->
+<div id="payment-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto pt-12 sm:pt-4">
+    
+    <!-- [EDIT 2]: Bổ sung my-auto và max-h-[90vh] để đảm bảo modal không bị tràn quá màn hình điện thoại -->
+    <div class="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl text-white my-auto max-h-[90vh] overflow-y-auto">
         
-        <!-- Nút đóng -->
-        <button data-close-payment class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- [EDIT 3]: Đưa nút X vào vùng đệm an toàn (top-3 right-3 sm:top-4 sm:right-4) và tăng vùng bấm (p-1.5) -->
+        <button data-close-payment class="absolute top-3 right-3 sm:top-4 sm:right-4 text-slate-400 hover:text-white p-1.5 bg-slate-800/60 hover:bg-slate-800 rounded-full transition-colors z-10" aria-label="Đóng">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
         </button>
 
         <!-- Tiêu đề & Tên gói cước -->
-        <h3 class="text-xl font-bold text-center text-cyan-400 mb-1">Thanh Toán & Nhận License Key</h3>
-        <p class="text-center text-sm text-slate-400 mb-5">Đăng ký gói: <span id="modal-plan-name" class="font-bold text-white uppercase">---</span></p>
+        <!-- [EDIT 4]: Giảm size chữ di động (text-lg sm:text-xl), dùng whitespace-nowrap hoặc flex để chữ "License Key" luôn nằm cùng dòng không bị rớt lẻ loi -->
+        <h3 class="text-lg sm:text-xl font-bold text-center text-cyan-400 mb-1 pr-6 pl-6 leading-snug">
+            Thanh Toán Đăng Ký
+        </h3>
+        <p class="text-center text-xs sm:text-sm text-slate-400 mb-4"> Gói đăng ký: <span id="modal-plan-name" class="font-bold text-white uppercase">---</span></p>
 
         <!-- ================= BƯỚC 1: NHẬP EMAIL ================= -->
         <div id="step-email-input">
-            <div class="mb-5">
+            <div class="mb-4">
                 <label for="customer-email" class="block text-xs font-medium text-slate-300 mb-1.5">
-                    Email nhận License Key : <span class="text-red-400">*</span>
+                    Nhập chính xác Email nhận License Key: <span class="text-red-400">*</span>
                 </label>
-                <input type="email" id="customer-email" placeholder="email@example.com" required
+                <input type="email" id="customer-email" placeholder="user@example.com" required
                     class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors shadow-inner">
                 <p id="email-error" class="text-xs text-red-400 mt-1.5 hidden">Vui lòng nhập email hợp lệ!</p>
             </div>
 
             <!-- Nút Tạo Mã QR -->
-            <button id="btn-generate-qr" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/20">
+            <button id="btn-generate-qr" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/20 text-sm sm:text-base">
                 Tạo Mã QR Thanh Toán
             </button>
         </div>
 
         <!-- ================= BƯỚC 2: HIỂN THỊ MÃ QR & THÔNG TIN (MẶC ĐỊNH ẨN) ================= -->
-        <div id="step-qr-display" class="hidden space-y-4">
+        <!-- [EDIT 5]: Giảm khoảng cách dọc (space-y-3 trên mobile) để tiết kiệm không gian -->
+        <div id="step-qr-display" class="hidden space-y-3 sm:space-y-4">
             
             <!-- Alert xác nhận Email -->
-            <div class="p-3 bg-cyan-950/40 border border-cyan-500/30 rounded-xl text-xs text-cyan-200">
+            <div class="p-2.5 sm:p-3 bg-cyan-950/40 border border-cyan-500/30 rounded-xl text-xs text-cyan-200">
                 <div class="flex items-start gap-2">
                     <svg class="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <div>
-                        License Key sẽ được gửi tự động đến: <strong id="confirmed-email-display" class="text-white  underline-offset-2">---</strong>
-                        <button id="btn-edit-email" class="text-cyan-400 hover:text-white font-medium ml-1.5 cursor-pointer">(Thay đổi email)</button>
+                    <div class="leading-tight">
+                        License Key sẽ được gửi đến: <strong id="confirmed-email-display" class="text-white underline-offset-2 break-all">---</strong>
+                        <button id="btn-edit-email" class="text-cyan-400 hover:text-white font-medium ml-1 cursor-pointer underline">(Sửa đổi Email)</button>
                     </div>
                 </div>
             </div>
 
             <!-- Khung thông tin Đơn hàng (Số tiền & Nội dung CK) -->
-            <div class="bg-slate-800/60 rounded-xl p-3.5 space-y-2 border border-slate-700/50 text-sm">
+            <!-- [EDIT 6]: Tối ưu padding p-2.5 sm:p-3.5 và giảm kích thước text để gọn gàng hơn -->
+            <div class="bg-slate-800/60 rounded-xl p-2.5 sm:p-3.5 space-y-1.5 sm:space-y-2 border border-slate-700/50 text-xs sm:text-sm">
                 <div class="flex justify-between items-center">
-                    <span class="text-slate-400 text-xs">Số tiền thanh toán:</span>
-                    <span id="modal-plan-price-value" class="font-bold text-emerald-400 text-base">0 VNĐ</span>
+                    <span class="text-slate-400">Số tiền thanh toán:</span>
+                    <span id="modal-plan-price-value" class="font-bold text-emerald-400 text-sm sm:text-base">0 VNĐ</span>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-slate-400 text-xs">Nội dung chuyển khoản:</span>
-                    <span id="modal-order-id" class="font-mono font-bold text-amber-400 bg-slate-950 px-2.5 py-0.5 rounded border border-amber-500/30 text-xs sm:text-sm">VNM30XXXXXX</span>
+                    <span class="text-slate-400">Nội dung chuyển khoản:</span>
+                    <span id="modal-order-id" class="font-mono font-bold text-amber-400 bg-slate-950 px-2 py-0.5 rounded border border-amber-500/30 text-xs sm:text-sm">VNM30XXXXXX</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400">Ngân hàng:</span>
+                    <span class="font-bold text-white">Ngân hàng TMCP Á Châu (ACB)</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400">Số tài khoản:</span>
+                    <span class="font-bold text-white">800058</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400">Tên tài khoản:</span>
+                    <span class="font-bold text-white">HO HUY TIEN</span>
                 </div>
             </div>
 
             <!-- Khung chứa ảnh VietQR -->
-            <div class="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-slate-200 shadow-inner">
-                <img id="vietqr-image" src="" alt="Mã QR Thanh Toán" class="w-60 h-auto rounded-lg">
-                <p class="text-[11px] text-slate-500 mt-2 text-center font-medium">Quét mã bằng App Ngân Hàng để tự động điền số tiền & nội dung</p>
+            <!-- [EDIT 7]: Giảm kích thước QR code từ w-60 xuống w-44 sm:w-56 để vừa vặn màn hình điện thoại mà không cần cuộn -->
+            <div class="flex flex-col items-center justify-center p-3 sm:p-4 bg-white rounded-xl border border-slate-200 shadow-inner">
+                <img id="vietqr-image" src="" alt="Mã QR Thanh Toán" class="w-44 sm:w-56 h-auto rounded-lg">
+                <p class="text-[10px] sm:text-[11px] text-slate-500 mt-1.5 text-center font-medium">Quét mã QR để tự động điền thông tin chuyển khoản</p>
             </div>
+
+            <!-- [EDIT 8]: BỔ SUNG NÚT ĐÓNG PHÍA DƯỚI ĐỂ DỄ DÀNG THAO TÁC TRÊN DI ĐỘNG -->
+            <button data-close-payment class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-medium text-xs sm:text-sm rounded-xl transition-colors border border-slate-700/60 mt-2">
+                Đóng cửa sổ
+            </button>
 
         </div>
 
@@ -2808,7 +2834,7 @@ document.addEventListener("DOMContentLoaded", () => {
         template: 'compact2'
     };
 
-    // ĐƯỜNG DẪN BACKEND RENDER (Hãy thay đúng URL Render của bạn)
+    // ĐƯỜNG DẪN BACKEND RENDER CỦA BẠN (Thay đúng URL Render của bạn vào đây)
     const RENDER_BACKEND_URL = 'https://wynalgo-backend.onrender.com';
 
     // 2. TÌM CÁC PHẦN TỬ DOM
@@ -2839,7 +2865,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!paymentModal) return;
 
-    // 3. HÀM TẠO MÃ HẬU TỐ NGẪU NHIÊN (5 KÝ TỰ)
+    // 3. HÀM TẠO SỐ HẬU TỐ NGẪU NHIÊN (5 ký tự)
     function generateOrderSuffix() {
         if (window.crypto && window.crypto.getRandomValues) {
             const bytes = new Uint8Array(3);
@@ -2878,7 +2904,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 : `${finalPrice} VNĐ`;
         }
 
-        // Reset giao diện về Bước 1
+        // Reset về Bước 1
         resetModalToStep1();
 
         paymentModal.classList.remove('hidden');
@@ -2895,7 +2921,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (stepEmailInput) stepEmailInput.classList.remove('hidden');
         if (stepQrDisplay) stepQrDisplay.classList.add('hidden');
         if (modalOrderId) modalOrderId.textContent = '---';
-        if (qrImage) qrImage.src = '';
     }
 
     // 6. ĐÓNG MODAL
@@ -2909,7 +2934,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 7. CHUYỂN SANG BƯỚC 2: TẠO MÃ MỚI & TẠO VIETQR
+    // 7. CHUYỂN SANG BƯỚC 2: TẠO MÃ MỚI, GỬI ĐƠN VỀ BACKEND & HIỂN THỊ VIETQR
     async function generateVietQR() {
         if (!customerEmailInput) return;
 
@@ -2924,22 +2949,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (emailError) emailError.classList.add('hidden');
 
-        // A. CHUẨN HÓA PREFIX VÀ PACKAGE KEY
+        // A. XÁC ĐỊNH CHÍNH XÁC PREFIX & PACKAGE KEY CHO BACKEND
+        // Ví dụ: Market GL + Gói M30 => Prefix là 'GLM30', PackageKey là 'GL_M30'
         const marketPrefix = isCurrentGlobal ? 'GL' : 'VN';
         const planCode = currentSelectedPlan.toUpperCase().replace(/[^A-Z0-9]/g, ''); // 'M30', 'Q90', 'Y365'
         
-        const prefix = `${marketPrefix}${planCode}`; // Ví dụ: 'GLM30'
-        const packageKey = `${marketPrefix}_${planCode}`; // Ví dụ: 'GL_M30'
+        const prefix = `${marketPrefix}${planCode}`; // Kết quả: 'GLM30', 'VNQ90',...
+        const packageKey = `${marketPrefix}_${planCode}`; // Kết quả: 'GL_M30', 'VN_Q90',...
 
-        // B. LUÔN SINH MÃ ĐƠN HÀNG MỚI HOÀN TOÀN TẠI THỜI ĐIỂM BẤM NÚT
-        const newOrderCode = `${prefix}${generateOrderSuffix()}`; // Ví dụ: 'GLM30X8K9P'
+        // B. SINH MÃ ĐƠN HÀNG MỚI ĐỘC NHẤT GẮN VỚI EMAIL HIỆN TẠI (Ví dụ: GLM30A8K9P)
+        const orderCode = `${prefix}${generateOrderSuffix()}`;
 
-        // Cập nhật lại mã đơn hàng hiển thị trên giao diện Modal
-        if (modalOrderId) modalOrderId.textContent = newOrderCode;
+        // Hiển thị mã đơn lên UI Modal
+        if (modalOrderId) modalOrderId.textContent = orderCode;
 
         const rawPrice = modalPlanPriceValue ? modalPlanPriceValue.textContent.replace(/[^0-9]/g, '') : '';
 
-        // C. GỬI ĐƠN HÀNG VỚI MÃ MỚI VÀ EMAIL MỚI LÊN BACKEND RENDER
+        // C. GỬI REQUEST ĐĂNG KÝ ĐƠN HÀNG LÊN BACKEND RENDER
         try {
             if (btnGenerateQr) {
                 btnGenerateQr.disabled = true;
@@ -2950,19 +2976,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    orderCode: newOrderCode,
+                    orderCode: orderCode,
                     email: email,
                     packageKey: packageKey
                 })
             });
 
             if (!response.ok) {
-                throw new Error("Không thể khởi tạo đơn hàng trên máy chủ.");
+                throw new Error("Không thể lưu đơn hàng chờ trên máy chủ.");
             }
 
-            // D. TẠO ẢNH VIETQR THEO MÃ MỚI VÀ HIỂN THỊ
+            // D. TẠO ANH VIETQR VÀ CHUYỂN SANG BƯỚC 2
             if (rawPrice && qrImage) {
-                const qrUrl = `https://img.vietqr.io/image/${BANK_CONFIG.bankId}-${BANK_CONFIG.accountNo}-${BANK_CONFIG.template}.png?amount=${rawPrice}&addInfo=${encodeURIComponent(newOrderCode)}&accountName=${encodeURIComponent(BANK_CONFIG.accountName)}`;
+                const qrUrl = `https://img.vietqr.io/image/${BANK_CONFIG.bankId}-${BANK_CONFIG.accountNo}-${BANK_CONFIG.template}.png?amount=${rawPrice}&addInfo=${encodeURIComponent(orderCode)}&accountName=${encodeURIComponent(BANK_CONFIG.accountName)}`;
 
                 qrImage.src = qrUrl;
 
@@ -2973,7 +2999,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (err) {
             console.error("[Create Order Error]:", err);
-            alert("Không thể kết nối đến máy chủ thanh toán. Vui lòng thử lại!");
+            alert("Có lỗi kết nối đến máy chủ thanh toán. Vui lòng thử lại!");
         } finally {
             if (btnGenerateQr) {
                 btnGenerateQr.disabled = false;
@@ -3001,18 +3027,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Nút "Sửa Email": Quay lại Bước 1 và chuẩn bị cho lượt tạo mã mới
     if (btnEditEmail) {
         btnEditEmail.addEventListener('click', (e) => {
             e.preventDefault();
             if (stepQrDisplay) stepQrDisplay.classList.add('hidden');
             if (stepEmailInput) stepEmailInput.classList.remove('hidden');
-            if (modalOrderId) modalOrderId.textContent = '---';
             if (customerEmailInput) customerEmailInput.focus();
         });
     }
 
-    // Nút "Tạo mã QR thanh toán": Mỗi lần bấm sẽ gọi generateVietQR() để sinh mã đơn hàng mới
     if (btnGenerateQr) {
         btnGenerateQr.addEventListener('click', (e) => {
             e.preventDefault();
