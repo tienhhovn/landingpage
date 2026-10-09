@@ -2087,12 +2087,14 @@
         <h3 class="text-lg sm:text-xl font-bold text-center text-cyan-400 mb-1 pr-6 pl-6 leading-snug">
             Thanh Toán Đăng Ký
         </h3>
-        <p class="text-center text-xs sm:text-sm text-white mb-4"> Gói đăng ký: <strong>Premium</strong> <span id="modal-plan-name" class="font-bold text-white uppercase">---</span></p>
+        <p class="text-center text-xs sm:text-sm text-slate-300 mb-4">
+            Gói đăng ký: <span id="modal-plan-name" class="font-bold text-slate-200">---</span>
+        </p>
 
         <!-- ================= BƯỚC 1: NHẬP EMAIL ================= -->
         <div id="step-email-input">
             <div class="mb-4">
-                <label for="customer-email" class="block text-xs font-medium text-slate-300 mb-1.5">
+                <label for="customer-email" class="block text-xs sm:text-sm font-medium text-slate-300 mb-1.5">
                     Nhập chính xác Email nhận License Key: <span class="text-red-400">*</span>
                 </label>
                 <input type="email" id="customer-email" placeholder="user@example.com" required
@@ -2101,8 +2103,8 @@
             </div>
 
             <!-- Nút Tạo Mã QR -->
-            <button id="btn-generate-qr" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/20 text-sm sm:text-base">
-                Tạo Mã QR Thanh Toán
+            <button id="btn-generate-qr" class="block w-fit mx-auto px-10 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-200 hover:text-slate-900 font-bold rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/20 text-sm sm:text-base">
+                Xác nhận
             </button>
         </div>
 
@@ -2116,9 +2118,14 @@
                     <svg class="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <div class="leading-tight">
-                        License Key sẽ được gửi đến: <strong id="confirmed-email-display" class="text-white underline-offset-2 break-all">---</strong>
-                        <button id="btn-edit-email" class="text-cyan-400 hover:text-white font-medium ml-1 cursor-pointer underline">(Sửa đổi Email)</button>
+                    <div class="flex flex-col gap-1 text-xs">
+                        <span class="text-cyan-200/90">Thông tin đăng ký & Hướng dẫn chi tiết sẽ được gửi đến:</span>
+                        <strong id="confirmed-email-display" class="text-slate-200 text-sm font-semibold break-all tracking-wide">---</strong>
+                        <div>
+                            <button id="btn-edit-email" class="text-cyan-400 hover:text-cyan-300 font-medium cursor-pointer underline text-[11px] hover:no-underline transition-all">
+                                (Sửa đổi email)
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2136,15 +2143,15 @@
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-slate-400">Ngân hàng:</span>
-                    <span class="font-bold text-white">Ngân hàng TMCP Á Châu (ACB)</span>
+                    <span class="font-bold text-slate-200">Ngân hàng TMCP Á Châu (ACB)</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-slate-400">Số tài khoản:</span>
-                    <span class="font-bold text-white">800058</span>
+                    <span class="font-bold text-slate-200">800058</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-slate-400">Tên tài khoản:</span>
-                    <span class="font-bold text-white">HO HUY TIEN</span>
+                    <span class="font-bold text-slate-200">HO HUY TIEN</span>
                 </div>
             </div>
 
@@ -2156,7 +2163,7 @@
             </div>
 
             <!-- [EDIT 8]: BỔ SUNG NÚT ĐÓNG PHÍA DƯỚI ĐỂ DỄ DÀNG THAO TÁC TRÊN DI ĐỘNG -->
-            <button data-close-payment class="block w-fit mx-auto px-10 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-medium text-xs sm:text-sm rounded-xl transition-colors border border-slate-700/60 mt-2">
+            <button data-close-payment class="block w-fit mx-auto px-10 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-200 hover:text-slate-900 font-bold text-sm sm:text-base rounded-xl transition-colors border border-slate-700/60 mt-2">
                 Kết thúc
             </button>
 
@@ -2455,74 +2462,7 @@
             });
         });
 
-// ==========================================
-// PAYMENT MODAL: mở thông tin chuyển khoản cho gói được chọn
-// ==========================================
-        const paymentModal = document.getElementById('payment-modal');
-        const modalPlanName = document.getElementById('modal-plan-name');
-        const modalPlanPriceValue = document.getElementById('modal-plan-price-value');
-        const modalPlanPricePeriod = document.getElementById('modal-plan-price-period');
-        const modalOrderId = document.getElementById('modal-order-id');
-        const planButtons = document.querySelectorAll('.js-plan-button');
-        const paymentCloseButtons = document.querySelectorAll('[data-close-payment]');
-        let lastFocusedElement = null;
 
-        function generateOrderSuffix() {
-            if (window.crypto && window.crypto.getRandomValues) {
-                const bytes = new Uint8Array(3);
-                window.crypto.getRandomValues(bytes);
-                return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('').toUpperCase();
-            }
-            return Date.now().toString(36).slice(-6).toUpperCase();
-        }
-
-        function openPaymentModal(plan) {
-            const prices = PLAN_PRICES[plan];
-            if (!prices) return;
-
-            const finalPrice = isYearly ? prices.yearly : prices.monthly;
-            lastFocusedElement = document.activeElement;
-            modalPlanName.textContent = plan;
-            modalPlanPriceValue.textContent = `${finalPrice} VNĐ`;
-            modalPlanPricePeriod.textContent = isYearly ? '' : '';
-            modalOrderId.textContent = `SDT_${plan.toUpperCase()}_${generateOrderSuffix()}`;
-            paymentModal.classList.remove('hidden');
-            paymentModal.setAttribute('aria-hidden', 'false');
-            lockPageScroll();
-
-            const closePaymentButton = paymentModal.querySelector('[data-close-payment]');
-            if (closePaymentButton) closePaymentButton.focus();
-        }
-
-        function closePaymentModal() {
-            paymentModal.classList.add('hidden');
-            paymentModal.setAttribute('aria-hidden', 'true');
-            unlockPageScroll();
-            if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
-                lastFocusedElement.focus();
-            }
-        }
-
-        planButtons.forEach(button => {
-            button.addEventListener('click', () => openPaymentModal(button.dataset.plan));
-        });
-
-        paymentCloseButtons.forEach(button => {
-            button.addEventListener('click', closePaymentModal);
-        });
-
-        paymentModal.addEventListener('click', event => {
-            if (event.target === paymentModal) closePaymentModal();
-        });
-
-        document.addEventListener('keydown', event => {
-            if (event.key !== 'Escape') return;
-            if (!paymentModal.classList.contains('hidden')) {
-                closePaymentModal();
-            } else if (mobileMenu.classList.contains('visible')) {
-                closeMobileMenu(true);
-            }
-        });
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -2823,7 +2763,7 @@ const observerOptions = {
 
 
 // ==========================================
-// TẠO MÃ VIETQR ĐỘNG & QUẢN LÝ BƯỚC THANH TOÁN
+// TẠO MÃ VIETQR ĐỘNG & QUẢN LÝ BƯỚC THANH TOÁN WYNALGO
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     // 1. CẤU HÌNH NGÂN HÀNG & RENDER BACKEND
@@ -2834,7 +2774,7 @@ document.addEventListener("DOMContentLoaded", () => {
         template: 'compact2'
     };
 
-    // ĐƯỜNG DẪN BACKEND RENDER CỦA BẠN (Thay đúng URL Render của bạn vào đây)
+    // Đường dẫn Backend Render
     const RENDER_BACKEND_URL = 'https://wynalgo-backend.onrender.com';
 
     // 2. TÌM CÁC PHẦN TỬ DOM
@@ -2897,14 +2837,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         lastFocusedElement = document.activeElement;
 
-        if (modalPlanName) modalPlanName.textContent = plan;
+        // HIỂN THỊ TÊN GÓI ĐẦY ĐỦ KÈM THỊ TRƯỜNG (Ví dụ: Premium M30 - Thị trường Việt Nam)
+        if (modalPlanName) {
+            const planUpper = plan.toUpperCase();
+            const marketText = isCurrentGlobal ? 'Thị trường Quốc tế' : 'Thị trường Việt Nam';
+            modalPlanName.textContent = `Premium ${planUpper} - ${marketText}`;
+        }
+
         if (modalPlanPriceValue) {
             modalPlanPriceValue.textContent = typeof finalPrice === 'number' 
                 ? `${finalPrice.toLocaleString('vi-VN')} VNĐ` 
                 : `${finalPrice} VNĐ`;
         }
 
-        // Reset về Bước 1
+        // Reset về Bước 1 (Nhập Email)
         resetModalToStep1();
 
         paymentModal.classList.remove('hidden');
@@ -2950,14 +2896,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (emailError) emailError.classList.add('hidden');
 
         // A. XÁC ĐỊNH CHÍNH XÁC PREFIX & PACKAGE KEY CHO BACKEND
-        // Ví dụ: Market GL + Gói M30 => Prefix là 'GLM30', PackageKey là 'GL_M30'
         const marketPrefix = isCurrentGlobal ? 'GL' : 'VN';
         const planCode = currentSelectedPlan.toUpperCase().replace(/[^A-Z0-9]/g, ''); // 'M30', 'Q90', 'Y365'
         
-        const prefix = `${marketPrefix}${planCode}`; // Kết quả: 'GLM30', 'VNQ90',...
-        const packageKey = `${marketPrefix}_${planCode}`; // Kết quả: 'GL_M30', 'VN_Q90',...
+        const prefix = `${marketPrefix}${planCode}`; // Kết quả: 'VNM30', 'GLM30',...
+        const packageKey = `${marketPrefix}_${planCode}`; // Kết quả: 'VN_M30', 'GL_M30',...
 
-        // B. SINH MÃ ĐƠN HÀNG MỚI ĐỘC NHẤT GẮN VỚI EMAIL HIỆN TẠI (Ví dụ: GLM30A8K9P)
+        // B. SINH MÃ ĐƠN HÀNG MỚI ĐỘC NHẤT (Ví dụ: VNM30A8K9P)
         const orderCode = `${prefix}${generateOrderSuffix()}`;
 
         // Hiển thị mã đơn lên UI Modal
@@ -2986,7 +2931,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error("Không thể lưu đơn hàng chờ trên máy chủ.");
             }
 
-            // D. TẠO ANH VIETQR VÀ CHUYỂN SANG BƯỚC 2
+            // D. TẠO ẢNH VIETQR VÀ CHUYỂN SANG BƯỚC 2
             if (rawPrice && qrImage) {
                 const qrUrl = `https://img.vietqr.io/image/${BANK_CONFIG.bankId}-${BANK_CONFIG.accountNo}-${BANK_CONFIG.template}.png?amount=${rawPrice}&addInfo=${encodeURIComponent(orderCode)}&accountName=${encodeURIComponent(BANK_CONFIG.accountName)}`;
 
@@ -3003,7 +2948,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } finally {
             if (btnGenerateQr) {
                 btnGenerateQr.disabled = false;
-                btnGenerateQr.textContent = 'Tạo mã QR thanh toán';
+                btnGenerateQr.textContent = 'Xác nhận';
             }
         }
     }
