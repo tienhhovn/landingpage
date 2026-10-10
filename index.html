@@ -1907,7 +1907,7 @@
 <div class="text-xs sm:text-sm text-left text-slate-200 flex items-center justify-center gap-4 sm:gap-6 flex-wrap pt-1">
             
             <!-- Hotline -->
-            <span>Hotline: <strong class="text-white font-bold">0988 886 719<br><i class="fa-regular fa-envelope"></i>  wynalgo@gmail.com</strong></span>
+            <span>Hotline: <strong class="text-white font-bold">0988 886 719<br><i class="fa-regular fa-envelope"></i>  support@wynalgo.com</strong></span>
 
             <span class="text-white/20 hidden sm:inline">|</span>
 
@@ -2004,7 +2004,7 @@
                 Tuyên bố miễn trừ trách nhiệm
             </button>
             <span class="text-slate-400">|</span>
-            <a href="mailto:wynalgo@gmail.com" class="hover:text-[#f0fdff] transition flex items-center gap-1.5"><i class="fa-regular fa-envelope"></i> Liên hệ bộ phận hỗ trợ</a>
+            <a href="mailto:support@wynalgo.com" class="hover:text-[#f0fdff] transition flex items-center gap-1.5"><i class="fa-regular fa-envelope"></i> Liên hệ bộ phận hỗ trợ</a>
         </div>
     </footer>
 
@@ -2069,33 +2069,33 @@
     <!-- PAYMENT MODAL -->
     
 <!-- PAYMENT MODAL -->
-<!-- [EDIT 1]: Thêm pt-12 sm:pt-4 để đẩy Modal xuống tránh bị thanh trạng thái iPhone che khuất, điều chỉnh my-auto để căn giữa đẹp mắt -->
-<div id="payment-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto pt-12 sm:pt-4">
+<!-- [SỬA 1]: Nền tối đục hơn (bg-slate-950/95), tăng độ mờ hậu cảnh (backdrop-blur-md) giúp che 100% nội dung trang dưới. -->
+<!-- [SỬA 2]: Đưa cơ chế cuộn mượt về đúng khung nền ngoài (overflow-y-auto overscroll-contain) để trên iOS/Android cuộn trơn tru không bị kẹt. -->
+<div id="payment-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-9500/60 backdrop-blur-[6px] p-3 sm:p-4 overflow-y-auto overscroll-contain pt-10 pb-10 sm:py-6">
     
-    <!-- [EDIT 2]: Bổ sung my-auto và max-h-[90vh] để đảm bảo modal không bị tràn quá màn hình điện thoại -->
-    <div class="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl text-white my-auto max-h-[90vh] overflow-y-auto">
+    <!-- [SỬA 3]: Bỏ overflow-y-auto ở thẻ con, dùng max-h-none/fit-content để Modal mở rộng tự nhiên theo nội dung. -->
+    <div class="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl text-white my-auto transform transition-all">
         
-        <!-- [EDIT 3]: Đưa nút X vào vùng đệm an toàn (top-3 right-3 sm:top-4 sm:right-4) và tăng vùng bấm (p-1.5) -->
-        <button data-close-payment class="absolute top-3 right-3 sm:top-4 sm:right-4 text-slate-400 hover:text-white p-1.5 bg-slate-800/60 hover:bg-slate-800 rounded-full transition-colors z-10" aria-label="Đóng">
+        <!-- Nút Đóng góc trên -->
+        <button data-close-payment class="absolute top-3 right-3 sm:top-4 sm:right-4 text-slate-400 hover:text-white p-2 bg-slate-800/80 hover:bg-slate-800 rounded-full transition-colors z-10" aria-label="Đóng">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
         </button>
 
         <!-- Tiêu đề & Tên gói cước -->
-        <!-- [EDIT 4]: Giảm size chữ di động (text-lg sm:text-xl), dùng whitespace-nowrap hoặc flex để chữ "License Key" luôn nằm cùng dòng không bị rớt lẻ loi -->
         <h3 class="text-lg sm:text-xl font-bold text-center text-cyan-400 mb-1 pr-6 pl-6 leading-snug">
             Thanh Toán Đăng Ký
         </h3>
-        <p class="text-center text-xs sm:text-sm text-slate-300 mb-4">
-            Gói đăng ký: <span id="modal-plan-name" class="font-bold text-slate-200">---</span>
+        <p class="text-center text-xs sm:text-sm text-slate-200 mb-4">
+            Gói <span id="modal-plan-name" class="font-bold text-slate-200">---</span>
         </p>
 
         <!-- ================= BƯỚC 1: NHẬP EMAIL ================= -->
         <div id="step-email-input">
             <div class="mb-4">
                 <label for="customer-email" class="block text-xs sm:text-sm font-medium text-slate-300 mb-1.5">
-                    Nhập chính xác Email nhận thông tin kích hoạt: <span class="text-red-400">*</span>
+                    Nhập chính xác Email đăng ký của bạn: <span class="text-red-400">*</span>
                 </label>
                 <input type="email" id="customer-email" placeholder="user@example.com" required
                     class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors shadow-inner">
@@ -2108,8 +2108,7 @@
             </button>
         </div>
 
-        <!-- ================= BƯỚC 2: HIỂN THỊ MÃ QR & THÔNG TIN (MẶC ĐỊNH ẨN) ================= -->
-        <!-- [EDIT 5]: Giảm khoảng cách dọc (space-y-3 trên mobile) để tiết kiệm không gian -->
+        <!-- ================= BƯỚC 2: HIỂN THỊ MÃ QR & THÔNG TIN ================= -->
         <div id="step-qr-display" class="hidden space-y-3 sm:space-y-4">
             
             <!-- Alert xác nhận Email -->
@@ -2119,19 +2118,18 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     <div class="flex flex-col gap-1 text-xs">
-                        <span class="text-cyan-200/90">Thông tin đăng ký & Hướng dẫn chi tiết sẽ được gửi đến:</span>
+                        <span class="text-cyan-200/90 text-sm">Thông tin đăng ký sử dụng sẽ được gửi đến email:</span>
                         <strong id="confirmed-email-display" class="text-slate-200 text-sm font-semibold break-all tracking-wide">---</strong>
                         <div>
-                            <button id="btn-edit-email" class="text-cyan-400 hover:text-cyan-300 font-medium cursor-pointer underline text-[11px] hover:no-underline transition-all">
-                                (Sửa đổi email)
+                            <button id="btn-edit-email" class="text-cyan-400 hover:text-cyan-300 font-bold cursor-pointer underline text-[11px] hover:no-underline transition-all">
+                                Thay đổi email
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Khung thông tin Đơn hàng (Số tiền & Nội dung CK) -->
-            <!-- [EDIT 6]: Tối ưu padding p-2.5 sm:p-3.5 và giảm kích thước text để gọn gàng hơn -->
+            <!-- Khung thông tin Đơn hàng -->
             <div class="bg-slate-800/60 rounded-xl p-2.5 sm:p-3.5 space-y-1.5 sm:space-y-2 border border-slate-700/50 text-xs sm:text-sm">
                 <div class="flex justify-between items-center">
                     <span class="text-slate-400">Số tiền thanh toán:</span>
@@ -2156,14 +2154,14 @@
             </div>
 
             <!-- Khung chứa ảnh VietQR -->
-            <!-- [EDIT 7]: Giảm kích thước QR code từ w-60 xuống w-44 sm:w-56 để vừa vặn màn hình điện thoại mà không cần cuộn -->
+            <!-- [SỬA 4]: Cố định max-width QR w-40 sm:w-52 để đảm bảo hiển thị trọn vẹn trên màn hình di động 320px-375px -->
             <div class="flex flex-col items-center justify-center p-3 sm:p-4 bg-white rounded-xl border border-slate-200 shadow-inner">
-                <img id="vietqr-image" src="" alt="Mã QR Thanh Toán" class="w-44 sm:w-56 h-auto rounded-lg">
-                <p class="text-[10px] sm:text-[11px] text-slate-500 mt-1.5 text-center font-medium">Quét mã QR để tự động điền thông tin chuyển khoản</p>
+                <img id="vietqr-image" src="" alt="Mã QR Thanh Toán" class="w-40 sm:w-52 h-auto rounded-lg">
+                <p class="text-[10px] sm:text-[11px] text-slate-500 mt-1.5 text-center font-medium">Quét mã QR để tự động điền thông tin chuyển khoản.</p>
             </div>
 
-            <!-- [EDIT 8]: BỔ SUNG NÚT ĐÓNG PHÍA DƯỚI ĐỂ DỄ DÀNG THAO TÁC TRÊN DI ĐỘNG -->
-            <button data-close-payment class="block w-fit mx-auto px-10 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-200 hover:text-slate-900 font-bold text-sm sm:text-base rounded-xl transition-colors border border-slate-700/60 mt-2">
+            <!-- Nút Kết thúc / Đóng -->
+            <button data-close-payment class="block w-fit mx-auto px-10 py-2.5 sm:py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-200 hover:text-slate-900 font-bold text-sm sm:text-base rounded-xl transition-colors border border-slate-700/60 mt-2">
                 Kết thúc
             </button>
 
