@@ -2066,16 +2066,14 @@
         </div>
     </div>
 
-<!-- PAYMENT MODAL -->
-<!-- [FIX CHÂN MÀN HÌNH]:
-     1. h-[100dvh]: Phủ kín 100% chiều cao thực tế của di động (Dynamic Viewport Height).
-     2. bg-slate-950/95: Đảm bảo độ đục nền 95% che sạch hoàn toàn trang dưới.
-     3. backdrop-blur-[8px]: Độ mờ mượt mà chuẩn 8px giữa sm và md.
-     4. overscroll-none: Chặn hoàn toàn hiệu ứng cuộn nẩy (bounce) làm hở chân trang iOS.
--->
-<div id="payment-modal" class="hidden fixed inset-0 w-full h-screen h-[100dvh] z-50 flex items-center justify-center bg-slate-950/95 backdrop-blur-[8px] p-3 sm:p-4 overflow-y-auto overscroll-none pt-8 pb-12 sm:py-6">
+    <!-- PAYMENT MODAL -->
     
-    <!-- Hộp thoại Modal bên trong -->
+<!-- PAYMENT MODAL -->
+<!-- [SỬA 1]: Nền tối đục hơn (bg-slate-950/95), tăng độ mờ hậu cảnh (backdrop-blur-md) giúp che 100% nội dung trang dưới. -->
+<!-- [SỬA 2]: Đưa cơ chế cuộn mượt về đúng khung nền ngoài (overflow-y-auto overscroll-contain) để trên iOS/Android cuộn trơn tru không bị kẹt. -->
+<div id="payment-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-9500/60 backdrop-blur-[6px] p-3 sm:p-4 overflow-y-auto overscroll-contain pt-10 pb-10 sm:py-6">
+    
+    <!-- [SỬA 3]: Bỏ overflow-y-auto ở thẻ con, dùng max-h-none/fit-content để Modal mở rộng tự nhiên theo nội dung. -->
     <div class="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl text-white my-auto transform transition-all">
         
         <!-- Nút Đóng góc trên -->
@@ -2156,6 +2154,7 @@
             </div>
 
             <!-- Khung chứa ảnh VietQR -->
+            <!-- [SỬA 4]: Cố định max-width QR w-40 sm:w-52 để đảm bảo hiển thị trọn vẹn trên màn hình di động 320px-375px -->
             <div class="flex flex-col items-center justify-center p-3 sm:p-4 bg-white rounded-xl border border-slate-200 shadow-inner">
                 <img id="vietqr-image" src="" alt="Mã QR Thanh Toán" class="w-40 sm:w-52 h-auto rounded-lg">
                 <p class="text-[10px] sm:text-[11px] text-slate-500 mt-1.5 text-center font-medium">Quét mã QR để tự động điền thông tin chuyển khoản.</p>
