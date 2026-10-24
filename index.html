@@ -4,26 +4,32 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <!-- Logo hiển thị trên Tab trình duyệt máy tính -->
-    <link rel="icon" href="img/W_bg.png">
+    <link rel="icon" type="image/png" href="https://www.wynalgo.com/wynalgoicon-v2.png">
+    <link rel="apple-touch-icon" href="https://www.wynalgo.com/wynalgoicon.png">
+    <meta name="apple-mobile-web-app-title" content="WynAlgo">
     
-    <!-- Logo hiển thị khi lưu trang ra màn hình điện thoại -->
-    <link href="WynAlgo32.png">
     
     <title>WynAlgo | Chỉ Báo Theo Dấu Dòng Tiền Thông Minh</title>
     
-    <meta name="description" content="Hệ thống chỉ báo kỹ thuật theo dấu dòng tiền thông minh và tối ưu hóa chiến lược giao dịch.">
+    <meta name="description" content="Nền tảng cung cấp các chỉ báo kỹ thuật, hỗ trợ tối ưu hóa chiến lược giao dịch trên thị trường.">
     <meta name="theme-color" content="#030611">
     <meta name="robots" content="index, follow">
 
-    <!-- TODO SEO: Khi lên domain thật, đổi canonical và og:image thành URL chính thức của anh. -->
     <link rel="canonical" href="https://www.wynalgo.com/">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.wynalgo.com/">
     <meta property="og:title" content="WynAlgo - Theo Dấu Dòng Tiền Thông Minh">
     <meta property="og:description" content="Hệ thống chỉ báo kỹ thuật theo dấu dòng tiền thông minh và tối ưu hóa chiến lược giao dịch.">
-    <meta property="og:image" content="WynAlgo32.png">
+    <meta property="og:image" content="https://www.wynalgo.com/wynalgo-share.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="WynAlgo - Chỉ báo theo dấu dòng tiền thông minh">
+
     <meta name="twitter:card" content="summary_large_image">
-    
+    <meta name="twitter:title" content="WynAlgo - Theo Dấu Dòng Tiền Thông Minh">
+    <meta name="twitter:description" content="Hệ thống chỉ báo kỹ thuật theo dấu dòng tiền thông minh.">
+    <meta name="twitter:image" content="https://www.wynalgo.com/wynalgo-share.jpg">
+
     <!-- Tailwind config phải đặt trước CDN để custom màu và font được nhận ngay khi tải trang. -->
     <script>
         window.tailwind = window.tailwind || {};
@@ -1048,6 +1054,26 @@
           transform: translateY(0);
         }
 
+/* aurora
+    /* Lớp 0: sao | Lớp 1: cực quang | Lớp 2: nội dung */
+  .aurora-hero .stars-canvas,
+  .aurora-hero .aurora-canvas {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+    pointer-events: none;
+  }
+  .aurora-hero .stars-canvas  { z-index: 0; }
+  .aurora-hero .aurora-canvas { z-index: 1; }   /* KHÔNG dùng CSS filter: đã chuyển vào shader */
+
+  .aurora-hero .content {
+    position: relative; z-index: 2;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 24px;
+  }
+
     </style>
 </head>
 <body id="top" class="antialiased">
@@ -1109,71 +1135,376 @@
         })();
         </script>
 
-  <!-- Canvas để vẽ cực quang -->
-  <canvas class="aurora-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block"></canvas>
-  
-  <!-- Lớp phủ nội dung -->
- 
+        <!-- Lớp sao (2D canvas, vẽ một lần) -->
+  <canvas class="stars-canvas"></canvas>
 
-  <style>
-    .aurora-hero .aurora-canvas {
-      filter: saturate(1.1) brightness(1.1);
-    }
-  </style>
+  <!-- Lớp cực quang (WebGL) -->
+  <canvas class="aurora-canvas"></canvas>
 
-  <script>
-  (function(){
+<!-- ============ FRAGMENT SHADER ============ -->
+<script id="aurora-frag" type="text/plain">
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+
+uniform vec2  uRes;
+uniform float uTime;
+uniform float uFade;
+uniform vec2  uMouse;
+uniform float uScrollX;
+
+// 5 dải rèm độc lập
+uniform float uX[5];
+uniform float uY[5];
+uniform float uW[5];
+uniform float uWL[5];
+uniform float uL[5];
+uniform float uH[5];
+uniform float uP[5];
+uniform float uI[5];
+uniform float uWS[5];
+uniform float uRS[5];
+uniform float uTlt[5];
+uniform float uSAmp[5];
+uniform float uSFreq[5];
+uniform float uPiv[5];
+uniform float uMDir[5];
+uniform float uEA[5];
+uniform float uWG[5];
+uniform vec3  uCA[5];
+uniform vec3  uCB[5];
+
+/* ---- hash / noise / fbm ---- */
+float hash(vec2 p){
+  p = fract(p * vec2(234.34, 435.345));
+  p += dot(p, p + 34.23);
+  return fract(p.x * p.y);
+}
+float noise(vec2 p){
+  vec2 i = floor(p); vec2 f = fract(p);
+  vec2 u = f*f*(3.0-2.0*f);
+  return mix(mix(hash(i), hash(i+vec2(1,0)), u.x),
+             mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), u.x), u.y);
+}
+const mat2 RM = mat2(.80,.60,-.60,.80);
+
+// fbm đầy đủ 5 octave: chỉ dùng cho tia (chi tiết nhìn thấy rõ)
+float fbm(vec2 p){
+  float s=0.0, a=0.5;
+  for(int i=0;i<5;i++){ s+=a*noise(p); p=RM*p*2.02+vec2(3.1,1.7); a*=.55; }
+  return s;
+}
+// fbm nhẹ 3 octave: dùng cho sóng và độ sâu (gần như không khác biệt về mắt thấy)
+float fbm3(vec2 p){
+  float s=0.0, a=0.5;
+  for(int i=0;i<3;i++){ s+=a*noise(p); p=RM*p*2.02+vec2(3.1,1.7); a*=.55; }
+  return s;
+}
+
+vec3 curtain(vec2 p, float tt, float tRaw, float xc, float yBase, float wavy, float wl, float xLength, float height, vec3 cBot, vec3 cTop, float seed, float asp, float waveSpeed, float raySpeed, float tilt, float swingAmp, float swingFreq, float pivot, float edgeAngle, float wlGrad){
+  float hn = p.x / asp;
+  float dx = hn - xc;
+  float safeWL = max(wl, 0.03);
+
+  float swingPhase = tRaw * swingFreq + seed * 1.5;
+  float dynamicAngle = tilt + swingAmp * sin(swingPhase);
+  if (abs(dynamicAngle) > 0.0001) {
+    float pivotY = yBase + pivot * max(height, 0.02);
+    float ca = cos(dynamicAngle), sa = sin(dynamicAngle);
+    float rx = dx * asp;
+    float ry = p.y - pivotY;
+    float rotX = rx * ca - ry * sa;
+    float rotY = rx * sa + ry * ca;
+    dx = rotX / asp;
+    p.y = rotY + pivotY;
+  }
+
+  float edgeSlope = tan(edgeAngle);
+  float scroll = tt * 0.04;
+  float lx = dx + scroll * (1.0 + 0.18 * seed) * 0.04;
+
+  float ws = waveSpeed;
+  float tWave = tt * 0.62 * ws;
+  float tFbm  = tt * 0.025 * ws * 0.6;
+  float tBob  = tt * 0.20 * ws;
+
+  float wlX = max(safeWL * (1.0 + wlGrad * lx), 0.03);
+  float phase;
+  if (abs(wlGrad) < 0.001) {
+    phase = (lx / safeWL) * 6.2831853;
+  } else {
+    phase = (6.2831853 / (safeWL * wlGrad)) * log(max(1.0 + wlGrad * lx, 0.1));
+  }
+  phase -= tWave; phase += seed * 1.37;
+  float wave = sin(phase) * wavy;
+  wave += sin(phase * 0.5 + 1.4) * wavy * 0.16;
+  wave += (fbm3(vec2(lx / wlX * 0.32 - tFbm, seed * 8.7)) - 0.5) * wavy * 0.12;
+  wave += sin(tBob + seed*2.0) * 0.025 * wavy;
+  float center = yBase + wave + edgeSlope * dx;
+  float dist = p.y - center;
+  if(dist < -0.15) return vec3(0.0);
+
+  float rs = raySpeed;
+  float rayScale = 0.12 + 0.04*sin(tt*0.3*rs + seed);
+  float tRay = tt * 0.03 * rs;
+  vec2 rc = vec2(lx*3.5/wlX + fbm3(vec2(lx*0.5/wlX, tt*0.02*rs)), p.y*rayScale - tRay + seed);
+  float ray  = fbm(rc*4.5);
+  float rayS = mix(0.4, 1.0, ray);
+
+  float fade = (dist>=0.0) ? exp(-dist/max(height,0.02)) : smoothstep(0.0,1.0,(dist+0.15)/0.15);
+  float I = fade*rayS*0.9;
+
+  float depth = 0.7 + 0.3*fbm3(vec2(lx*0.8/wlX - tt*0.05, seed*5.0 + p.y*0.5));
+  I *= depth;
+
+  float gf = clamp(dist*1.1, 0.0, 1.0);
+  vec3 col = mix(cBot, cTop, gf) * I;
+
+  float xSpan = max(xLength, 0.02) * 0.5;
+  float hmask = 1.0 - smoothstep(xSpan*0.55, xSpan, abs(dx));
+  col *= hmask;
+  return col;
+}
+
+void main(){
+  float mn = min(uRes.x, uRes.y);
+  vec2 uv = (gl_FragCoord.xy*2.0 - uRes)/mn;
+  float asp = uRes.x/mn;
+  float t = uTime;
+  vec2 mo = uMouse * 0.09;
+
+  vec3 aurora = vec3(0.0);
+  for(int i=0;i<5;i++){
+    float splitDir = (uX[i] < 0.0) ? -1.0 : 1.0;
+    float currentX = uX[i] + splitDir * uScrollX * 1.1;
+
+    vec2 pS = uv - mo * uMDir[i];
+    pS.y -= (pS.x*pS.x)*0.08;
+    float sd = 0.9 + 0.3 * mod(float(i), 2.0);
+    aurora += curtain(pS, t*uP[i], t, currentX, uY[i], uW[i], uWL[i], uL[i], uH[i], uCA[i], uCB[i], sd, asp, uWS[i], uRS[i], uTlt[i], uSAmp[i], uSFreq[i], uPiv[i], uEA[i], uWG[i]) * uI[i];
+  }
+
+  vec3 col = 1.0 - exp(-aurora * 1.15);
+  float vig = 1.0 - 0.25*smoothstep(0.4,1.5,length(uv*vec2(0.7,1.0)));
+  col *= vig * uFade;
+
+  // Thay cho CSS filter: saturate(1.1) brightness(1.1) -> làm trong shader, không bị clip sau composite
+  float l = dot(col, vec3(0.2126, 0.7152, 0.0722));
+  col = mix(vec3(l), col, 1.1) * 1.1;
+
+  // Dither tam giác (-1..1)/255, chỉ áp dụng nơi có cực quang để không làm sáng nền
+  float n = hash(gl_FragCoord.xy + fract(t) * 11.13)
+          + hash(gl_FragCoord.xy * 1.7 + fract(t * 0.7) * 7.31) - 1.0;
+  float has = smoothstep(0.0, 0.02, max(col.r, max(col.g, col.b)));
+  col += n * (1.5 / 255.0) * has;
+
+  col = clamp(col, 0.0, 1.0);
+
+  // Premultiplied hợp lệ: màu luôn <= alpha
+  float a = max(col.r, max(col.g, col.b));
+  gl_FragColor = vec4(col, a);
+}
+</script>
+
+<!-- ============ LOGIC ============ -->
+<script>
+(function(){
+  /* ---------- Cấu hình 5 dải ---------- */
   var CFG={"gspeed":1,"strips":[
-  // Dải 1: Giảm bớt độ sáng i xuống 1.1 để không nuốt màu dải 2
-  {"x":-0.84,"y":-0.7,"l":1.16,"w":0.1,"wl":0.9,"h":1.04,"p":-1.45,"ws":0.25,"rs":1,"tlt":-11,"samp":0,"sfreq":0.16,"piv":1.8,"md":-1.0,"ea":0,"wg":0,"i":1.1,"ca":"#0df2a1","cb":"#9d0df2"},
-  
-  // Dải 2: Tăng độ sáng i lên 1.6 và mở rộng w lên 0.18 để màu hồng rực lên rõ rệt
-  {"x":-0.8,"y":0.09,"l":0.81,"w":0.18,"wl":1.2,"h":0.4,"p":0.65,"ws":0.95,"rs":-4,"tlt":-14,"samp":0,"sfreq":0.13,"piv":0,"md":-1.0,"ea":0,"wg":-0.12,"i":1.6,"ca":"#0df2a1","cb":"#f20db1"},
-  
-  {"x":0.42,"y":-0.21,"l":1.57,"w":0.06,"wl":0.9,"h":0.98,"p":-1.8,"ws":1,"rs":1,"tlt":-11,"samp":0,"sfreq":0.16,"piv":1.8,"md":-1.0,"ea":0,"wg":0,"i":1.48,"ca":"#0df2a1","cb":"#9d0df2"},
-  {"x":0.67,"y":-0.5,"l":1.33,"w":0.08,"wl":0.86,"h":0.84,"p":-0.7,"ws":1,"rs":-0.7,"tlt":-11,"samp":0,"sfreq":0,"piv":1.8,"md":-1.0,"ea":8,"wg":0.12,"i":1.52,"ca":"#0df2a1","cb":"#f20db1"}
-]};
-  var VERT="\nattribute vec2 a;\nvoid main(){ gl_Position = vec4(a, 0.0, 1.0); }\n";
-  var FRAG="\n#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n\nuniform vec2  uRes;\nuniform float uTime;\nuniform float uFade;\nuniform vec2  uMouse;\n\n// 4 independent half-width curtains (2 left, 2 right)\nuniform float uX[4];    // horizontal centre (normalised -1..1)\nuniform float uY[4];    // vertical centre\nuniform float uW[4];    // wave amplitude (uốn lượn)\nuniform float uWL[4];   // wavelength (bước sóng)\nuniform float uL[4];    // horizontal length\nuniform float uH[4];    // vertical height\nuniform float uP[4];    // per-strip pace (depth/parallax)\nuniform float uI[4];    // independent brightness\nuniform float uWS[4];   // wave speed (tilde)\nuniform float uRS[4];   // ray speed\nuniform float uTlt[4];  // base tilt angle (radians)\nuniform float uSAmp[4]; // pendulum swing amplitude (radians)\nuniform float uSFreq[4];// pendulum swing speed/frequency\nuniform float uPiv[4];  // sweep anchor: 0 = bottom fixed, higher = top fixed\nuniform float uMDir[4]; // mouse-follow direction: 0 = off, +1 = follow, -1 = oppose\nuniform float uEA[4];   // bottom-edge angle (radians) — shear along X\nuniform float uWG[4];   // wavelength gradient (+ grows toward the right, - shrinks)\nuniform vec3  uCA[4];\nuniform vec3  uCB[4];\n\n/* ---- hash / noise / fbm ---- */\nfloat hash(vec2 p){\n  p = fract(p * vec2(234.34, 435.345));\n  p += dot(p, p + 34.23);\n  return fract(p.x * p.y);\n}\nfloat noise(vec2 p){\n  vec2 i = floor(p); vec2 f = fract(p);\n  vec2 u = f*f*(3.0-2.0*f);\n  return mix(mix(hash(i), hash(i+vec2(1,0)), u.x),\n             mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), u.x), u.y);\n}\nconst mat2 RM = mat2(.80,.60,-.60,.80);\nfloat fbm(vec2 p){\n  float s=0.0, a=0.5;\n  for(int i=0;i<5;i++){ s+=a*noise(p); p=RM*p*2.02+vec2(3.1,1.7); a*=.55; }\n  return s;\n}\n\n/* (stars removed — aurora only, transparent background) */\n\n/* ---- one half-width aurora curtain with multi-axis depth motion ---- */\nvec3 curtain(vec2 p, float tt, float tRaw, float xc, float yBase, float wavy, float wl, float xLength, float height, vec3 cBot, vec3 cTop, float seed, float asp, float waveSpeed, float raySpeed, float tilt, float swingAmp, float swingFreq, float pivot, float edgeAngle, float wlGrad){\n  float hn = p.x / asp;          // normalised horizontal position [-1,1]\n  float dx = hn - xc;            // local horizontal coordinate\n  float safeWL = max(wl, 0.03);\n\n  // ---- Searchlight sweep -------------------------------------------------\n  // The pivot decides which end stays nailed in place:\n  //   pivot = 0      -> base (bottom) anchored, the tail sweeps\n  //   pivot ~ 1..3   -> the upper tail is anchored, the bright bottom sweeps\n  // Raw global time is used so the sweep keeps going even when drift is 0.\n  float swingPhase = tRaw * swingFreq + seed * 1.5;\n  float dynamicAngle = tilt + swingAmp * sin(swingPhase);\n  if (abs(dynamicAngle) > 0.0001) {\n    float pivotY = yBase + pivot * max(height, 0.02);\n    float ca = cos(dynamicAngle), sa = sin(dynamicAngle);\n    float rx = dx * asp;\n    float ry = p.y - pivotY;\n    float rotX = rx * ca - ry * sa;\n    float rotY = rx * sa + ry * ca;\n    dx = rotX / asp;\n    p.y = rotY + pivotY;\n  }\n\n  // bottom-edge angle: shear along X — slants the bright lower edge\n  // independently from the tilt/pivot rotation of the whole curtain\n  float edgeSlope = tan(edgeAngle);\n\n  // lateral drift: a gentle global parallax that is kept consistent across strips\n  // (the old seed-based offset made the leftmost strip nearly static while\n  //  the right strips drifted many times faster)\n  float scroll = tt * 0.04;\n  float lx = dx + scroll * (1.0 + 0.18 * seed) * 0.04;\n\n  // A clear travelling tilde (~): wavelength controls crest spacing,\n  // while a faint harmonic keeps the edge organic without hiding the sine.\n  // 3-axis time so each strip can be tuned independently\n  float ws = waveSpeed;\n  float tWave = tt * 0.62 * ws;          // speed of the tilde edge\n  float tFbm  = tt * 0.025 * ws * 0.6;  // speed of the organic distortion\n  float tBob  = tt * 0.20 * ws;          // speed of the slow depth bob\n\n  // wavelength may grow or shrink progressively along the curtain —\n  // log-phase keeps the crests coherent instead of just stretching the sine\n  float wlX = max(safeWL * (1.0 + wlGrad * lx), 0.03);\n  float phase;\n  if (abs(wlGrad) < 0.001) {\n    phase = (lx / safeWL) * 6.2831853;\n  } else {\n    phase = (6.2831853 / (safeWL * wlGrad)) * log(max(1.0 + wlGrad * lx, 0.1));\n  }\n  phase -= tWave; phase += seed * 1.37;\n  float wave = sin(phase) * wavy;\n  wave += sin(phase * 0.5 + 1.4) * wavy * 0.16;\n  wave += (fbm(vec2(lx / wlX * 0.32 - tFbm, seed * 8.7)) - 0.5) * wavy * 0.12;\n  wave += sin(tBob + seed*2.0) * 0.025 * wavy;\n  float center = yBase + wave + edgeSlope * dx;\n  float dist = p.y - center;\n  if(dist < -0.15) return vec3(0.0);\n\n  // vertical rays, density breathing => sense of approaching/receding\n  float rs = raySpeed;\n  float rayScale = 0.12 + 0.04*sin(tt*0.3*rs + seed);\n  float tRay = tt * 0.03 * rs;\n  vec2 rc = vec2(lx*3.5/wlX + fbm(vec2(lx*0.5/wlX, tt*0.02*rs)), p.y*rayScale - tRay + seed);\n  float ray  = fbm(rc*4.5);\n  float rayS = mix(0.4, 1.0, ray);\n\n  float fade = (dist>=0.0) ? exp(-dist/max(height,0.02)) : smoothstep(0.0,1.0,(dist+0.15)/0.15);\n  float I = fade*rayS*0.9;\n\n  // large drifting cloud => brightness patches at different depths\n  float depth = 0.7 + 0.3*fbm(vec2(lx*0.8/wlX - tt*0.05, seed*5.0 + p.y*0.5));\n  I *= depth;\n\n  float gf = clamp(dist*1.1, 0.0, 1.0);\n  vec3 col = mix(cBot, cTop, gf) * I;\n\n  // curtain only lives in its own horizontal region (no full-screen span)\n  float xSpan = max(xLength, 0.02) * 0.5;\n  float hmask = 1.0 - smoothstep(xSpan*0.55, xSpan, abs(dx));\n  col *= hmask;\n  return col;\n}\n\nvoid main(){\n  float mn = min(uRes.x, uRes.y);\n  vec2 uv = (gl_FragCoord.xy*2.0 - uRes)/mn;\n  float asp = uRes.x/mn;\n  float t = uTime;\n  vec2 mo = uMouse * 0.09;   // magnitude of the mouse offset\n\n  vec3 aurora = vec3(0.0);\n  for(int i=0;i<4;i++){\n    // per-strip mouse reaction: 0 = fixed, +1 follow, -1 oppose (arbitrary scaling ok)\n    vec2 pS = uv - mo * uMDir[i];\n    pS.y -= (pS.x*pS.x)*0.08;\n    // paired seeds: strips 0&2 share one seed, 1&3 share another, so the\n    // left pair and the right pair behave as exact copies of each other\n    float sd = 0.9 + 0.3 * mod(float(i), 2.0);\n    aurora += curtain(pS, t*uP[i], t, uX[i], uY[i], uW[i], uWL[i], uL[i], uH[i], uCA[i], uCB[i], sd, asp, uWS[i], uRS[i], uTlt[i], uSAmp[i], uSFreq[i], uPiv[i], uEA[i], uWG[i]) * uI[i];\n  }\n\n  // filmic tone on aurora only (transparent background)\n  vec3 col = 1.0 - exp(-aurora*1.15);\n\n  float vig = 1.0 - 0.25*smoothstep(0.4,1.5,length(uv*vec2(0.7,1.0)));\n  col *= vig;\n\n  // alpha = aurora strength, rolled through the same filmic curve + fade-in\n  float rawPeak = max(aurora.r, max(aurora.g, aurora.b));\n  float a = (1.0 - exp(-rawPeak*1.15)) * vig * uFade;\n\n  col = col * uFade + (hash(gl_FragCoord.xy + fract(t)*11.13) - 0.5)*(1.5/255.0);\n\n  gl_FragColor = vec4(clamp(col,0.0,1.0), clamp(a,0.0,1.0));\n}\n";
-  var host=document.currentScript.closest('.aurora-hero');
-  var canvas=host.querySelector('.aurora-canvas');
-  var gl=canvas.getContext('webgl',{alpha:true,antialias:false,depth:false,stencil:false,premultipliedAlpha:false,powerPreference:'high-performance'})||canvas.getContext('experimental-webgl',{alpha:true,premultipliedAlpha:false});
-  if(!gl){return;}
-  function sh(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.error('Aurora shader:',gl.getShaderInfoLog(s));return null;}return s;}
-  var vs=sh(gl.VERTEX_SHADER,VERT),fs=sh(gl.FRAGMENT_SHADER,FRAG);
-  if(!vs||!fs){return;}
-  var pr=gl.createProgram();gl.attachShader(pr,vs);gl.attachShader(pr,fs);gl.linkProgram(pr);
-  if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){console.error('Aurora link:',gl.getProgramInfoLog(pr));return;}
-  gl.useProgram(pr);
-  var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
-  var aLoc=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(aLoc);gl.vertexAttribPointer(aLoc,2,gl.FLOAT,false,0,0);
-  var U={};['uRes','uTime','uFade','uMouse','uX[0]','uY[0]','uW[0]','uWL[0]','uL[0]','uH[0]','uP[0]','uI[0]','uWS[0]','uRS[0]','uTlt[0]','uSAmp[0]','uSFreq[0]','uPiv[0]','uMDir[0]','uEA[0]','uWG[0]','uCA[0]','uCB[0]'].forEach(function(n){U[n]=gl.getUniformLocation(pr,n);});
-  var X=new Float32Array(4),Y=new Float32Array(4),W=new Float32Array(4),WL=new Float32Array(4),L=new Float32Array(4),H=new Float32Array(4),P=new Float32Array(4),I=new Float32Array(4),WS=new Float32Array(4),RS=new Float32Array(4),TLT=new Float32Array(4),SAMP=new Float32Array(4),SFREQ=new Float32Array(4),PIV=new Float32Array(4),MDIR=new Float32Array(4),EA=new Float32Array(4),WG=new Float32Array(4),CA=new Float32Array(12),CB=new Float32Array(12);
+    // Dải 1
+    {"x":-0.84,"y":-0.7,"l":1.16,"w":0.1,"wl":0.9,"h":1.04,"p":-1.45,"ws":0.25,"rs":1,"tlt":-11,"samp":0,"sfreq":0.16,"piv":1.8,"md":-1.0,"ea":0,"wg":0,"i":1.1,"ca":"#0df2a1","cb":"#9d0df2"},
+    // Dải 2 (giảm i 1.6 -> 1.4: vùng giao xanh-hồng dễ cháy trắng)
+    {"x":-0.8,"y":-0.05,"l":0.81,"w":0.18,"wl":1.2,"h":0.4,"p":0.65,"ws":0.95,"rs":-4,"tlt":-14,"samp":0,"sfreq":0.13,"piv":0,"md":-1.0,"ea":0,"wg":-0.12,"i":1.4,"ca":"#0df2a1","cb":"#f20db1"},
+    // Dải 3 (i 1.48 -> 1.35)
+    {"x":0.42,"y":-0.21,"l":1.57,"w":0.06,"wl":0.9,"h":0.98,"p":-1.8,"ws":1,"rs":1,"tlt":-11,"samp":0,"sfreq":0.16,"piv":1.8,"md":-1.0,"ea":0,"wg":0,"i":1.35,"ca":"#0df2a1","cb":"#9d0df2"},
+    // Dải 4 (i 1.52 -> 1.4)
+    {"x":0.67,"y":-0.5,"l":1.33,"w":0.08,"wl":0.86,"h":0.84,"p":-0.7,"ws":1,"rs":-0.7,"tlt":-11,"samp":0,"sfreq":0,"piv":1.8,"md":-1.0,"ea":8,"wg":0.12,"i":1.4,"ca":"#0df2a1","cb":"#f20db1"},
+    // Dải 5 (i 1.52 -> 1.4)
+    {"x":0.87,"y":-0.75,"l":0.53,"w":0.08,"wl":0.86,"h":0.4,"p":-0.7,"ws":1,"rs":-0.7,"tlt":-11,"samp":0,"sfreq":0,"piv":1.8,"md":-1.0,"ea":8,"wg":0.12,"i":1.4,"ca":"#0df2a1","cb":"#f20db1"}
+  ]};
+  var N = CFG.strips.length; // 5
+
+  var MAX_DPR = 1;           // đổi thành 1.25 nếu muốn mịn hơn (tốn GPU hơn)
+  var MIN_SCALE = 0.5;       // sàn của render scale thích ứng
+  var reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var host   = document.currentScript.closest('.aurora-hero');
+  var canvas = host.querySelector('.aurora-canvas');
+  var starsC = host.querySelector('.stars-canvas');
+
+  /* ---------- Sao (2D, vẽ một lần, vị trí cố định theo seed) ---------- */
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  var starData=(function(){
+    var rnd=mulberry32(20240607), arr=[], count=0; 
+    for(var i=0;i<count;i++){
+      arr.push({
+        x:rnd(), y:rnd()*0.92,                 // phân bố theo tỉ lệ -> ổn định khi resize
+        r:0.4+rnd()*0.8,                       // bán kính (px CSS)
+        a:0.28+rnd()*0.22,                     // độ mờ ~28–50%: đủ thấy trên màn tương phản thấp
+        b:rnd()<0.25                           // một số sao hơi xanh
+      });
+    }
+    return arr;
+  })();
+  function drawStars(){
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    var w=Math.max(1,Math.round(starsC.clientWidth*dpr));
+    var h=Math.max(1,Math.round(starsC.clientHeight*dpr));
+    starsC.width=w; starsC.height=h;
+    var c=starsC.getContext('2d');
+    c.clearRect(0,0,w,h);
+    var density=Math.min(1,(w*h)/(1920*1080*dpr*dpr)+0.35);
+    var n=Math.floor(starData.length*density);
+    for(var i=0;i<n;i++){
+      var s=starData[i];
+      c.beginPath();
+      c.arc(s.x*w,s.y*h,s.r*dpr,0,6.2832);
+      c.fillStyle=(s.b?'rgba(200,220,255,':'rgba(255,255,255,')+s.a+')';
+      c.fill();
+    }
+  }
+
+  /* ---------- WebGL ---------- */
+  var VERT="attribute vec2 a;\nvoid main(){ gl_Position = vec4(a, 0.0, 1.0); }\n";
+  var FRAG=document.getElementById('aurora-frag').textContent;
+
+  var UNIFORM_SCALARS=['uRes','uTime','uFade','uMouse','uScrollX'];
+  var UNIFORM_ARRAYS=['uX','uY','uW','uWL','uL','uH','uP','uI','uWS','uRS','uTlt','uSAmp','uSFreq','uPiv','uMDir','uEA','uWG','uCA','uCB'];
+
+  var gl=null, pr=null, U={}, ready=false;
+
+  function sh(type,src){
+    var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.error('Aurora shader:',gl.getShaderInfoLog(s));return null;}
+    return s;
+  }
+
+  function setupGL(){
+    gl=canvas.getContext('webgl',{alpha:true,antialias:false,depth:false,stencil:false,premultipliedAlpha:true,powerPreference:'default'})
+      ||canvas.getContext('experimental-webgl',{alpha:true,premultipliedAlpha:true});
+    if(!gl) return false;
+    var vs=sh(gl.VERTEX_SHADER,VERT), fs=sh(gl.FRAGMENT_SHADER,FRAG);
+    if(!vs||!fs) return false;
+    pr=gl.createProgram();gl.attachShader(pr,vs);gl.attachShader(pr,fs);gl.linkProgram(pr);
+    if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){console.error('Aurora link:',gl.getProgramInfoLog(pr));return false;}
+    gl.useProgram(pr);
+
+    var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    var aLoc=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(aLoc);
+    gl.vertexAttribPointer(aLoc,2,gl.FLOAT,false,0,0);
+
+    U={};
+    UNIFORM_SCALARS.forEach(function(n){U[n]=gl.getUniformLocation(pr,n);});
+    UNIFORM_ARRAYS.forEach(function(n){U[n]=gl.getUniformLocation(pr,n+'[0]');});
+    return true;
+  }
+
+  /* ---------- Dữ liệu dải -> Float32Array ---------- */
+  var X=new Float32Array(N),Y=new Float32Array(N),W=new Float32Array(N),WL=new Float32Array(N),L=new Float32Array(N),H=new Float32Array(N),P=new Float32Array(N),I=new Float32Array(N),WS=new Float32Array(N),RS=new Float32Array(N),TLT=new Float32Array(N),SAMP=new Float32Array(N),SFREQ=new Float32Array(N),PIV=new Float32Array(N),MDIR=new Float32Array(N),EA=new Float32Array(N),WG=new Float32Array(N),CA=new Float32Array(N*3),CB=new Float32Array(N*3);
   function h2r(h){return [parseInt(h.slice(1,3),16)/255,parseInt(h.slice(3,5),16)/255,parseInt(h.slice(5,7),16)/255];}
-  CFG.strips.forEach(function(st,i){X[i]=st.x;Y[i]=st.y;W[i]=st.w;WL[i]=st.wl;L[i]=st.l;H[i]=st.h;P[i]=st.p;I[i]=st.i;WS[i]=st.ws;RS[i]=st.rs;TLT[i]=st.tlt*Math.PI/180;SAMP[i]=st.samp*Math.PI/180;SFREQ[i]=st.sfreq;PIV[i]=st.piv;MDIR[i]=st.md||0;EA[i]=(st.ea||0)*Math.PI/180;WG[i]=st.wg||0;var a=h2r(st.ca),b=h2r(st.cb);CA[i*3]=a[0];CA[i*3+1]=a[1];CA[i*3+2]=a[2];CB[i*3]=b[0];CB[i*3+1]=b[1];CB[i*3+2]=b[2];});
+  CFG.strips.forEach(function(st,i){
+    X[i]=st.x;Y[i]=st.y;W[i]=st.w;WL[i]=st.wl;L[i]=st.l;H[i]=st.h;P[i]=st.p;I[i]=st.i;WS[i]=st.ws;RS[i]=st.rs;
+    TLT[i]=st.tlt*Math.PI/180;SAMP[i]=st.samp*Math.PI/180;SFREQ[i]=st.sfreq;PIV[i]=st.piv;
+    MDIR[i]=st.md||0;EA[i]=(st.ea||0)*Math.PI/180;WG[i]=st.wg||0;
+    var a=h2r(st.ca),b=h2r(st.cb);
+    CA[i*3]=a[0];CA[i*3+1]=a[1];CA[i*3+2]=a[2];CB[i*3]=b[0];CB[i*3+1]=b[1];CB[i*3+2]=b[2];
+  });
+
+  /* ---------- Chuột & cuộn ---------- */
   var mxT=0,myT=0,mx=0,my=0;
-  window.addEventListener('pointermove',function(e){var r=canvas.getBoundingClientRect();if(!r.width||!r.height)return;mxT=((e.clientX-r.left)/r.width)*2-1;myT=-(((e.clientY-r.top)/r.height)*2-1);},{passive:true});
-  function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=Math.max(1,Math.round(canvas.clientWidth*dpr));var h=Math.max(1,Math.round(canvas.clientHeight*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}}
-  resize();window.addEventListener('resize',resize,{passive:true});
-  var t0=performance.now(),tAcc=0,fade=0;
-  function loop(now){
-    var dt=Math.min(0.05,(now-t0)/1000);t0=now;
-    tAcc+=dt*CFG.gspeed;fade=Math.min(1,fade+dt/2.6);
-    mx+=(mxT-mx)*Math.min(1,dt*2.5);my+=(myT-my)*Math.min(1,dt*2.5);
+  window.addEventListener('pointermove',function(e){
+    var r=canvas.getBoundingClientRect();if(!r.width||!r.height)return;
+    mxT=((e.clientX-r.left)/r.width)*2-1;myT=-(((e.clientY-r.top)/r.height)*2-1);
+  },{passive:true});
+
+  var scrollOffset=0,targetScrollOffset=0;
+  window.addEventListener('scroll',function(){
+    var scrollTop=window.pageYOffset||document.documentElement.scrollTop;
+    targetScrollOffset=Math.min(1.2,scrollTop/600);
+  },{passive:true});
+
+  /* ---------- Resize + render scale thích ứng ---------- */
+  var scale=1;
+  function resize(){
+    if(!gl) return;
+    var dpr=Math.min(window.devicePixelRatio||1,MAX_DPR)*scale;
+    var w=Math.max(1,Math.round(canvas.clientWidth*dpr));
+    var h=Math.max(1,Math.round(canvas.clientHeight*dpr));
+    if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}
+  }
+
+  /* ---------- Vẽ một khung ---------- */
+  var tAcc=0,fade=0;
+  function draw(){
     resize();
     gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);
     gl.uniform2f(U.uRes,canvas.width,canvas.height);
     gl.uniform1f(U.uTime,tAcc);
     gl.uniform1f(U.uFade,fade*fade*(3-2*fade));
     gl.uniform2f(U.uMouse,mx,my);
-    gl.uniform1fv(U['uX[0]'],X);gl.uniform1fv(U['uY[0]'],Y);gl.uniform1fv(U['uW[0]'],W);gl.uniform1fv(U['uWL[0]'],WL);gl.uniform1fv(U['uL[0]'],L);gl.uniform1fv(U['uH[0]'],H);gl.uniform1fv(U['uP[0]'],P);gl.uniform1fv(U['uI[0]'],I);gl.uniform1fv(U['uWS[0]'],WS);gl.uniform1fv(U['uRS[0]'],RS);gl.uniform1fv(U['uTlt[0]'],TLT);gl.uniform1fv(U['uSAmp[0]'],SAMP);gl.uniform1fv(U['uSFreq[0]'],SFREQ);gl.uniform1fv(U['uPiv[0]'],PIV);gl.uniform1fv(U['uMDir[0]'],MDIR);gl.uniform1fv(U['uEA[0]'],EA);gl.uniform1fv(U['uWG[0]'],WG);
-    gl.uniform3fv(U['uCA[0]'],CA);gl.uniform3fv(U['uCB[0]'],CB);
+    gl.uniform1f(U.uScrollX,scrollOffset);
+    gl.uniform1fv(U.uX,X);gl.uniform1fv(U.uY,Y);gl.uniform1fv(U.uW,W);gl.uniform1fv(U.uWL,WL);gl.uniform1fv(U.uL,L);gl.uniform1fv(U.uH,H);gl.uniform1fv(U.uP,P);gl.uniform1fv(U.uI,I);gl.uniform1fv(U.uWS,WS);gl.uniform1fv(U.uRS,RS);gl.uniform1fv(U.uTlt,TLT);gl.uniform1fv(U.uSAmp,SAMP);gl.uniform1fv(U.uSFreq,SFREQ);gl.uniform1fv(U.uPiv,PIV);gl.uniform1fv(U.uMDir,MDIR);gl.uniform1fv(U.uEA,EA);gl.uniform1fv(U.uWG,WG);
+    gl.uniform3fv(U.uCA,CA);gl.uniform3fv(U.uCB,CB);
     gl.drawArrays(gl.TRIANGLES,0,3);
-    requestAnimationFrame(loop);
   }
-  requestAnimationFrame(loop);
+
+  /* ---------- Vòng lặp ---------- */
+  var running=false,rafId=0,t0=0,frames=0,dtSum=0;
+  function loop(now){
+    if(!running||!ready) return;
+    var raw=(now-t0)/1000; t0=now;
+    var dt=Math.min(0.05,raw);
+    tAcc+=dt*CFG.gspeed; fade=Math.min(1,fade+dt/2.6);
+    mx+=(mxT-mx)*Math.min(1,dt*2.5); my+=(myT-my)*Math.min(1,dt*2.5);
+    scrollOffset+=(targetScrollOffset-scrollOffset)*Math.min(1,dt*5);
+
+    // Render scale thích ứng: bỏ qua 30 khung đầu (compile shader), đo mỗi 60 khung
+    frames++;
+    if(frames>30){
+      dtSum+=raw;
+      if((frames-30)%60===0){
+        var avg=dtSum/60; dtSum=0;
+        if(avg>1/45 && scale>MIN_SCALE){ scale=Math.max(MIN_SCALE,scale-0.15); }
+      }
+    }
+
+    draw();
+    rafId=requestAnimationFrame(loop);
+  }
+  function setRunning(v){
+    if(reduceMotion||!ready) return;
+    if(v&&!running){running=true;t0=performance.now();cancelAnimationFrame(rafId);rafId=requestAnimationFrame(loop);}
+    else if(!v){running=false;cancelAnimationFrame(rafId);}
+  }
+
+  /* ---------- Khởi tạo ---------- */
+  function start(){
+    ready=setupGL();
+    if(!ready) return;
+    if(reduceMotion){ tAcc=8; fade=1; draw(); }
+    else { frames=0; dtSum=0; setRunning(true); }
+  }
+
+  drawStars();
+  start();
+
+  window.addEventListener('resize',function(){
+    drawStars();
+    if(ready){ resize(); if(reduceMotion) draw(); }
+  },{passive:true});
+
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(e){ setRunning(e[0].isIntersecting && !document.hidden); }).observe(canvas);
+  }
+  document.addEventListener('visibilitychange',function(){ setRunning(!document.hidden); });
+
+  canvas.addEventListener('webglcontextlost',function(e){ e.preventDefault(); running=false; ready=false; cancelAnimationFrame(rafId); });
+  canvas.addEventListener('webglcontextrestored',function(){ start(); });
 })();
-  </script>
+</script>
 
 </section>
     <canvas id="c" class="fixed top-0 left-0 w-full h-full z-0 pointer-events-none opacity-0"></canvas>
@@ -1511,11 +1842,11 @@
         <section class="fade-in-section content-section relative">
             <div class="image-zone">
                 <div class="image-track">
-                    <div class="image-item"><img src="https://picsum.photos/900/600?random=16" alt="Ảnh 16"></div>
-                    <div class="image-item"><img src="https://picsum.photos/900/600?random=17" alt="Ảnh 17"></div>
-                    <div class="image-item"><img src="https://picsum.photos/900/600?random=18" alt="Ảnh 18"></div>
-                    <div class="image-item"><img src="https://picsum.photos/900/600?random=19" alt="Ảnh 19"></div>
-                    <div class="image-item"><img src="https://picsum.photos/900/600?random=20" alt="Ảnh 20"></div>
+                    <div class="image-item"><img src="img/signaleye1.webp" alt="Bảng tổng hợp tín hiệu thị trường 1"></div>
+                    <div class="image-item"><img src="img/signaleye2.webp" alt="Bảng tổng hợp tín hiệu thị trường 2"></div>
+                    <div class="image-item"><img src="img/signaleye3.webp" alt="Bảng tổng hợp tín hiệu thị trường 3"></div>
+                    <div class="image-item"><img src="img/signaleye4.webp" alt="Bảng tổng hợp tín hiệu thị trường 4"></div>
+                    <div class="image-item"><img src="img/signaleye5.webp" alt="Bảng tổng hợp tín hiệu thị trường 5"></div>
                 </div>
             </div>
                 
@@ -1904,26 +2235,23 @@
                         <p class="mb-4">Mọi vấn đề cần hỗ trợ, vui lòng liên hệ với chúng tôi qua:
                         </p>
 
-<div class="text-xs sm:text-sm text-left text-slate-200 flex items-center justify-center gap-4 sm:gap-6 flex-wrap pt-1">
-            
-            <!-- Hotline -->
-            <span>Hotline: <strong class="text-white font-bold">0988 886 719<br><i class="fa-regular fa-envelope"></i>  support@wynalgo.com</strong></span>
+                    <div class="flex flex-col gap-2">
+                        <!-- Hotline -->
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-phone text-slate-300"></i>
+                            <span class="text-slate-300">Hotline: 
+                                <a href="tel:0988886719" class="text-white font-bold hover:text-emerald-400 transition-colors">0988 886 719</a>
+                            </span>
+                        </div>
 
-            <span class="text-white/20 hidden sm:inline">|</span>
-
-            <!-- Cụm Zalo: Dùng gap-1.5 để ảnh sát chữ -->
-            <div class="inline-flex items-center gap-1.5">
-                <span>Zalo:</span>
-                <img src="img/zaloqr.webp" alt="Zalo QR Code" class="w-18 sm:w-20 max-w-[100px] h-auto rounded-lg border border-white/10">
-            </div>
-
-            <!-- Cụm Telegram: Dùng gap-1.5 để ảnh sát chữ -->
-            <div class="inline-flex items-center gap-1.5">
-                <span>Telegram:</span>
-                <img src="img/teleqr.webp" alt="Zalo QR Code" class="w-18 sm:w-20 max-w-[100px] h-auto rounded-lg border border-white/10">
-            </div>
-
-</div>
+                        <!-- Email -->
+                        <div class="flex items-center gap-2">
+                            <i class="fa-regular fa-envelope text-slate-300"></i>
+                            <span class="text-slate-300">Email: 
+                                <a href="mailto:support@wynalgo.com" class="text-white font-bold hover:text-emerald-400 transition-colors">support@wynalgo.com</a>
+                            </span>
+                        </div>
+                    </div>
 
                     </div>
                 </div>
@@ -2069,8 +2397,7 @@
     <!-- PAYMENT MODAL -->
     
 <!-- PAYMENT MODAL -->
-<!-- [SỬA 1]: Nền tối đục hơn (bg-slate-950/95), tăng độ mờ hậu cảnh (backdrop-blur-md) giúp che 100% nội dung trang dưới. -->
-<!-- [SỬA 2]: Đưa cơ chế cuộn mượt về đúng khung nền ngoài (overflow-y-auto overscroll-contain) để trên iOS/Android cuộn trơn tru không bị kẹt. -->
+
 <div id="payment-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-9500/60 backdrop-blur-[6px] p-3 sm:p-4 overflow-y-auto overscroll-contain pt-10 pb-10 sm:py-6">
     
     <!-- [SỬA 3]: Bỏ overflow-y-auto ở thẻ con, dùng max-h-none/fit-content để Modal mở rộng tự nhiên theo nội dung. -->
@@ -2111,13 +2438,19 @@
         <!-- ================= BƯỚC 2: HIỂN THỊ MÃ QR & THÔNG TIN ================= -->
         <div id="step-qr-display" class="hidden space-y-3 sm:space-y-4">
             
-            <!-- Alert xác nhận Email -->
+            <!-- Alert xác nhận Email & Thông báo ưu đãi -->
             <div class="p-2.5 sm:p-3 bg-cyan-950/40 border border-cyan-500/30 rounded-xl text-xs text-cyan-200">
                 <div class="flex items-start gap-2">
-                    <svg class="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <!--svg class="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <div class="flex flex-col gap-1 text-xs">
+                    </svg-->
+                    <div class="flex flex-col gap-1 text-xs w-full">
+                        
+                        <!-- DÒNG THÔNG BÁO ƯU ĐÃI (Sẽ ẩn/hiện tự động bằng JavaScript) -->
+                        <div id="discount-alert-box" class="hidden font-bold text-emerald-400 pb-1 mb-1 border-b border-cyan-500/20">
+                            WynAlgo xin tặng bạn Coupon 100.000VNĐ vào lần thanh toán này.
+                        </div>
+
                         <span class="text-cyan-200/90 text-sm">Thông tin đăng ký sử dụng sẽ được gửi đến email:</span>
                         <strong id="confirmed-email-display" class="text-slate-200 text-sm font-semibold break-all tracking-wide">---</strong>
                         <div>
@@ -2199,7 +2532,7 @@
     
     <!-- Đoạn mở đầu nhấn mạnh -->
     <p class="text-slate-200 text-base sm:text-xl font-medium p-3 rounded-r-xl">
-        Mọi nội dung, công cụ và dữ liệu trên website này được cung cấp duy nhất cho mục đích giáo dục và tham khảo thông tin, hoàn toàn không cấu thành lời khuyên đầu tư tài chính. Hoạt động giao dịch, đầu tư luôn đi kèm rủi ro; người dùng cần chủ động quản lý rủi ro đối với nguồn vốn của mình.
+        Mọi nội dung, công cụ và dữ liệu trên website này được cung cấp duy nhất cho mục đích giáo dục và tham khảo thông tin, hoàn toàn không cấu thành lời khuyên đầu tư tài chính. Tất cả hình ảnh minh họa được sử dụng nếu có, chỉ nhằm mục đích giải thích ý nghĩa cách đọc hiểu chỉ báo và không phản ánh bất kỳ điều gì đến tài sản tài chính ở thời gian thực. Hoạt động giao dịch, đầu tư luôn đi kèm rủi ro; người dùng cần chủ động quản lý rủi ro đối với nguồn vốn của mình.
     </p>
 
     <!-- Điều 1 -->
@@ -2221,7 +2554,7 @@
         </h4>
         <ul class="list-disc pl-5 space-y-1.5 text-slate-300 marker:text-cyan-500">
             Các kết quả giao dịch thử nghiệm, kiểm thử lịch sử (Backtest) hoặc mô phỏng luôn có những hạn chế nhất định. Do không phát sinh lệnh thật trên thị trường, kết quả chưa thể phản ánh hết các yếu tố thực tế như biến động thanh khoản hay độ trượt giá nếu có.
-            Các thuật toán giao dịch thử nghiệm được xây dựng dựa trên dữ liệu lịch sử. Việc đạt được kết quả tốt trong quá khứ không đồng nghĩa hoặc đảm bảo rằng tài khoản thực tế sẽ đạt được lợi nhuận tương tự trong tương lai.
+            Các thuật toán giao dịch thử nghiệm được xây dựng dựa trên dữ liệu lịch sử. Việc đạt được kết quả tốt trong quá khứ không đồng nghĩa hoặc đảm bảo rằng tài khoản thực tế sẽ đạt được lợi nhuận tương tự trong tương lai. 
             
         </ul>
     </section>
@@ -2804,15 +3137,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!paymentModal) return;
 
     // 3. HÀM TẠO SỐ HẬU TỐ NGẪU NHIÊN (5 ký tự)
-    function generateOrderSuffix() {
-        if (window.crypto && window.crypto.getRandomValues) {
-            const bytes = new Uint8Array(3);
-            window.crypto.getRandomValues(bytes);
-            return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('').toUpperCase().substring(0, 5);
-        }
-        return Math.random().toString(36).substring(2, 7).toUpperCase();
-    }
-
+    
     // 4. MỞ MODAL THANH TOÁN
     function openPaymentModal(plan) {
         if (!plan) return;
@@ -2878,7 +3203,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 7. CHUYỂN SANG BƯỚC 2: TẠO MÃ MỚI, GỬI ĐƠN VỀ BACKEND & HIỂN THỊ VIETQR
+    // 7. CHUYỂN SANG BƯỚC 2: GỬI ĐƠN VỀ BACKEND XIN MÃ & HIỂN THỊ VIETQR
     async function generateVietQR() {
         if (!customerEmailInput) return;
 
@@ -2893,22 +3218,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (emailError) emailError.classList.add('hidden');
 
-        // A. XÁC ĐỊNH CHÍNH XÁC PREFIX & PACKAGE KEY CHO BACKEND
+        // A. XÁC ĐỊNH PACKAGE KEY ĐỂ GỬI LÊN BACKEND
         const marketPrefix = isCurrentGlobal ? 'GL' : 'VN';
         const planCode = currentSelectedPlan.toUpperCase().replace(/[^A-Z0-9]/g, ''); // 'M30', 'Q90', 'Y365'
-        
-        const prefix = `${marketPrefix}${planCode}`; // Kết quả: 'VNM30', 'GLM30',...
         const packageKey = `${marketPrefix}_${planCode}`; // Kết quả: 'VN_M30', 'GL_M30',...
 
-        // B. SINH MÃ ĐƠN HÀNG MỚI ĐỘC NHẤT (Ví dụ: VNM30A8K9P)
-        const orderCode = `${prefix}${generateOrderSuffix()}`;
-
-        // Hiển thị mã đơn lên UI Modal
-        if (modalOrderId) modalOrderId.textContent = orderCode;
-
-        const rawPrice = modalPlanPriceValue ? modalPlanPriceValue.textContent.replace(/[^0-9]/g, '') : '';
-
-        // C. GỬI REQUEST ĐĂNG KÝ ĐƠN HÀNG LÊN BACKEND RENDER
+        // B. GỬI REQUEST ĐĂNG KÝ ĐƠN HÀNG LÊN BACKEND RENDER (ĐỂ SERVER TỰ SINH MÃ & BẢO VỆ RATE-LIMIT)
         try {
             if (btnGenerateQr) {
                 btnGenerateQr.disabled = true;
@@ -2919,17 +3234,42 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    orderCode: orderCode,
                     email: email,
                     packageKey: packageKey
+                    // Lưu ý: Không gửi orderCode từ đây nữa, Server sẽ tự lo phần đó!
                 })
             });
 
-            if (!response.ok) {
-                throw new Error("Không thể lưu đơn hàng chờ trên máy chủ.");
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                // Xử lý trường hợp bị chặn do Rate-Limit hoặc lỗi server
+                throw new Error(data.error || "Không thể khởi tạo đơn hàng trên máy chủ.");
             }
 
-            // D. TẠO ẢNH VIETQR VÀ CHUYỂN SANG BƯỚC 2
+            // LẤY CHÍNH XÁC MÃ ĐƠN HÀNG VÀ GIÁ TIỀN DO SERVER TRẢ VỀ
+            const orderCode = data.orderCode; 
+            const rawPrice = data.amount; 
+
+            // Hiển thị mã đơn lên UI Modal
+            if (modalOrderId) modalOrderId.textContent = orderCode;
+
+            // 1. Cập nhật lại giá tiền thanh toán trên Modal (Đã trừ coupon nếu có)
+            if (modalPlanPriceValue && rawPrice) {
+                modalPlanPriceValue.textContent = `${Number(rawPrice).toLocaleString('vi-VN')} VNĐ`;
+            }
+
+            // 2. Hiển thị hoặc ẩn dòng thông báo ưu đãi trong khung phía trên
+            const discountAlertBox = document.getElementById('discount-alert-box');
+            if (discountAlertBox) {
+                if (data.isDiscountApplied) {
+                    discountAlertBox.classList.remove('hidden'); // Hiện thông báo nếu là khách mới
+                } else {
+                    discountAlertBox.classList.add('hidden');    // Ẩn đi nếu là khách cũ
+                }
+            }
+
+            // C. TẠO ẢNH VIETQR VÀ CHUYỂN SANG BƯỚC 2
             if (rawPrice && qrImage) {
                 const qrUrl = `https://img.vietqr.io/image/${BANK_CONFIG.bankId}-${BANK_CONFIG.accountNo}-${BANK_CONFIG.template}.png?amount=${rawPrice}&addInfo=${encodeURIComponent(orderCode)}&accountName=${encodeURIComponent(BANK_CONFIG.accountName)}`;
 
@@ -2942,7 +3282,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (err) {
             console.error("[Create Order Error]:", err);
-            alert("Có lỗi kết nối đến máy chủ thanh toán. Vui lòng thử lại!");
+            alert(err.message || "Bạn đã thao tác tạo đơn quá nhiều lần hoặc có lỗi kết nối. Vui lòng thử lại sau ít phút!");
         } finally {
             if (btnGenerateQr) {
                 btnGenerateQr.disabled = false;
