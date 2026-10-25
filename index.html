@@ -1135,7 +1135,7 @@
         })();
         </script>
 
-        <!-- Lớp sao (2D canvas, vẽ một lần) -->
+  <!-- Lớp sao (2D (WebGL), vẽ một lần) -->
   <canvas class="stars-canvas"></canvas>
 
   <!-- Lớp cực quang (WebGL) -->
@@ -1605,13 +1605,13 @@ void main(){
 
     <!-- CONTENT WRAPPER -->
     <main class="relative z-10 pt-20">
-        <!-- HERO SECTION (Chỉ phần này có dải cực quang động) #436fff #1bd1d7 [linear-gradient(180deg,rgba(59,171,246,1)_0%,rgba(59,171,246,1)_35%,rgba(103,232,249,1)_45%,rgba(255,255,255,1)_50%,rgba(103,232,249,1)_55%,rgba(59,130,246,1)_65%,rgba(25,83,255,1)_100%)]-->
-        <section class="relative pt-24 pb-16 px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-7 sm:space-y-8">
-            <h1 class="hero-fluid-title font-bold tracking-tight text-white max-w-5xl mx-auto hero-title font-sans">
+        
+        <section class="relative pt-12 sm:pt-16 lg:pt-24 pb-16 px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-7 sm:space-y-8">
+            <h1 class="text-3xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-white max-w-5xl mx-auto hero-title font-sans">
                 Thấu hiểu thị trường như<br> 
                 <span class="text-transparent bg-clip-text bg-[linear-gradient(180deg,#3398ff_0%,#3398ff_35%,#67e8f9_45%,#d8f6ff_50%,#67e8f9_55%,#3398ff_70%,#1953ff_100%)] font-bold ">Dòng Tiền Thông Minh</span>
             </h1>
-            <p class="text-slate text-xl sm:text-[26px] max-w-3xl mx-auto hero-copy font-normal text-center space-y-2">
+            <p class="text-slate-300 text-xl sm:text-[26px] max-w-3xl mx-auto hero-copy font-normal text-center space-y-2">
                 <span class="block">
                     Hệ thống chỉ báo kỹ thuật 
                     <br class="sm:hidden"> theo dấu dòng tiền.
@@ -1621,6 +1621,25 @@ void main(){
                     <br class="sm:hidden"> bắt đầu theo chân dòng tiền lớn.
                 </span>
             </p>
+        </section>
+        <section class="hidden relative pt-12 sm:pt-16 lg:pt-20 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-5 sm:space-y-7">
+            <!-- Tiêu đề Hero: Dùng clamp() hoặc font size responsive linh hoạt -->
+            <h1 class="text-3xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-white max-w-5xl mx-auto leading-tight sm:leading-tight">
+                Thấu hiểu thị trường như<br> 
+                <span class="text-transparent bg-clip-text bg-[linear-gradient(180deg,#3398ff_0%,#3398ff_35%,#67e8f9_45%,#d8f6ff_50%,#67e8f9_55%,#3398ff_70%,#1953ff_100%)] font-bold inline-block mt-1">
+                    Dòng Tiền Thông Minh
+                </span>
+            </h1>
+
+            <!-- Đoạn văn mô tả: Thu nhỏ nhẹ cỡ chữ trên màn nhỏ để cân bằng tỷ lệ -->
+            <div class="text-slate-300 text-base sm:text-xl lg:text-2xl max-w-3xl mx-auto font-normal text-center space-y-1.5 sm:space-y-2 leading-relaxed">
+                <p class="block">
+                    Hệ thống chỉ báo kỹ thuật <br class="sm:hidden"> theo dấu dòng tiền.
+                </p>
+                <p class="block text-slate-400 text-sm sm:text-lg">
+                    Ngừng dự đoán thị trường & <br class="sm:hidden"> bắt đầu theo chân dòng tiền lớn.
+                </p>
+            </div>
         </section>
         
         <div class="flex justify-center mb-10 px-6 relative z-30">
