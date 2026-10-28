@@ -3604,9 +3604,10 @@ createStars();
 .boo-lantern__ghost {
   pointer-events: auto !important;
   cursor: grab;
-  touch-action: none;
+  touch-action: none; /* Bắt buộc để trình duyệt không tranh chấp thao tác kéo với cuộn trang */
   -webkit-user-select: none;
   user-select: none;
+  will-change: transform; /* Tối ưu hóa phần cứng GPU để không bị giật */
 }
 .boo-lantern__ghost:active {
   cursor: grabbing;
@@ -3786,21 +3787,19 @@ createStars();
     });
   }
 
-  // === TÍNH NĂNG KÉO THẢ TỐI ƯU (DÙNG POINTER EVENTS) ===
+  // === XỬ LÝ KÉO THẢ MƯỢT MÀ KHÔNG GIẬT LAG ===
   let isDragging = false;
   let isUserPlaced = false;
   let posX = 0, posY = 0;
   let offX = 0, offY = 0;
+  let resumeTimeout = null;
 
   if (ghost) {
-    // Đánh dấu để hàm D() của startMotion bỏ qua không can thiệp
     ghost.setAttribute("data-ghost-ui", "");
     const pumpkin = ghost.querySelector("[data-pumpkin-face]");
 
     const applyPos = () => {
       ghost.style.transform = `translate3d(${posX}px, ${posY}px, 0) translate(-50%, -50%)`;
-      
-      // Đồng bộ vùng sáng đèn theo vị trí thực tế của con ma/quả bí ngô
       if (overlay) {
         const o = overlay.getBoundingClientRect();
         const p = (pumpkin || ghost).getBoundingClientRect();
@@ -3812,10 +3811,12 @@ createStars();
     ghost.addEventListener("pointerdown", (e) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
       
+      // Hủy lịch trình bật lại hiệu ứng tự động nếu đang kéo tiếp
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+
       const o = overlay.getBoundingClientRect();
       const g = ghost.getBoundingClientRect();
       
-      // Khởi tạo tọa độ chuẩn xác từ vị trí thực tế, chống giật nhảy
       posX = g.left + g.width / 2 - o.left;
       posY = g.top + g.height / 2 - o.top;
       
@@ -3838,8 +3839,13 @@ createStars();
     const endDrag = (e) => {
       if (!isDragging) return;
       isDragging = false;
-      // Nếu muốn sau khi thả tay ra, con ma lại tiếp tục bay đuổi theo chuột/chạm thì đổi thành: isUserPlaced = false;
       try { ghost.releasePointerCapture(e.pointerId); } catch (err) {}
+
+      // SAU KHI THẢ TAY 3 GIÂY: Cho phép con ma tự động bay lượn và né chuột lại bình thường!
+      // Nếu bạn muốn nó đứng yên luôn không bao giờ bay nữa, hãy xóa đoạn lệnh setTimeout này đi.
+      resumeTimeout = setTimeout(() => {
+        isUserPlaced = false;
+      }, 3000); 
     };
 
     ghost.addEventListener("pointerup", endDrag);
@@ -3872,7 +3878,6 @@ createStars();
   const createBodyPath = function ei(y,b=1){const A=[];for(let M=0;M<=16;M++){const H=M/16,$=46+120*H,J=Math.sin(Math.PI*H),it=9+Math.sin(y*.9)*3.2*b,ht=Math.sin(y*1.5+H*Math.PI*4.6)*7.4*b,gt=146+J*(it+ht);A.push([$,gt])}const S=A.reverse();let Y="M 46 146 L 46 92 C 46 52 66 20 106 20 C 146 20 166 52 166 92 L 166 146";for(let M=0;M<S.length-1;M++){const H=S[M-1]??S[M],$=S[M],J=S[M+1],it=S[M+2]??J,ht=$[0]+(J[0]-H[0])/6,gt=$[1]+(J[1]-H[1])/6,Dt=J[0]-(it[0]-$[0])/6,yt=J[1]-(it[1]-$[1])/6;Y+=` C ${ht.toFixed(2)} ${gt.toFixed(2)} ${Dt.toFixed(2)} ${yt.toFixed(2)} ${J[0].toFixed(2)} ${J[1].toFixed(2)}`}return`${Y} Z`};
   
   const startMotion = function lr({layer:y,ghost:b,tilt:O,flip:r,body:N,getSpeed:U,getOffset:Q,getAvoidEdges:F,createBodyPath:A}){const S=window.matchMedia?.("(prefers-reduced-motion: reduce)").matches??!1,Y=window.matchMedia?.("(hover: none)").matches??!1,M=14,H=.48,$=.39,J=.47,it=.39,ht=6;let gt=0,Dt=performance.now(),yt=0,pt=0,ft=0,ut=0,L=0,Ot=0,Gt=0,fl=0,Nt=0,P=0,It=null,Qt=null,Et=1,_=0;const j=()=>({x:b.offsetWidth*.3,y:b.offsetHeight*.24}),G=()=>{const B=b.offsetWidth,ct=b.offsetHeight,st=j(),Rl=Q(),Hl=F(),Zl=Zt=>Gt+Zt*(Rl.x-st.x),ie=Zt=>B*(Zt===1?$:H),Sl=Zt=>B*(Zt===1?H:$),ce=Zt=>{const Bl=Zl(Zt);return Math.max(0,M-(Bl-ie(Zt)))+Math.max(0,Bl+Sl(Zt)-(Nt-M))};if(!Hl)Et=1;else{const Zt=ce(Et);Zt>0&&ce(-Et)+ht<Zt&&(Et=-Et)}let Re=Zl(Et),Za=fl+Rl.y-st.y;if(Hl){const Zt=M+ie(Et),Bl=Nt-M-Sl(Et),He=M+ct*J,Be=P-M-ct*it;Re=Zt>Bl?(Zt+Bl)/2:Math.min(Bl,Math.max(Zt,Re)),Za=He>Be?(He+Be)/2:Math.min(Be,Math.max(He,Za))}return{x:Re,y:Za}},mt=()=>{
-    // Nếu người dùng đang kéo hoặc đã đặt vị trí thủ công, dừng hẳn hiệu ứng đuổi chuột
     if (isDragging || isUserPlaced) return;
 
     const B=j(),ct=Math.cos(_*Math.PI/180);b.style.transform=`translate3d(${ft}px, ${ut}px, 0) translate(-50%, -50%)`,r.style.transform=`rotateY(${_.toFixed(2)}deg)`,y.style.setProperty("--light-x",`${(ft+B.x*ct).toFixed(2)}px`),y.style.setProperty("--light-y",`${(ut+B.y).toFixed(2)}px`)},ot=()=>{const B=y.getBoundingClientRect();Nt=B.width,P=B.height;const ct=B.width<720;Gt=It===null?B.width*(ct?.7:.76):It-B.left,fl=Qt===null?B.height*(ct?.66:.54):Qt-B.top;const st=G();L=ft=st.x,Ot=ut=st.y,_=Et===1?0:180,mt()},d=B=>{const ct=Math.min(64,Math.max(0,B-Dt));Dt=B;const st=G(),Rl=Math.min(1,Math.max(.001,U())),Hl=S?1:1-Math.pow(1-Rl,ct/16.67);ft+=(st.x-ft)*Hl,ut+=(st.y-ut)*Hl;const Zl=Et===1?0:180;if(_=S?Zl:_+(Zl-_)*(1-Math.pow(.86,ct/16.67)),!S){const ie=ft-L,Sl=ut-Ot;L=ft,Ot=ut;const ce=Math.max(-13,Math.min(13,ie*.85+Sl*.12));pt+=(ce-pt)*.14,O.style.transform=`rotate(${pt.toFixed(2)}deg)`,yt+=ct/1e3*2.1,N.setAttribute("d",A(yt,.85+Math.min(.6,Math.abs(ie)*.1)))}mt(),gt=window.requestAnimationFrame(d)},T=(B,ct)=>{const st=y.getBoundingClientRect();It=B,Qt=ct,Gt=B-st.left,fl=ct-st.top},D=B=>B instanceof Element&&!!B.closest("[data-ghost-ui]"),C=B=>{if (isUserPlaced) return; D(B.target)||Y&&It===null&&B.pointerType==="mouse"&&B.clientX===0&&B.clientY===0||T(B.clientX,B.clientY)},V=B=>{if (isUserPlaced) return; if(D(B.target))return;const ct=B.touches[0];ct&&T(ct.clientX,ct.clientY)};ot();const I=typeof ResizeObserver<"u"?new ResizeObserver(ot):null;return I?.observe(y),window.addEventListener("resize",ot,{passive:!0}),window.addEventListener("pointermove",C,{passive:!0}),window.addEventListener("pointerdown",C,{passive:!0}),window.addEventListener("touchmove",V,{passive:!0}),gt=window.requestAnimationFrame(d),()=>{I?.disconnect(),window.removeEventListener("resize",ot),window.removeEventListener("pointermove",C),window.removeEventListener("pointerdown",C),window.removeEventListener("touchmove",V),window.cancelAnimationFrame(gt)}};
