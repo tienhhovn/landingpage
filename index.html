@@ -41,7 +41,7 @@
                         brand: {
                             50: '#f0f9ff',
                             100: '#e0f2fe',
-                            500: '#06b6d4', /* Cyan */
+                            500: '#06b6d4', 
                             600: '#0891b2',
                             900: '#164e63',
                         },
@@ -69,11 +69,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* =========================================================================
-           🎨 BIẾN ĐỔI MÀU NỀN TRANG DỄ DÀNG TẠI ĐÂY
-           ========================================================================= */
+        
         :root {
-            --bg-page-color: #020920; /* ĐỔI MÀU NỀN CHÍNH Ở ĐÂY (Ví dụ: #020920, #030611, v.v.) */
+            --bg-page-color: #041039; 
         }
 
         html {
@@ -103,7 +101,8 @@
             position: relative;
             margin: 0;
             padding: 0;
-            height: 100vh;
+            min-height: 100vh; 
+            transition: background-color 0.1s ease-out; 
         }
 
         h1, h2, h3, h4, h5, h6, p, a, button, span, li, td, th {
@@ -1135,11 +1134,11 @@
         })();
         </script>
 
-  <!-- Lớp sao (2D (WebGL), vẽ một lần) -->
-  <canvas class="stars-canvas"></canvas>
+<!-- Lớp sao (2D (WebGL), vẽ một lần) -->
+<canvas class="stars-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:1;"></canvas>
 
-  <!-- Lớp cực quang (WebGL) -->
-  <canvas class="aurora-canvas"></canvas>
+<!-- Lớp cực quang (WebGL) -->
+<canvas class="aurora-canvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:2;"></canvas>
 
 <!-- ============ FRAGMENT SHADER ============ -->
 <script id="aurora-frag" type="text/plain">
@@ -1173,8 +1172,10 @@ uniform float uPiv[5];
 uniform float uMDir[5];
 uniform float uEA[5];
 uniform float uWG[5];
-uniform vec3  uCA[5];
-uniform vec3  uCB[5];
+uniform vec3  uCA[5];  // Màu đáy gốc 1
+uniform vec3  uCB[5];  // Màu đỉnh gốc 1
+uniform vec3  uCA2[5]; // Màu đáy đích 2
+uniform vec3  uCB2[5]; // Màu đỉnh đích 2
 
 /* ---- hash / noise / fbm ---- */
 float hash(vec2 p){
@@ -1196,7 +1197,7 @@ float fbm(vec2 p){
   for(int i=0;i<5;i++){ s+=a*noise(p); p=RM*p*2.02+vec2(3.1,1.7); a*=.55; }
   return s;
 }
-// fbm nhẹ 3 octave: dùng cho sóng và độ sâu (gần như không khác biệt về mắt thấy)
+// fbm nhẹ 3 octave: dùng cho sóng và độ sâu
 float fbm3(vec2 p){
   float s=0.0, a=0.5;
   for(int i=0;i<3;i++){ s+=a*noise(p); p=RM*p*2.02+vec2(3.1,1.7); a*=.55; }
@@ -1275,6 +1276,10 @@ void main(){
   float t = uTime;
   vec2 mo = uMouse * 0.09;
 
+  // Tạo chu kỳ chuyển màu đồng bộ cho tất cả các dải (chu kỳ lặp mượt mà qua hàm sin)
+  // Thay đổi số 0.15 bên dưới để chỉnh tốc độ đổi màu nhanh/chậm tùy ý
+  float colorMixFactor = sin(t * 0.15) * 0.5 + 0.5; 
+
   vec3 aurora = vec3(0.0);
   for(int i=0;i<5;i++){
     float splitDir = (uX[i] < 0.0) ? -1.0 : 1.0;
@@ -1283,18 +1288,23 @@ void main(){
     vec2 pS = uv - mo * uMDir[i];
     pS.y -= (pS.x*pS.x)*0.08;
     float sd = 0.9 + 0.3 * mod(float(i), 2.0);
-    aurora += curtain(pS, t*uP[i], t, currentX, uY[i], uW[i], uWL[i], uL[i], uH[i], uCA[i], uCB[i], sd, asp, uWS[i], uRS[i], uTlt[i], uSAmp[i], uSFreq[i], uPiv[i], uEA[i], uWG[i]) * uI[i];
+
+    // Pha trộn giữa cặp màu gốc (1) và cặp màu đích (2) đồng bộ theo thời gian thực
+    vec3 currentBot = mix(uCA[i], uCA2[i], colorMixFactor);
+    vec3 currentTop = mix(uCB[i], uCB2[i], colorMixFactor);
+
+    aurora += curtain(pS, t*uP[i], t, currentX, uY[i], uW[i], uWL[i], uL[i], uH[i], currentBot, currentTop, sd, asp, uWS[i], uRS[i], uTlt[i], uSAmp[i], uSFreq[i], uPiv[i], uEA[i], uWG[i]) * uI[i];
   }
 
   vec3 col = 1.0 - exp(-aurora * 1.15);
   float vig = 1.0 - 0.25*smoothstep(0.4,1.5,length(uv*vec2(0.7,1.0)));
   col *= vig * uFade;
 
-  // Thay cho CSS filter: saturate(1.1) brightness(1.1) -> làm trong shader, không bị clip sau composite
+  // Cân chỉnh màu sắc tổng thể
   float l = dot(col, vec3(0.2126, 0.7152, 0.0722));
   col = mix(vec3(l), col, 1.1) * 1.1;
 
-  // Dither tam giác (-1..1)/255, chỉ áp dụng nơi có cực quang để không làm sáng nền
+  // Dither khử sọc màu
   float n = hash(gl_FragCoord.xy + fract(t) * 11.13)
           + hash(gl_FragCoord.xy * 1.7 + fract(t * 0.7) * 7.31) - 1.0;
   float has = smoothstep(0.0, 0.02, max(col.r, max(col.g, col.b)));
@@ -1302,7 +1312,6 @@ void main(){
 
   col = clamp(col, 0.0, 1.0);
 
-  // Premultiplied hợp lệ: màu luôn <= alpha
   float a = max(col.r, max(col.g, col.b));
   gl_FragColor = vec4(col, a);
 }
@@ -1311,44 +1320,40 @@ void main(){
 <!-- ============ LOGIC ============ -->
 <script>
 (function(){
-  /* ---------- Cấu hình 5 dải ---------- */
+  /* ---------- Cấu hình 5 dải kèm theo cặp màu chuyển đổi (ca2, cb2) ---------- */
   var CFG={"gspeed":1,"strips":[
-    // Dải 1 dưới trái
-    {"x":-0.84,"y":-0.7,"l":1.16,"w":0.1,"wl":0.9,"h":1.04,"p":-1.45,"ws":0.25,"rs":1,"tlt":-11,"samp":0,"sfreq":0.16,"piv":1.8,"md":-1.0,"ea":0,"wg":0,"i":1.1,"ca":"#0df2a1","cb":"#d600f8"},
-    // Dải 2 trên trái (giảm i 1.6 -> 1.4: vùng giao xanh-hồng dễ cháy trắng)
-    {"x":-0.85,"y":-0.05,"l":0.81,"w":0.18,"wl":1.2,"h":0.4,"p":0.65,"ws":0.95,"rs":-4,"tlt":-14,"samp":0,"sfreq":0.13,"piv":0,"md":-1.0,"ea":0,"wg":-0.12,"i":1.4,"ca":"#0df2a1","cb":"#f20db1"},
-    // Dải 3 trên phải (i 1.48 -> 1.35)
-    {"x":0.42,"y":-0.36,"l":1.57,"w":0.06,"wl":0.9,"h":0.98,"p":-1.8,"ws":1,"rs":1,"tlt":-11,"samp":0,"sfreq":0.16,"piv":1.8,"md":-1.0,"ea":0,"wg":0,"i":1.35,"ca":"#0df2a1","cb":"#9d0df2"},
-    // Dải 4 giữa phải(i 1.52 -> 1.4)
-    {"x":0.67,"y":-0.6,"l":1.33,"w":0.08,"wl":0.86,"h":0.84,"p":-0.7,"ws":1,"rs":-0.7,"tlt":-11,"samp":0,"sfreq":0,"piv":1.8,"md":-1.0,"ea":8,"wg":0.12,"i":1.4,"ca":"#0df2a1","cb":"#f20db1"},
-    // Dải 5 dưới phải(i 1.52 -> 1.4)
-    {"x":0.87,"y":-0.85,"l":0.53,"w":0.08,"wl":0.86,"h":0.4,"p":-0.7,"ws":1,"rs":-0.7,"tlt":-11,"samp":0,"sfreq":0,"piv":1.8,"md":-1.0,"ea":8,"wg":0.12,"i":1.4,"ca":"#0df2a1","cb":"#f20db1"}
+    // Dải 1 dưới trái: Chuyển từ (Xanh lá -> Tím) sang (Xanh dương nhạt -> Cam sáng)
+    {"x":-0.84,"y":-0.7,"l":1.16,"w":0.1,"wl":0.9,"h":1.04,"p":-1.45,"ws":0.25,"rs":1,"tlt":-11,"samp":0,"sfreq":0.16,"piv":1.8,"md":-1.0,"ea":0,"wg":0,"i":1.1,"ca":"#0df2a1","cb":"#d600f8","ca2":"#17f580","cb2":"#d600f8"},
+    // Dải 2 trên trái
+    {"x":-0.85,"y":-0.05,"l":0.81,"w":0.18,"wl":1.2,"h":0.4,"p":0.65,"ws":0.95,"rs":-4,"tlt":-14,"samp":0,"sfreq":0.13,"piv":0,"md":-1.0,"ea":0,"wg":-0.12,"i":1.4,"ca":"#0df2a1","cb":"#d600f8","ca2":"#17f580","cb2":"#d600f8"},
+    // Dải 3 trên phải
+    {"x":0.42,"y":-0.36,"l":1.57,"w":0.06,"wl":0.9,"h":0.98,"p":-1.8,"ws":1,"rs":1,"tlt":-11,"samp":0,"sfreq":0.16,"piv":1.8,"md":-1.0,"ea":0,"wg":0,"i":1.35,"ca":"#0df2a1","cb":"#d600f8","ca2":"#17f580","cb2":"#d600f8"},
+    // Dải 4 giữa phải
+    {"x":0.67,"y":-0.6,"l":1.33,"w":0.08,"wl":0.86,"h":0.84,"p":-0.7,"ws":1,"rs":-0.7,"tlt":-11,"samp":0,"sfreq":0,"piv":1.8,"md":-1.0,"ea":8,"wg":0.12,"i":1.4,"ca":"#0df2a1","cb":"#d600f8","ca2":"#17f580","cb2":"#d600f8"},
+    // Dải 5 dưới phải
+    {"x":0.87,"y":-0.85,"l":0.53,"w":0.08,"wl":0.86,"h":0.4,"p":-0.7,"ws":1,"rs":-0.7,"tlt":-11,"samp":0,"sfreq":0,"piv":1.8,"md":-1.0,"ea":8,"wg":0.12,"i":1.4,"ca":"#0df2a1","cb":"#d600f8","ca2":"#17f580","cb2":"#d600f8"}
   ]};
   var N = CFG.strips.length; // 5
 
-  var MAX_DPR = 1;           // đổi thành 1.25 nếu muốn mịn hơn (tốn GPU hơn)
-  var MIN_SCALE = 0.5;       // sàn của render scale thích ứng
+  var MAX_DPR = 1;
+  var MIN_SCALE = 0.5;
   var reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var host   = document.currentScript.closest('.aurora-hero');
+  var host   = document.currentScript.closest('.aurora-hero') || document.body;
   var canvas = host.querySelector('.aurora-canvas');
   var starsC = host.querySelector('.stars-canvas');
 
-  /* ---------- Sao (2D, vẽ một lần, vị trí cố định theo seed) ---------- */
+  /* ---------- Sao (2D, vẽ một lần) ---------- */
   function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
   var starData=(function(){
-    var rnd=mulberry32(20240607), arr=[], count=0; 
+    var rnd=mulberry32(20240607), arr=[], count=80; 
     for(var i=0;i<count;i++){
-      arr.push({
-        x:rnd(), y:rnd()*0.92,                 // phân bố theo tỉ lệ -> ổn định khi resize
-        r:0.4+rnd()*0.8,                       // bán kính (px CSS)
-        a:0.28+rnd()*0.22,                     // độ mờ ~28–50%: đủ thấy trên màn tương phản thấp
-        b:rnd()<0.25                           // một số sao hơi xanh
-      });
+      arr.push({ x:rnd(), y:rnd()*0.92, r:0.4+rnd()*0.8, a:0.28+rnd()*0.22, b:rnd()<0.25 });
     }
     return arr;
   })();
   function drawStars(){
+    if(!starsC) return;
     var dpr=Math.min(window.devicePixelRatio||1,2);
     var w=Math.max(1,Math.round(starsC.clientWidth*dpr));
     var h=Math.max(1,Math.round(starsC.clientHeight*dpr));
@@ -1371,7 +1376,7 @@ void main(){
   var FRAG=document.getElementById('aurora-frag').textContent;
 
   var UNIFORM_SCALARS=['uRes','uTime','uFade','uMouse','uScrollX'];
-  var UNIFORM_ARRAYS=['uX','uY','uW','uWL','uL','uH','uP','uI','uWS','uRS','uTlt','uSAmp','uSFreq','uPiv','uMDir','uEA','uWG','uCA','uCB'];
+  var UNIFORM_ARRAYS=['uX','uY','uW','uWL','uL','uH','uP','uI','uWS','uRS','uTlt','uSAmp','uSFreq','uPiv','uMDir','uEA','uWG','uCA','uCB','uCA2','uCB2'];
 
   var gl=null, pr=null, U={}, ready=false;
 
@@ -1402,15 +1407,23 @@ void main(){
     return true;
   }
 
-  /* ---------- Dữ liệu dải -> Float32Array ---------- */
-  var X=new Float32Array(N),Y=new Float32Array(N),W=new Float32Array(N),WL=new Float32Array(N),L=new Float32Array(N),H=new Float32Array(N),P=new Float32Array(N),I=new Float32Array(N),WS=new Float32Array(N),RS=new Float32Array(N),TLT=new Float32Array(N),SAMP=new Float32Array(N),SFREQ=new Float32Array(N),PIV=new Float32Array(N),MDIR=new Float32Array(N),EA=new Float32Array(N),WG=new Float32Array(N),CA=new Float32Array(N*3),CB=new Float32Array(N*3);
+  /* ---------- Chuẩn bị dữ liệu mảng dải màu ---------- */
+  var X=new Float32Array(N),Y=new Float32Array(N),W=new Float32Array(N),WL=new Float32Array(N),L=new Float32Array(N),H=new Float32Array(N),P=new Float32Array(N),I=new Float32Array(N),WS=new Float32Array(N),RS=new Float32Array(N),TLT=new Float32Array(N),SAMP=new Float32Array(N),SFREQ=new Float32Array(N),PIV=new Float32Array(N),MDIR=new Float32Array(N),EA=new Float32Array(N),WG=new Float32Array(N);
+  var CA=new Float32Array(N*3),CB=new Float32Array(N*3),CA2=new Float32Array(N*3),CB2=new Float32Array(N*3);
+
   function h2r(h){return [parseInt(h.slice(1,3),16)/255,parseInt(h.slice(3,5),16)/255,parseInt(h.slice(5,7),16)/255];}
   CFG.strips.forEach(function(st,i){
     X[i]=st.x;Y[i]=st.y;W[i]=st.w;WL[i]=st.wl;L[i]=st.l;H[i]=st.h;P[i]=st.p;I[i]=st.i;WS[i]=st.ws;RS[i]=st.rs;
     TLT[i]=st.tlt*Math.PI/180;SAMP[i]=st.samp*Math.PI/180;SFREQ[i]=st.sfreq;PIV[i]=st.piv;
     MDIR[i]=st.md||0;EA[i]=(st.ea||0)*Math.PI/180;WG[i]=st.wg||0;
+
     var a=h2r(st.ca),b=h2r(st.cb);
-    CA[i*3]=a[0];CA[i*3+1]=a[1];CA[i*3+2]=a[2];CB[i*3]=b[0];CB[i*3+1]=b[1];CB[i*3+2]=b[2];
+    CA[i*3]=a[0];CA[i*3+1]=a[1];CA[i*3+2]=a[2];
+    CB[i*3]=b[0];CB[i*3+1]=b[1];CB[i*3+2]=b[2];
+
+    var a2=h2r(st.ca2),b2=h2r(st.cb2);
+    CA2[i*3]=a2[0];CA2[i*3+1]=a2[1];CA2[i*3+2]=a2[2];
+    CB2[i*3]=b2[0];CB2[i*3+1]=b2[1];CB2[i*3+2]=b2[2];
   });
 
   /* ---------- Chuột & cuộn ---------- */
@@ -1426,7 +1439,6 @@ void main(){
     targetScrollOffset=Math.min(1.2,scrollTop/600);
   },{passive:true});
 
-  /* ---------- Resize + render scale thích ứng ---------- */
   var scale=1;
   function resize(){
     if(!gl) return;
@@ -1436,7 +1448,6 @@ void main(){
     if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}
   }
 
-  /* ---------- Vẽ một khung ---------- */
   var tAcc=0,fade=0;
   function draw(){
     resize();
@@ -1446,12 +1457,14 @@ void main(){
     gl.uniform1f(U.uFade,fade*fade*(3-2*fade));
     gl.uniform2f(U.uMouse,mx,my);
     gl.uniform1f(U.uScrollX,scrollOffset);
+
     gl.uniform1fv(U.uX,X);gl.uniform1fv(U.uY,Y);gl.uniform1fv(U.uW,W);gl.uniform1fv(U.uWL,WL);gl.uniform1fv(U.uL,L);gl.uniform1fv(U.uH,H);gl.uniform1fv(U.uP,P);gl.uniform1fv(U.uI,I);gl.uniform1fv(U.uWS,WS);gl.uniform1fv(U.uRS,RS);gl.uniform1fv(U.uTlt,TLT);gl.uniform1fv(U.uSAmp,SAMP);gl.uniform1fv(U.uSFreq,SFREQ);gl.uniform1fv(U.uPiv,PIV);gl.uniform1fv(U.uMDir,MDIR);gl.uniform1fv(U.uEA,EA);gl.uniform1fv(U.uWG,WG);
     gl.uniform3fv(U.uCA,CA);gl.uniform3fv(U.uCB,CB);
+    gl.uniform3fv(U.uCA2,CA2);gl.uniform3fv(U.uCB2,CB2);
+
     gl.drawArrays(gl.TRIANGLES,0,3);
   }
 
-  /* ---------- Vòng lặp ---------- */
   var running=false,rafId=0,t0=0,frames=0,dtSum=0;
   function loop(now){
     if(!running||!ready) return;
@@ -1461,7 +1474,6 @@ void main(){
     mx+=(mxT-mx)*Math.min(1,dt*2.5); my+=(myT-my)*Math.min(1,dt*2.5);
     scrollOffset+=(targetScrollOffset-scrollOffset)*Math.min(1,dt*5);
 
-    // Render scale thích ứng: bỏ qua 30 khung đầu (compile shader), đo mỗi 60 khung
     frames++;
     if(frames>30){
       dtSum+=raw;
@@ -1480,7 +1492,6 @@ void main(){
     else if(!v){running=false;cancelAnimationFrame(rafId);}
   }
 
-  /* ---------- Khởi tạo ---------- */
   function start(){
     ready=setupGL();
     if(!ready) return;
@@ -1632,7 +1643,7 @@ void main(){
             </h1>
 
             <!-- Đoạn văn mô tả: Thu nhỏ nhẹ cỡ chữ trên màn nhỏ để cân bằng tỷ lệ -->
-            <div class="text-slate-300 text-base sm:text-xl lg:text-2xl max-w-3xl mx-auto font-normal text-center space-y-1.5 sm:space-y-2 leading-relaxed">
+            <div class="text-[#ffffffd9] text-base sm:text-xl lg:text-2xl max-w-3xl mx-auto font-normal text-center space-y-1.5 sm:space-y-2 leading-relaxed">
                 <p class="block">
                     Hệ thống chỉ báo kỹ thuật <br class="sm:hidden"> theo dấu dòng tiền.
                 </p>
@@ -3246,7 +3257,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             if (btnGenerateQr) {
                 btnGenerateQr.disabled = true;
-                btnGenerateQr.textContent = 'Đang khởi tạo mã...';
+                btnGenerateQr.textContent = 'Khởi tạo thanh toán...';
             }
 
             const response = await fetch(`${RENDER_BACKEND_URL}/api/create-order`, {
@@ -3356,9 +3367,9 @@ document.addEventListener("DOMContentLoaded", () => {
         button.addEventListener('click', closePaymentModal);
     });
 
-    paymentModal.addEventListener('click', (event) => {
-        if (event.target === paymentModal) closePaymentModal();
-    });
+    //paymentModal.addEventListener('click', (event) => {
+    //    if (event.target === paymentModal) closePaymentModal();
+    //});
 
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape' && !paymentModal.classList.contains('hidden')) {
@@ -3480,7 +3491,405 @@ createStars();
             triggerWave();
         }, 9000 + Math.random() * 3000);
 
+//Cuộn nền trang
+
+(function() {
+    function hexToRgb(hex) {
+        var c = hex.replace('#', '');
+        if (c.length === 3) {
+            c = c.split('').map(function (char) { return char + char; }).join('');
+        }
+        var num = parseInt(c, 16);
+        return [num >> 16, (num >> 8) & 255, num & 255];
+    }
+
+    function interpolateColor(color1, color2, t) {
+        var r = Math.round(color1[0] + (color2[0] - color1[0]) * t);
+        var g = Math.round(color1[1] + (color2[1] - color1[1]) * t);
+        var b = Math.round(color1[2] + (color2[2] - color1[2]) * t);
+        return 'rgb(' + r + ',' + g + ',' + b + ')';
+    }
+
+    // ==========================================
+    // 🎨 TÙY CHỈNH MÀU NỀN ĐẦU VÀ MÀU ĐÍCH
+    // ==========================================
+    var startColorHex = "#020920"; // Màu nền ban đầu (trên cùng)
+    var endColorHex   = "#020920"; // Màu nền khi cực quang dạt xong
+
+    var startRgb = hexToRgb(startColorHex);
+    var endRgb   = hexToRgb(endColorHex);
+
+    // Mốc chiều cao cuộn khớp chính xác với hiệu ứng vén màn cực quang (600px)
+    var maxAuroraScroll = 600; 
+
+    window.addEventListener('scroll', function() {
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Tính tỷ lệ tiến trình dựa trên mốc 600px (t từ 0.0 đến 1.0)
+        var progress = Math.min(1, Math.max(0, scrollTop / maxAuroraScroll));
+
+        // Pha trộn màu sắc
+        var currentColor = interpolateColor(startRgb, endRgb, progress);
+
+        // Gán vào biến CSS --bg-page-color
+        document.documentElement.style.setProperty('--bg-page-color', currentColor);
+    }, { passive: true });
+})();
 
     </script>
+
+<!-- Boo: paste this block once, just before the closing body tag. -->
+<style>
+.boo-lantern {
+  --light-x: 76%;
+  --light-y: 54%;
+  --spot-radius: min(490px, 84vw);
+  --warm-radius: min(372px, 64vw);
+  --dim-soft: 0.313;
+  --dim-mid: 0.696;
+  --dim-opacity: 0.87;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.boo-lantern__shade,
+.boo-lantern__beam,
+.boo-lantern__core {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  transition: opacity .6s ease;
+}
+
+.boo-lantern--off .boo-lantern__shade,
+.boo-lantern--off .boo-lantern__beam,
+.boo-lantern--off .boo-lantern__core { opacity: 0; animation: none; }
+
+.boo-lantern__shade {
+  background: radial-gradient(circle var(--spot-radius) at var(--light-x) var(--light-y),
+    rgba(4, 6, 17, .02) 0%,
+    rgba(4, 6, 17, .07) 24%,
+    rgba(4, 6, 17, var(--dim-soft)) 50%,
+    rgba(4, 6, 17, var(--dim-mid)) 77%,
+    rgba(4, 6, 17, var(--dim-opacity)) 100%);
+}
+
+.boo-lantern__beam {
+  background: radial-gradient(circle var(--warm-radius) at var(--light-x) var(--light-y),
+    rgba(255, 192, 100, .24) 0%, rgba(255, 168, 76, .12) 28%, rgba(255, 150, 70, .04) 56%, transparent 84%);
+  mix-blend-mode: screen;
+  animation: boo-effect-beam-breathe 3.9s ease-in-out infinite alternate;
+}
+
+.boo-lantern__core {
+  background: radial-gradient(circle calc(var(--spot-radius) * .28) at var(--light-x) var(--light-y),
+    rgba(255, 231, 178, .3), rgba(255, 206, 138, .1) 46%, transparent 78%);
+  mix-blend-mode: screen;
+  animation: boo-effect-beam-flicker 4.7s ease-in-out infinite;
+}
+
+.boo-lantern__ghost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: clamp(168px, 15.5vw, 214px);
+  will-change: transform;
+  opacity: 1;
+  filter: drop-shadow(0 16px 22px rgba(6, 5, 26, .42));
+  transition: opacity .6s ease, filter .6s ease;
+}
+
+.boo-lantern__ghost {
+  pointer-events: auto !important;
+  cursor: grab;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.boo-lantern__ghost:active {
+  cursor: grabbing;
+}
+
+@media (max-width: 768px) {
+  .boo-lantern__ghost {
+    width: clamp(120px, 28vw, 150px) !important;
+  }
+}
+
+.boo-lantern--off .boo-lantern__ghost {
+  opacity: .34;
+  filter: drop-shadow(0 10px 18px rgba(6, 5, 26, .3)) saturate(.4) brightness(.8);
+}
+
+.boo-lantern__tilt { transform-origin: 50% 42%; }
+.boo-lantern__float { animation: boo-effect-float 3.4s ease-in-out infinite; perspective: 1100px; }
+.boo-lantern__flip { transform-origin: 50% 50%; will-change: transform; }
+.boo-lantern__ghost svg { display: block; width: 100%; height: auto; max-width: none; overflow: visible; }
+
+.boo-lantern-halo {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: boo-effect-halo-pulse 3.2s ease-in-out infinite alternate;
+}
+
+.boo-lantern-sparkle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: boo-effect-sparkle 2.9s ease-in-out infinite;
+}
+
+.boo-lantern-sparkle--alt { animation-delay: 1.2s; }
+
+@keyframes boo-effect-float { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-13px) rotate(1.6deg); } }
+@keyframes boo-effect-halo-pulse { from { opacity: .78; transform: scale(.94); } to { opacity: 1; transform: scale(1.08); } }
+@keyframes boo-effect-beam-breathe { from { opacity: .74; } to { opacity: 1; } }
+@keyframes boo-effect-beam-flicker { 0%, 100% { opacity: .72; } 18% { opacity: 1; } 32% { opacity: .8; } 55% { opacity: .98; } 71% { opacity: .74; } }
+@keyframes boo-effect-sparkle { 0%, 100% { opacity: .3; transform: scale(.7); } 45% { opacity: 1; transform: scale(1.25); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .boo-lantern__float, .boo-lantern__beam, .boo-lantern__core, .boo-lantern-halo, .boo-lantern-sparkle { animation: none; }
+}
+
+#boo-lantern-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483646;
+  overflow: hidden;
+  pointer-events: none;
+}
+#boo-lantern-overlay, #boo-lantern-overlay * { box-sizing: border-box; }
+
+/* NÚT TẮT HIỆU ỨNG (Cho phép click riêng nút này) */
+#boo-close-btn {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  z-index: 2147483647;
+  background: rgba(15, 15, 25, 0.75);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-family: sans-serif;
+  border-radius: 20px;
+  cursor: pointer;
+  pointer-events: auto; /* Cho phép bấm vào nút */
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+#boo-close-btn:hover {
+  background: rgba(230, 81, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+</style>
+
+<div id="boo-lantern-overlay" class="boo-lantern" aria-hidden="true">
+  <div class="boo-lantern__shade"></div>
+  <div class="boo-lantern__beam"></div>
+  <div class="boo-lantern__core"></div>
+  <div class="boo-lantern__ghost">
+    <div class="boo-lantern__tilt">
+      <div class="boo-lantern__float">
+        <div class="boo-lantern__flip">
+        <svg viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+          <linearGradient id="boo-lantern-export-ghost-body" x1="58" y1="24" x2="164" y2="176" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FFFFFF"/>
+          <stop offset="0.55" stop-color="#FFFEFF"/>
+          <stop offset="1" stop-color="#D4D3F1"/>
+          </linearGradient>
+          <linearGradient id="boo-lantern-export-ghost-arm" x1="160" y1="104" x2="190" y2="134" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FFFFFF"/>
+          <stop offset="1" stop-color="#D8D9F0"/>
+          </linearGradient>
+          <radialGradient id="boo-lantern-export-pumpkin-fill" cx="0" cy="0" r="1" gradientTransform="translate(171 160) rotate(90) scale(34 33)" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FFC258"/>
+          <stop offset="0.5" stop-color="#F18A24"/>
+          <stop offset="1" stop-color="#B44E19"/>
+          </radialGradient>
+          <radialGradient id="boo-lantern-export-lantern-halo">
+          <stop stop-color="#FFD376" stop-opacity="0.7"/>
+          <stop offset="0.48" stop-color="#FFAC3C" stop-opacity="0.24"/>
+          <stop offset="1" stop-color="#FFAC3C" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="boo-lantern-export-lantern-blur" x="110" y="96" width="126" height="126" filterUnits="userSpaceOnUse">
+          <feGaussianBlur stdDeviation="9"/>
+          </filter>
+          <filter id="boo-lantern-export-cut-blur" x="140" y="140" width="72" height="56" filterUnits="userSpaceOnUse">
+          <feGaussianBlur stdDeviation="2.4"/>
+          </filter>
+          </defs>
+          <circle class="boo-lantern-halo" cx="175" cy="163" r="52" fill="url(#boo-lantern-export-lantern-halo)" filter="url(#boo-lantern-export-lantern-blur)"/>
+          <path d="M141 98c23-7 40 6 39 30" stroke="url(#boo-lantern-export-ghost-arm)" stroke-width="17" stroke-linecap="round" fill="none"/>
+          <path data-ghost-body="" d="M 46 146 L 46 92 C 46 52 66 20 106 20 C 146 20 166 52 166 92 L 166 146 C 164.75 146.00 161.00 145.83 158.50 146.00 C 156.00 146.16 153.50 146.25 151.00 146.99 C 148.50 147.73 146.00 149.17 143.50 150.43 C 141.00 151.69 138.50 153.66 136.00 154.55 C 133.50 155.44 131.00 156.09 128.50 155.79 C 126.00 155.48 123.50 154.02 121.00 152.72 C 118.50 151.42 116.00 149.10 113.50 147.98 C 111.00 146.86 108.50 145.88 106.00 146.01 C 103.50 146.13 101.00 147.46 98.50 148.73 C 96.00 149.99 93.50 152.36 91.00 153.59 C 88.50 154.83 86.00 156.02 83.50 156.13 C 81.00 156.23 78.50 155.27 76.00 154.24 C 73.50 153.20 71.00 151.16 68.50 149.90 C 66.00 148.65 63.50 147.35 61.00 146.70 C 58.50 146.05 56.00 146.12 53.50 146.01 C 51.00 145.89 47.25 146.00 46.00 146.00 Z" fill="url(#boo-lantern-export-ghost-body)" stroke="#F9F7FF" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M50 104c-11-3-22 3-24 12-2 10 7 17 16 15 5-1 9-5 11-10Z" fill="url(#boo-lantern-export-ghost-body)" stroke="#F9F7FF" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M64 50c8-13 22-20 38-22" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity="0.72" fill="none"/>
+          <g>
+          <ellipse cx="85" cy="90" rx="6.5" ry="9.2" fill="#17151F"/>
+          <ellipse cx="127" cy="90" rx="6.5" ry="9.2" fill="#17151F"/>
+          </g>
+          <path d="M157 148c-3-14 6-24 18-24s21 10 18 24" stroke="#8A4C25" stroke-width="4.4" stroke-linecap="round" fill="none"/>
+          <path d="M174 145c-4-4-12-5-18-2-11 5-12 17-8 28 3 10 11 17 20 17 3 0 5-1 7-2 3 2 6 3 9 2 10-1 17-11 18-23 1-13-7-23-18-23-4 0-8 1-10 3Z" fill="url(#boo-lantern-export-pumpkin-fill)" stroke="#A34718" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M162 146c-7 11-6 29 2 39M186 146c8 11 7 29-2 39" stroke="#B8571D" stroke-width="2.4" stroke-linecap="round" opacity="0.5" fill="none"/>
+          <path d="M171 145c-1-5 0-9 4-12" stroke="#5F6A32" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <g data-pumpkin-face="classic">
+          <g fill="#FFD98F" filter="url(#boo-lantern-export-cut-blur)" opacity="0.92">
+          <path d="M164 148 173 161 155 161Z M184 148 175 161 193 161Z"/>
+          <path d="m174 162 2.8 4h-5.6Z"/>
+          <path d="M155 169 161 171 163 168 167 172 171 169 174 173 177 169 181 172 185 168 187 171 193 169c-3 9-9 13-19 13s-16-4-19-13Z"/>
+          </g>
+          <g fill="#FFEEC4">
+          <path d="M164 148 173 161 155 161Z M184 148 175 161 193 161Z"/>
+          <path d="m174 162 2.8 4h-5.6Z"/>
+          <path d="M155 169 161 171 163 168 167 172 171 169 174 173 177 169 181 172 185 168 187 171 193 169c-3 9-9 13-19 13s-16-4-19-13Z"/>
+          </g>
+          </g>
+          <path d="M155 148c3-3 6-4 10-4" stroke="#FFE7B4" stroke-width="2.4" stroke-linecap="round" opacity="0.55" fill="none"/>
+          <path d="M164 124c6-5 16-5 22 1 4 4 3 11-2 13-6 3-14 2-19-2-4-3-4-9-1-12Z" fill="url(#boo-lantern-export-ghost-arm)" stroke="#EDEBFA" stroke-width="1.4"/>
+          <path d="M171 126c1 4 1 8 0 11M179 127c1 4 1 7 0 10" stroke="#D7D6EE" stroke-width="1.6" stroke-linecap="round" fill="none" opacity="0.8"/>
+          <path class="boo-lantern-sparkle" d="M206 108v10m-5-5h10" stroke="#FFD894" stroke-width="2" stroke-linecap="round"/>
+          <circle class="boo-lantern-sparkle boo-lantern-sparkle--alt" cx="213" cy="143" r="2.2" fill="#FFE0A0"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NÚT BẤM ĐỂ KHÁCH TỰ ĐỘNG TẮT HIỆU ỨNG -->
+<button id="boo-close-btn" aria-label="Tắt hiệu ứng Halloween">✕</button>
+
+<script>
+(function () {
+  const overlay = document.getElementById("boo-lantern-overlay");
+  const closeBtn = document.getElementById("boo-close-btn");
+  const ghost = overlay ? overlay.querySelector(".boo-lantern__ghost") : null;
+
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const expiryDate = new Date(currentYear, 9, 31, 23, 59, 59); 
+
+  if (now > expiryDate || sessionStorage.getItem("boo_effect_disabled") === "true") {
+    if (overlay) overlay.remove();
+    if (closeBtn) closeBtn.remove();
+    return;
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      if (overlay) overlay.remove();
+      closeBtn.remove();
+      sessionStorage.setItem("boo_effect_disabled", "true");
+    });
+  }
+
+  // === TÍNH NĂNG KÉO THẢ TỐI ƯU (DÙNG POINTER EVENTS) ===
+  let isDragging = false;
+  let isUserPlaced = false;
+  let posX = 0, posY = 0;
+  let offX = 0, offY = 0;
+
+  if (ghost) {
+    // Đánh dấu để hàm D() của startMotion bỏ qua không can thiệp
+    ghost.setAttribute("data-ghost-ui", "");
+    const pumpkin = ghost.querySelector("[data-pumpkin-face]");
+
+    const applyPos = () => {
+      ghost.style.transform = `translate3d(${posX}px, ${posY}px, 0) translate(-50%, -50%)`;
+      
+      // Đồng bộ vùng sáng đèn theo vị trí thực tế của con ma/quả bí ngô
+      if (overlay) {
+        const o = overlay.getBoundingClientRect();
+        const p = (pumpkin || ghost).getBoundingClientRect();
+        overlay.style.setProperty("--light-x", (p.left + p.width / 2 - o.left) + "px");
+        overlay.style.setProperty("--light-y", (p.top + p.height / 2 - o.top) + "px");
+      }
+    };
+
+    ghost.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      
+      const o = overlay.getBoundingClientRect();
+      const g = ghost.getBoundingClientRect();
+      
+      // Khởi tạo tọa độ chuẩn xác từ vị trí thực tế, chống giật nhảy
+      posX = g.left + g.width / 2 - o.left;
+      posY = g.top + g.height / 2 - o.top;
+      
+      offX = e.clientX - posX;
+      offY = e.clientY - posY;
+      
+      isDragging = true;
+      isUserPlaced = true;
+      ghost.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+
+    ghost.addEventListener("pointermove", (e) => {
+      if (!isDragging) return;
+      posX = e.clientX - offX;
+      posY = e.clientY - offY;
+      applyPos();
+    });
+
+    const endDrag = (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      // Nếu muốn sau khi thả tay ra, con ma lại tiếp tục bay đuổi theo chuột/chạm thì đổi thành: isUserPlaced = false;
+      try { ghost.releasePointerCapture(e.pointerId); } catch (err) {}
+    };
+
+    ghost.addEventListener("pointerup", endDrag);
+    ghost.addEventListener("pointercancel", endDrag);
+  }
+
+  // Cấu hình chuyển động mặc định ban đầu
+  const settings = {
+    "radius": 490,
+    "darkness": 0.87,
+    "followSpeed": 0.14,
+    "offsetX": -70,
+    "offsetY": -60,
+    "avoidEdges": true
+  };
+
+  if (!overlay || overlay.dataset.booReady) return;
+  const tilt = overlay.querySelector(".boo-lantern__tilt");
+  const flip = overlay.querySelector(".boo-lantern__flip");
+  const body = overlay.querySelector("[data-ghost-body]");
+  if (!ghost || !tilt || !flip || !body) return;
+  overlay.dataset.booReady = "true";
+  
+  overlay.style.setProperty("--spot-radius", "min(" + settings.radius + "px, 84vw)");
+  overlay.style.setProperty("--warm-radius", "min(" + Math.round(settings.radius * 0.76) + "px, 64vw)");
+  overlay.style.setProperty("--dim-soft", (settings.darkness * 0.36).toFixed(3));
+  overlay.style.setProperty("--dim-mid", (settings.darkness * 0.8).toFixed(3));
+  overlay.style.setProperty("--dim-opacity", settings.darkness);
+
+  const createBodyPath = function ei(y,b=1){const A=[];for(let M=0;M<=16;M++){const H=M/16,$=46+120*H,J=Math.sin(Math.PI*H),it=9+Math.sin(y*.9)*3.2*b,ht=Math.sin(y*1.5+H*Math.PI*4.6)*7.4*b,gt=146+J*(it+ht);A.push([$,gt])}const S=A.reverse();let Y="M 46 146 L 46 92 C 46 52 66 20 106 20 C 146 20 166 52 166 92 L 166 146";for(let M=0;M<S.length-1;M++){const H=S[M-1]??S[M],$=S[M],J=S[M+1],it=S[M+2]??J,ht=$[0]+(J[0]-H[0])/6,gt=$[1]+(J[1]-H[1])/6,Dt=J[0]-(it[0]-$[0])/6,yt=J[1]-(it[1]-$[1])/6;Y+=` C ${ht.toFixed(2)} ${gt.toFixed(2)} ${Dt.toFixed(2)} ${yt.toFixed(2)} ${J[0].toFixed(2)} ${J[1].toFixed(2)}`}return`${Y} Z`};
+  
+  const startMotion = function lr({layer:y,ghost:b,tilt:O,flip:r,body:N,getSpeed:U,getOffset:Q,getAvoidEdges:F,createBodyPath:A}){const S=window.matchMedia?.("(prefers-reduced-motion: reduce)").matches??!1,Y=window.matchMedia?.("(hover: none)").matches??!1,M=14,H=.48,$=.39,J=.47,it=.39,ht=6;let gt=0,Dt=performance.now(),yt=0,pt=0,ft=0,ut=0,L=0,Ot=0,Gt=0,fl=0,Nt=0,P=0,It=null,Qt=null,Et=1,_=0;const j=()=>({x:b.offsetWidth*.3,y:b.offsetHeight*.24}),G=()=>{const B=b.offsetWidth,ct=b.offsetHeight,st=j(),Rl=Q(),Hl=F(),Zl=Zt=>Gt+Zt*(Rl.x-st.x),ie=Zt=>B*(Zt===1?$:H),Sl=Zt=>B*(Zt===1?H:$),ce=Zt=>{const Bl=Zl(Zt);return Math.max(0,M-(Bl-ie(Zt)))+Math.max(0,Bl+Sl(Zt)-(Nt-M))};if(!Hl)Et=1;else{const Zt=ce(Et);Zt>0&&ce(-Et)+ht<Zt&&(Et=-Et)}let Re=Zl(Et),Za=fl+Rl.y-st.y;if(Hl){const Zt=M+ie(Et),Bl=Nt-M-Sl(Et),He=M+ct*J,Be=P-M-ct*it;Re=Zt>Bl?(Zt+Bl)/2:Math.min(Bl,Math.max(Zt,Re)),Za=He>Be?(He+Be)/2:Math.min(Be,Math.max(He,Za))}return{x:Re,y:Za}},mt=()=>{
+    // Nếu người dùng đang kéo hoặc đã đặt vị trí thủ công, dừng hẳn hiệu ứng đuổi chuột
+    if (isDragging || isUserPlaced) return;
+
+    const B=j(),ct=Math.cos(_*Math.PI/180);b.style.transform=`translate3d(${ft}px, ${ut}px, 0) translate(-50%, -50%)`,r.style.transform=`rotateY(${_.toFixed(2)}deg)`,y.style.setProperty("--light-x",`${(ft+B.x*ct).toFixed(2)}px`),y.style.setProperty("--light-y",`${(ut+B.y).toFixed(2)}px`)},ot=()=>{const B=y.getBoundingClientRect();Nt=B.width,P=B.height;const ct=B.width<720;Gt=It===null?B.width*(ct?.7:.76):It-B.left,fl=Qt===null?B.height*(ct?.66:.54):Qt-B.top;const st=G();L=ft=st.x,Ot=ut=st.y,_=Et===1?0:180,mt()},d=B=>{const ct=Math.min(64,Math.max(0,B-Dt));Dt=B;const st=G(),Rl=Math.min(1,Math.max(.001,U())),Hl=S?1:1-Math.pow(1-Rl,ct/16.67);ft+=(st.x-ft)*Hl,ut+=(st.y-ut)*Hl;const Zl=Et===1?0:180;if(_=S?Zl:_+(Zl-_)*(1-Math.pow(.86,ct/16.67)),!S){const ie=ft-L,Sl=ut-Ot;L=ft,Ot=ut;const ce=Math.max(-13,Math.min(13,ie*.85+Sl*.12));pt+=(ce-pt)*.14,O.style.transform=`rotate(${pt.toFixed(2)}deg)`,yt+=ct/1e3*2.1,N.setAttribute("d",A(yt,.85+Math.min(.6,Math.abs(ie)*.1)))}mt(),gt=window.requestAnimationFrame(d)},T=(B,ct)=>{const st=y.getBoundingClientRect();It=B,Qt=ct,Gt=B-st.left,fl=ct-st.top},D=B=>B instanceof Element&&!!B.closest("[data-ghost-ui]"),C=B=>{if (isUserPlaced) return; D(B.target)||Y&&It===null&&B.pointerType==="mouse"&&B.clientX===0&&B.clientY===0||T(B.clientX,B.clientY)},V=B=>{if (isUserPlaced) return; if(D(B.target))return;const ct=B.touches[0];ct&&T(ct.clientX,ct.clientY)};ot();const I=typeof ResizeObserver<"u"?new ResizeObserver(ot):null;return I?.observe(y),window.addEventListener("resize",ot,{passive:!0}),window.addEventListener("pointermove",C,{passive:!0}),window.addEventListener("pointerdown",C,{passive:!0}),window.addEventListener("touchmove",V,{passive:!0}),gt=window.requestAnimationFrame(d),()=>{I?.disconnect(),window.removeEventListener("resize",ot),window.removeEventListener("pointermove",C),window.removeEventListener("pointerdown",C),window.removeEventListener("touchmove",V),window.cancelAnimationFrame(gt)}};
+  
+  startMotion({
+    layer: overlay,
+    ghost: ghost,
+    tilt: tilt,
+    flip: flip,
+    body: body,
+    getSpeed: function () { return settings.followSpeed; },
+    getOffset: function () { return { x: settings.offsetX, y: settings.offsetY }; },
+    getAvoidEdges: function () { return settings.avoidEdges !== false; },
+    createBodyPath: createBodyPath
+  });
+})();
+</script>
+<!-- /Boo -->
 </body>
 </html>
