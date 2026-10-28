@@ -1457,7 +1457,7 @@ void main(){
     if(!running||!ready) return;
     var raw=(now-t0)/1000; t0=now;
     var dt=Math.min(0.05,raw);
-    tAcc+=dt*CFG.gspeed; fade=Math.min(1,fade+dt/2.6);
+    tAcc+=dt*CFG.gspeed; fade=Math.min(1,fade+dt/1.5);
     mx+=(mxT-mx)*Math.min(1,dt*2.5); my+=(myT-my)*Math.min(1,dt*2.5);
     scrollOffset+=(targetScrollOffset-scrollOffset)*Math.min(1,dt*5);
 
